@@ -1,0 +1,18 @@
+<html>
+<link rel="shortcut icon" href="rabbit.ico" />
+<script type="text/javascript" src="level.js"></script>
+<script type="text/javascript" src="objects.js"></script>
+<script type="text/javascript" src="players.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<style type="text/css">
+  canvas { border: 0px solid black; }
+  img.hidden { display:none; }
+</style>
+<body onload="init()">
+<canvas id="screen" width="400" height="256"></canvas>  
+<img class="hidden" id='level' src='level.png'/>
+<img class="hidden" id='mask' src='mask.png'/>
+<img class="hidden" id='rabbit' src='rabbit.png'/>
+<div id='debug'>Jump'n'Bump</div>
+</body>
+</html>
