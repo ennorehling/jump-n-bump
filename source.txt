@@ -1,0 +1,93 @@
+                JUMP 'N BUMP
+
+            Source Code Release
+         by Brainchild Design in 99
+
+
+Ok, enough already! Too many people have been
+asking about the source code for Jump 'n Bump,
+but I've always said that it's messy and ugly
+and bad, and besides, nobody could really learn
+anything from it, certainly not how to design
+code.
+
+Then I remembered how excited I was when I got
+hold of the source code to Wolfenstein 3D by
+ID. Not that I really learned that much from
+it, it was far too complex for me at that time.
+That is also the reason that I don't care
+about source code. It takes far too long time
+to understand what happens, and I personally
+don't think it's worth it.
+
+Again, I thought about it for a while. And I
+can't say that there is that much source code
+for complete games out there. Mostly it's just
+"how to make this neat effect". Nothing wrong
+with that, it's just that there's so much more
+to making a game than that!
+
+So I finally decided to release the code. Do
+whatever you like with it. I've gotten e-mails
+saying things like "if I got the source, I could
+add multiplayer support over the internet".
+Yeah, right! Adding that would probably be
+harder than to totally rewrite the game. The
+code is poorly designed, making changes to is
+hard, if not impossible. Be warned!
+
+If I still haven't convinced you to stay away,
+then I would be glad to see what you manage
+to do with it. Some suggestions I've gotten for
+the game includes computer rabbits, network
+support, better menu with level-loading support,
+and so on. Oh, and 400x256 is NOT a good
+resolution, I can tell you that much.
+
+You'll need DJGPP to compile the code. You can
+find it on http://www.delorie.com. I recommend
+that you also get hold of RHIDE, a great IDE.
+If you need to recompile the ASM code, you will
+need NASM, which you can find on
+http://www.web-sites.co.uk/nasm/
+
+Ok, here's a short explanation on how to get
+it to compile (I won't explain how to install
+DJGPP and RHIDE, there's plenty of info on that
+on the net):
+
+Move 'libdj.a' to DJGPP's LIB-directory and
+'dj.h' to DJGPP's INCLUDE-directory.
+
+Start up RHIDE, and try opening the project
+'jumpbump.gpr'. If that works then you'll be
+all set and ready to compile. If not, try
+setting all the directories in the project
+right, and so on.
+
+If you can't open the project, delete
+'jumpbump.gpr' and 'jumpbump.gdt'. Start up
+RHIDE and create a new project. Add all *.o
+files and 'gfx.obj'. (The reason I add the
+object files instead of the source files is
+that my RHIDE always recompiled everything,
+not just what was changed.) Go into Local
+Options for 'gfx.obj' and change Name of the
+output file to 'gfx.obj'. In the menu, go for
+Options->Libraries. Write 'dj' on the first
+row, and put an X to the left of it. Now you
+should be able to compile.
+
+Oh, and please don't write to me and ask about
+the code. It was almost a year since I wrote it,
+and I really don't remember anything about it.
+
+Of course, I don't take any responsibility
+whatsoever to what might happen to you, your
+computer or your social life if you choose to
+use this.
+
+'Nuff said!
+
+Mattias Brynervall, Brainchild Design
+http://www.brainchilddesign.com
