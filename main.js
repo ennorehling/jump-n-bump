@@ -525,8 +525,10 @@ function collision_check() {
 }
 
 function put_pob(ctx, x, y, image) {
-    ctx.fillStyle = "rgba(" + image*16 + ",0,0,0.5)";
-    ctx.fillRect(x >> 16, y >> 16, 16, 16);
+    var img = document.getElementById('objects');
+    ctx.drawImage(img, 0, 14, 29, 10, x, y, 29, 10);
+//    ctx.fillStyle = "rgba(" + image*16 + ",0,0,0.5)";
+//    ctx.fillRect(x, y, 16, 16);
 }
 
 function draw_pobs(ctx) {
@@ -540,12 +542,6 @@ function draw_pobs(ctx) {
 	for (c1 = page_info.num_pobs - 1; c1 >= 0; c1--) {
         var pob = page_info.pobs[c1];
         put_pob(ctx, pob.x, pob.y, pob.image);
-/*
-		page_info.pobs[c1].back_buf_ofs = back_buf_ofs;
-		get_block(page, page_info.pobs[c1].x - pob_hs_x(page_info.pobs[c1].image, page_info.pobs[c1].pob_data), page_info.pobs[c1].y - pob_hs_y(page_info.pobs[c1].image, page_info.pobs[c1].pob_data), pob_width(page_info.pobs[c1].image, page_info.pobs[c1].pob_data), pob_height(page_info.pobs[c1].image, page_info.pobs[c1].pob_data), main_info.pob_backbuf[page] + back_buf_ofs);
-        back_buf_ofs += pob_width(page_info.pobs[c1].image, page_info.pobs[c1].pob_data) * pob_height(page_info.pobs[c1].image, page_info.pobs[c1].pob_data);
-		put_pob(page, page_info.pobs[c1].x, page_info.pobs[c1].y, page_info.pobs[c1].image, page_info.pobs[c1].pob_data, 1, mask_pic);
-*/
 	}
 }
 
@@ -887,9 +883,8 @@ function add_pob(x, y, image) {
 	if (page_info.num_pobs >= NUM_POBS) {
 		return;
     }
-	page_info.pobs[page_info.num_pobs].x = x;
-	page_info.pobs[page_info.num_pobs].y = y;
-	page_info.pobs[page_info.num_pobs].image = image;
+    debug(page_info.num_pobs + " " + x + " " + y + " " + y);
+    page_info.pobs[page_info.num_pobs] = { x : x, y : y, image : image };
 	page_info.num_pobs++;
 }
 
@@ -910,6 +905,7 @@ function draw() {
 function game_loop() {
     steer_players();
     collision_check();
+    main_info.page_info.num_pobs = 0;
     update_objects();
     draw();
 }
