@@ -63,8 +63,10 @@ function add_object(type, x, y, x_add, y_add, anim, frame) {
             objects[c1].y_acc = 0;
             objects[c1].anim = anim;
             objects[c1].frame = frame;
-            objects[c1].ticks = object_anims[anim].frame[frame].ticks;
-            objects[c1].image = object_anims[anim].frame[frame].image;
+            if (frame<object_anims[anim].num_frames) {
+                objects[c1].ticks = object_anims[anim].frame[frame].ticks;
+                objects[c1].image = object_anims[anim].frame[frame].image;
+            }
             break;
         }
     }

@@ -1,4 +1,3 @@
-var frame = 0;
 var next_time = 0;
 
 var jetpack = 0;
@@ -25,6 +24,7 @@ function rnd(max_value) {
 
 var main_info = {
 	draw_page : null,
+    no_gore : false,
 	page_info : {
 		num_pobs : 0,
 		pobs : []
@@ -72,8 +72,48 @@ function key_pressed(key) {
     return keys_pressed[key];
 }
 
+function add_gore(x, y, c2) {
+    var c4;
+    for (c4 = 0; c4 < 6; c4++)
+        add_object(OBJ_FUR, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 44 + c2 * 8);
+    for (c4 = 0; c4 < 6; c4++)
+        add_object(OBJ_FLESH, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 76);
+    for (c4 = 0; c4 < 6; c4++)
+        add_object(OBJ_FLESH, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 77);
+    for (c4 = 0; c4 < 8; c4++)
+        add_object(OBJ_FLESH, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 78);
+    for (c4 = 0; c4 < 10; c4++)
+        add_object(OBJ_FLESH, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 79);
+}
+
+function processKill(c1, c2, x, y)
+{
+	var s1 = 0;
+
+	player[c1].y_add = -player[c1].y_add;
+	if (player[c1].y_add > -262144)
+		player[c1].y_add = -262144;
+	player[c1].jump_abort = true;
+	player[c2].dead_flag = true;
+	if (player[c2].anim != 6) {
+		player[c2].anim = 6;
+		player[c2].frame = 0;
+		player[c2].frame_tick = 0;
+		player[c2].image = player_anims[player[c2].anim].frame[player[c2].frame].image + player[c2].direction * 9;
+		if (main_info.no_gore == 0) {
+            add_gore(x, y, c2);
+		}
+		// dj_play_sfx(SFX_DEATH, (unsigned short)(SFX_DEATH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+		player[c1].bumps++;
+		player[c1].bumped[c2]++;
+		s1 = player[c1].bumps % 100;
+		// add_leftovers(360, 34 + c1 * 64, s1 / 10, &number_gobs);
+		// add_leftovers(376, 34 + c1 * 64, s1 - (s1 / 10) * 10, &number_gobs);
+	}
+}
+
 function player_kill(c1, c2) {
-    position_player(c2);
+    processKill(c1, c2, player[c2].x, player[c2].y);
 }
 
 function update_player_actions() {
@@ -174,8 +214,8 @@ function player_action_right(p) {
 
 function steer_players() {  
     update_player_actions();
-    for (var i=0;i!=player.length;++i) {
-        var p = player[i];
+    for (var c1=0;c1!=player.length;++c1) {
+        var p = player[c1];
         if (p.enabled) {
             if (!p.dead_flag) {
 				if (p.action_left && p.action_right) {
@@ -535,6 +575,8 @@ function collision_check() {
 	}
 }
 
+function add_leftovers(x, y, frame) {}
+
 function add_pob(x, y, image, gob) {
     var page_info = main_info.page_info;
 	if (page_info.num_pobs >= NUM_POBS) {
@@ -786,14 +828,14 @@ function update_objects() {
 				if (obj.x_add > 0 && obj.x_add < 16384)
 					obj.x_add = 16384;
 				if (obj.used) {
-					s1 = (int)(atan2(obj.y_add, obj.x_add) * 4 / M_PI);
+					s1 = Math.floor(Math.atan2(obj.y_add, obj.x_add) * 4 / Math.PI);
 					if (s1 < 0)
 						s1 += 8;
 					if (s1 < 0)
 						s1 = 0;
 					if (s1 > 7)
 						s1 = 7;
-					add_pob(obj.x >> 16, obj.y >> 16, obj.frame + s1);
+					add_pob(obj.x >> 16, obj.y >> 16, img_objects, object_gobs[obj.frame + s1]);
 				}
 				break;
 			case OBJ_FLESH:
@@ -858,8 +900,7 @@ function update_objects() {
 							} else {
 								if (rnd(100) < 10) {
 									s1 = rnd(4) - 2;
-									add_leftovers(0, obj.x >> 16, (obj.y >> 16) + s1, obj.frame);
-									add_leftovers(1, obj.x >> 16, (obj.y >> 16) + s1, obj.frame);
+									add_leftovers(obj.x >> 16, (obj.y >> 16) + s1, obj.frame);
 								}
 								obj.used = false;
 							}
@@ -877,7 +918,7 @@ function update_objects() {
 				if (obj.x_add > 0 && obj.x_add < 16384)
 					obj.x_add = 16384;
 				if (obj.used)
-					add_pob(obj.x >> 16, obj.y >> 16, obj.frame);
+					add_pob(obj.x >> 16, obj.y >> 16, img_objects, object_gobs[obj.frame]);
 				break;
 			case OBJ_FLESH_TRACE:
 				obj.ticks--;
@@ -902,7 +943,7 @@ function update_objects() {
 function draw() {
     var ctx = main_info.draw_page;
 
-    ctx.drawImage(img_level, 0, 0, 354, 256, 0, 0, 354, 256);
+    ctx.drawImage(img_level, 0, 0);
 
     var page_info = main_info.page_info;
 
@@ -930,8 +971,7 @@ function debug(str) {
 
 function pump() {
     while (1) {
-        ++frame;
-        
+       
         game_loop();
         var now = timeGetTime();
         var time_diff = next_time - now;
@@ -1021,6 +1061,8 @@ function init() {
     player[3] = create_player([74,76,73]);
     player[0].enabled = true;
     player[1].enabled = true;
+    player[2].enabled = true;
+    player[3].enabled = true;
 
     init_level();
 
@@ -1028,6 +1070,5 @@ function init() {
     document.onkeyup = onKeyUp;
     next_time = timeGetTime() + 1000;
 
-    ctx.drawImage(img_level, 0, 0);
     pump();
 }
