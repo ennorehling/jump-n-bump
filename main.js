@@ -553,8 +553,6 @@ function put_pob(ctx, x, y, gob, img) {
     hs_x = gob.hotspot_x;
     hs_y = gob.hotspot_y;
     ctx.drawImage(img, sx, sy, sw, sh, x-hs_x, y-hs_y, sw, sh);
-//    ctx.fillStyle = "rgba(" + image*16 + ",0,0,0.5)";
-//    ctx.fillRect(x, y, 16, 16);
 }
 
 function draw_pobs(ctx) {
@@ -562,12 +560,6 @@ function draw_pobs(ctx) {
 	var back_buf_ofs = 0;
     var page_info = main_info.page_info;
 
-    for (c1=0;c1!=JNB_MAX_PLAYERS;++c1) {
-        if (player[c1].enabled) {
-            ctx.fillStyle = "rgba(" + (frame%256) + ",0,0,0.5)";
-            ctx.fillRect(player[c1].x >> 16, player[c1].y >> 16, 16, 16);
-        }
-    }
 	for (c1 = page_info.num_pobs - 1; c1 >= 0; c1--) {
         var pob = page_info.pobs[c1];
         put_pob(ctx, pob.x, pob.y, pob.gob, pob.image);
@@ -910,9 +902,15 @@ function update_objects() {
 function draw() {
     var ctx = main_info.draw_page;
 
-    ctx.drawImage(img_level, 0, 0);
+    ctx.drawImage(img_level, 0, 0, 354, 256, 0, 0, 354, 256);
 
-    ctx.fillStyle = "blue";
+    var page_info = main_info.page_info;
+
+    for (var i = 0; i < JNB_MAX_PLAYERS; i++) {
+        if (player[i].enabled) {
+            add_pob(player[i].x >> 16, player[i].y >> 16, img_rabbits, rabbit_gobs[player[i].image + i * 18]);
+        }
+    }
     draw_pobs(ctx);
 
     ctx.drawImage(img_mask, 0, 0);
@@ -1030,5 +1028,6 @@ function init() {
     document.onkeyup = onKeyUp;
     next_time = timeGetTime() + 1000;
 
+    ctx.drawImage(img_level, 0, 0);
     pump();
 }
