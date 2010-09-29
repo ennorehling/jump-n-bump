@@ -534,7 +534,6 @@ function add_pob(x, y, image, gob) {
 	if (page_info.num_pobs >= NUM_POBS) {
 		return;
     }
-    debug(page_info.num_pobs + " " + x + " " + y + " " + y);
     page_info.pobs[page_info.num_pobs] = { x : x, y : y, gob : gob, image : image };
 	page_info.num_pobs++;
 }
@@ -641,7 +640,7 @@ function update_objects() {
 					obj.x_add = -obj.x_add >> 2;
 					obj.x_acc = 0;
 				}
-				if (ban_map[obj.y >> 20][obj.x >> 20] != 0) {
+				if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != 0) {
 					if (obj.x_add < 0) {
 						obj.x = (((obj.x >> 16) + 16) & 0xfff0) << 16;
 					} else {
@@ -670,7 +669,7 @@ function update_objects() {
 					obj.y_add = -obj.y_add >> 2;
 					obj.y_acc = 0;
 				}
-				if (ban_map[obj.y >> 20][obj.x >> 20] != 0) {
+				if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != 0) {
 					if (obj.y_add < 0) {
 						obj.y = (((obj.y >> 16) + 16) & 0xfff0) << 16;
 					} else {
@@ -720,11 +719,11 @@ function update_objects() {
 			case OBJ_FUR:
 				if (rnd(100) < 30)
 					add_object(OBJ_FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, OBJ_ANIM_FLESH_TRACE, 0);
-				if (ban_map[obj.y >> 20][obj.x >> 20] == 0) {
+				if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 0) {
 					obj.y_add += 3072;
 					if (obj.y_add > 196608)
 						obj.y_add = 196608;
-				} else if (ban_map[obj.y >> 20][obj.x >> 20] == 2) {
+				} else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 2) {
 					if (obj.x_add < 0) {
 						if (obj.x_add < -65536)
 							obj.x_add = -65536;
@@ -745,7 +744,7 @@ function update_objects() {
 						obj.y_add = 65536;
 				}
 				obj.x += obj.x_add;
-				if ((obj.y >> 16) > 0 && (ban_map[obj.y >> 20][obj.x >> 20] == 1 || ban_map[obj.y >> 20][obj.x >> 20] == 3)) {
+				if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 1 || GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 3)) {
 					if (obj.x_add < 0) {
 						obj.x = (((obj.x >> 16) + 16) & 0xfff0) << 16;
 						obj.x_add = -obj.x_add >> 2;
@@ -757,22 +756,22 @@ function update_objects() {
 				obj.y += obj.y_add;
 				if ((obj.x >> 16) < -5 || (obj.x >> 16) > 405 || (obj.y >> 16) > 260)
 					obj.used = false;
-				if ((obj.y >> 16) > 0 && (ban_map[obj.y >> 20][obj.x >> 20] != 0)) {
+				if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != 0)) {
 					if (obj.y_add < 0) {
-						if (ban_map[obj.y >> 20][obj.x >> 20] != 2) {
+						if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != 2) {
 							obj.y = (((obj.y >> 16) + 16) & 0xfff0) << 16;
 							obj.x_add >>= 2;
 							obj.y_add = -obj.y_add >> 2;
 						}
 					} else {
-						if (ban_map[obj.y >> 20][obj.x >> 20] == 1) {
+						if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 1) {
 							if (obj.y_add > 131072) {
 								obj.y = ((((obj.y >> 16) - 16) & 0xfff0) + 15) << 16;
 								obj.x_add >>= 2;
 								obj.y_add = -obj.y_add >> 2;
 							} else
 								obj.used = false;
-						} else if (ban_map[obj.y >> 20][obj.x >> 20] == 3) {
+						} else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 3) {
 							obj.y = ((((obj.y >> 16) - 16) & 0xfff0) + 15) << 16;
 							if (obj.y_add > 131072)
 								obj.y_add = -obj.y_add >> 2;
@@ -805,11 +804,11 @@ function update_objects() {
 					else if (obj.frame == 78)
 						add_object(OBJ_FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, OBJ_ANIM_FLESH_TRACE, 3);
 				}
-				if (ban_map[obj.y >> 20][obj.x >> 20] == 0) {
+				if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 0) {
 					obj.y_add += 3072;
 					if (obj.y_add > 196608)
 						obj.y_add = 196608;
-				} else if (ban_map[obj.y >> 20][obj.x >> 20] == 2) {
+				} else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 2) {
 					if (obj.x_add < 0) {
 						if (obj.x_add < -65536)
 							obj.x_add = -65536;
@@ -830,7 +829,7 @@ function update_objects() {
 						obj.y_add = 65536;
 				}
 				obj.x += obj.x_add;
-				if ((obj.y >> 16) > 0 && (ban_map[obj.y >> 20][obj.x >> 20] == 1 || ban_map[obj.y >> 20][obj.x >> 20] == 3)) {
+				if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 1 || GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 3)) {
 					if (obj.x_add < 0) {
 						obj.x = (((obj.x >> 16) + 16) & 0xfff0) << 16;
 						obj.x_add = -obj.x_add >> 2;
@@ -842,15 +841,15 @@ function update_objects() {
 				obj.y += obj.y_add;
 				if ((obj.x >> 16) < -5 || (obj.x >> 16) > 405 || (obj.y >> 16) > 260)
 					obj.used = false;
-				if ((obj.y >> 16) > 0 && (ban_map[obj.y >> 20][obj.x >> 20] != 0)) {
+				if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != 0)) {
 					if (obj.y_add < 0) {
-						if (ban_map[obj.y >> 20][obj.x >> 20] != 2) {
+						if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != 2) {
 							obj.y = (((obj.y >> 16) + 16) & 0xfff0) << 16;
 							obj.x_add >>= 2;
 							obj.y_add = -obj.y_add >> 2;
 						}
 					} else {
-						if (ban_map[obj.y >> 20][obj.x >> 20] == 1) {
+						if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 1) {
 							if (obj.y_add > 131072) {
 								obj.y = ((((obj.y >> 16) - 16) & 0xfff0) + 15) << 16;
 								obj.x_add >>= 2;
@@ -863,7 +862,7 @@ function update_objects() {
 								}
 								obj.used = false;
 							}
-						} else if (ban_map[obj.y >> 20][obj.x >> 20] == 3) {
+						} else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 3) {
 							obj.y = ((((obj.y >> 16) - 16) & 0xfff0) + 15) << 16;
 							if (obj.y_add > 131072)
 								obj.y_add = -obj.y_add >> 2;
@@ -936,7 +935,7 @@ function pump() {
             setTimeout("pump()", time_diff);
             break;
         }
-        debug("time exceed: " + time_diff);
+        debug("frametime exceeded: " + (-time_diff));
     }
 }
 

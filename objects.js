@@ -24,7 +24,7 @@ var OBJ_ANIM_FLESH_TRACE = 7;
 
 function create_object_anims() {
     object_anims = [];
-	var object_anim_data = [
+    var object_anim_data = [
         [ 6, 0, [[0, 3], [1, 3], [2, 3], [3, 3], [4, 3], [5, 3], [0, 0], [0, 0], [0, 0], [0, 0]]], 
         [ 9, 0, [[6, 2], [7, 2], [8, 2], [9, 2], [10, 2], [11, 2], [12, 2], [13, 2], [14, 2], [0, 0]]],
         [ 5, 0, [[15, 3], [16, 3], [16, 3], [17, 3], [18, 3], [19, 3], [0, 0], [0, 0], [0, 0], [0, 0]]],
@@ -51,8 +51,8 @@ function create_object_anims() {
 }
 
 function add_object(type, x, y, x_add, y_add, anim, frame) {
-	for (var c1 = 0; c1 < NUM_OBJECTS; c1++) {
-		if (!objects[c1].used) {
+    for (var c1 = 0; c1 < NUM_OBJECTS; c1++) {
+        if (!objects[c1].used) {
             set_object(c1, type, x, y, x_add, y_add, anim, frame);
             break;
         }
@@ -74,6 +74,17 @@ function set_object(c1, type, x, y, x_add, y_add, anim, frame) {
     objects[c1].image = object_anims[anim].frame[frame].image;
 }
 
+function create_butterfly(obj) {
+    while (1) {
+        var s1 = rnd(22);
+        var s2 = rnd(16);
+        if (GET_BAN_MAP(s2, s1) == BAN_VOID) {
+            add_object(obj, (s1 << 4) + 8, (s2 << 4) + 8, (rnd(65535) - 32768) * 2, (rnd(65535) - 32768) * 2, 0, 0);
+            break;
+        }
+    }
+}
+
 function create_objects() {
     var c1, c2;
     var idx = 0;
@@ -82,12 +93,16 @@ function create_objects() {
     for (c1 = 0; c1 < NUM_OBJECTS; c1++) {
         objects[c1] = { used : false };
     }
-	for (c1 = 0; c1 < 16; c1++) {
-		for (c2 = 0; c2 < 22; c2++) {
-			if (ban_map[c1*22+c2] == BAN_SPRING) {
-				set_object(idx++, OBJ_SPRING, c2 << 4, c1 << 4, 0, 0, OBJ_ANIM_SPRING, 5);
+    for (c1 = 0; c1 < 16; c1++) {
+        for (c2 = 0; c2 < 22; c2++) {
+            if (GET_BAN_MAP(c2, c1) == BAN_SPRING) {
+                set_object(idx++, OBJ_SPRING, c2 << 4, c1 << 4, 0, 0, OBJ_ANIM_SPRING, 5);
             }
-		}
-	}
+        }
+    }
+    create_butterfly(OBJ_YEL_BUTFLY);
+    create_butterfly(OBJ_YEL_BUTFLY);
+    create_butterfly(OBJ_PINK_BUTFLY);
+    create_butterfly(OBJ_PINK_BUTFLY);
     return objects;
 }

@@ -11,6 +11,11 @@ function GET_BAN_MAP_XY(x, y) {
     return ban_map[(x>>4)+(y>>4)*22];
 }
 
+function GET_BAN_MAP(x, y) {
+    if (y<0) y = 0;
+    return ban_map[x+y*22];
+}
+
 function GET_BAN_MAP_IN_WATER(s1, s2) {
     return (GET_BAN_MAP_XY((s1), ((s2) + 7)) == BAN_VOID || GET_BAN_MAP_XY(((s1) + 15), ((s2) + 7)) == BAN_VOID) && (GET_BAN_MAP_XY((s1), ((s2) + 8)) == BAN_WATER || GET_BAN_MAP_XY(((s1) + 15), ((s2) + 8)) == BAN_WATER);
 }
