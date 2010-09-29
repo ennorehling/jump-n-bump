@@ -28,7 +28,7 @@ var main_info = {
 	page_info : {
 		num_pobs : 0,
 		pobs : []
-	},
+	}
 };
 
 var player = [];
