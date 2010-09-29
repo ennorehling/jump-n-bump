@@ -34,12 +34,16 @@ var img_rabbits;
 var img_level;
 var img_mask;
 
+var sounds = [];
+var snd_tune = null;
+
 function rnd(max_value) {
     return Math.floor(Math.random()*max_value);
 }
 
 var main_info = {
 	draw_page : null,
+    music_no_sound : false,
     no_gore : false,
 	page_info : {
 		num_pobs : 0,
@@ -49,9 +53,13 @@ var main_info = {
 
 
 function dj_play_sfx(sfx, freq, volume, panning, delay, channel) {
-    var name = ["jump.ogg", "land.ogg", "death.ogg", "spring.ogg", "splash.ogg", "fly.ogg" ];
-    var audio = new Audio(name[sfx]);
-    audio.play();
+    if (!main_info.music_no_sound) {
+        var name = ["jump.ogg", "land.ogg", "death.ogg", "spring.ogg", "splash.ogg", "fly.ogg" ];
+        var audio = new Audio('sound/' + name[sfx]);
+        audio.play();
+        sounds.push(audio);
+        if (sounds.length>NUM_SFX) sounds.shift();
+    }
 }
 
 var player = [];
@@ -1073,6 +1081,7 @@ function gup(name) {
 }
 
 function init() {
+    if (gup('nosound')=='1') main_info.music_no_sound = true;
     if (gup('pogostick')=='1') pogostick = 1;
     if (gup('jetpack')=='1') jetpack = 1;
     if (gup('space')=='1') bunnies_in_space = 1;
@@ -1102,5 +1111,11 @@ function init() {
     document.onkeyup = onKeyUp;
     next_time = timeGetTime() + 1000;
 
+    if (!main_info.music_no_sound) {
+        var audio = new Audio('sound/bump.ogg');
+        audio.load();
+        audio.play();
+        snd_tune = audio;
+    }
     pump();
 }
