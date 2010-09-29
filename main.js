@@ -1043,7 +1043,21 @@ function init_level() {
 	}
 }
 
+function gup(name) {
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( window.location.href );
+  if( results == null )
+    return "";
+  else
+    return results[1];
+}
+
 function init() {
+    if (gup('pogostick')=='1') pogostick = 1;
+    if (gup('jetpack')=='1') jetpack = 1;
+    if (gup('space')=='1') bunnies_in_space = 1;
     img_level = document.getElementById('level');
     img_mask = document.getElementById('mask');
     img_rabbits = document.getElementById('rabbits');
