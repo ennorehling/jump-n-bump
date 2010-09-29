@@ -4,7 +4,7 @@ var jetpack = 0;
 var pogostick = 0;
 var bunnies_in_space = 0;
 var flies_enabled = 0;
-
+var blood_is_thicker_than_water = 0;
 var is_server = true;
 
 var JNB_MAX_PLAYERS = 4;
@@ -12,6 +12,22 @@ var JNB_MAX_PLAYERS = 4;
 var NUM_POBS = 200;
 var NUM_FLIES = 20;
 var NUM_LEFTOVERS = 50;
+
+var SFX_JUMP = 0;
+var SFX_LAND = 1;
+var SFX_DEATH = 2;
+var SFX_SPRING = 3;
+var SFX_SPLASH = 4;
+var SFX_FLY = 5;
+
+var SFX_JUMP_FREQ = 15000;
+var SFX_LAND_FREQ = 15000;
+var SFX_DEATH_FREQ = 20000;
+var SFX_SPRING_FREQ = 15000;
+var SFX_SPLASH_FREQ = 12000;
+var SFX_FLY_FREQ = 12000;
+
+var NUM_SFX = 6;
 
 var img_objects;
 var img_rabbits;
@@ -30,6 +46,13 @@ var main_info = {
 		pobs : []
 	}
 };
+
+
+function dj_play_sfx(sfx, freq, volume, panning, delay, channel) {
+    var name = ["jump.ogg", "land.ogg", "death.ogg", "spring.ogg", "splash.ogg", "fly.ogg" ];
+    var audio = new Audio(name[sfx]);
+    audio.play();
+}
 
 var player = [];
 function create_player(keys) {
@@ -103,7 +126,7 @@ function processKill(c1, c2, x, y)
 		if (main_info.no_gore == 0) {
             add_gore(x, y, c2);
 		}
-		// dj_play_sfx(SFX_DEATH, (unsigned short)(SFX_DEATH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+		dj_play_sfx(SFX_DEATH, (SFX_DEATH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 		player[c1].bumps++;
 		player[c1].bumped[c2]++;
 		s1 = player[c1].bumps % 100;
@@ -276,12 +299,10 @@ function steer_players() {
 							p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
 							p.jump_ready = 0;
 							p.jump_abort = 1;
-/*
 							if (pogostick == 0)
-								dj_play_sfx(SFX_JUMP, (unsigned short)(SFX_JUMP_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+								dj_play_sfx(SFX_JUMP, (SFX_JUMP_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 							else
-								dj_play_sfx(SFX_SPRING, (unsigned short)(SFX_SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
-*/
+								dj_play_sfx(SFX_SPRING, (SFX_SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 						}
 						/* jump out of water */
 						if (GET_BAN_MAP_IN_WATER(s1, s2)) {
@@ -293,12 +314,10 @@ function steer_players() {
 							p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
 							p.jump_ready = 0;
 							p.jump_abort = 1;
-/*
 							if (pogostick == 0)
-								dj_play_sfx(SFX_JUMP, (unsigned short)(SFX_JUMP_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+								dj_play_sfx(SFX_JUMP, (SFX_JUMP_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 							else
-								dj_play_sfx(SFX_SPRING, (unsigned short)(SFX_SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
-*/
+								dj_play_sfx(SFX_SPRING, (SFX_SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 						}
 					}
 					/* fall down by gravity */
@@ -399,7 +418,7 @@ function steer_players() {
 							}
 						}
 					}
-					// dj_play_sfx(SFX_SPRING, (unsigned short)(SFX_SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+					dj_play_sfx(SFX_SPRING, (SFX_SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 				}
 				s1 = (p.x >> 16);
 				s2 = (p.y >> 16);
@@ -427,12 +446,11 @@ function steer_players() {
 						p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
 						if (p.y_add >= 32768) {
 							add_object(OBJ_SPLASH, (p.x >> 16) + 8, ((p.y >> 16) & 0xfff0) + 15, 0, 0, OBJ_ANIM_SPLASH, 0);
-                            /*
+
 							if (blood_is_thicker_than_water == 0)
-								dj_play_sfx(SFX_SPLASH, (unsigned short)(SFX_SPLASH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+								dj_play_sfx(SFX_SPLASH, (SFX_SPLASH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 							else
-								dj_play_sfx(SFX_SPLASH, (unsigned short)(SFX_SPLASH_FREQ + rnd(2000) - 5000), 64, 0, 0, -1);
-                            */
+								dj_play_sfx(SFX_SPLASH, (SFX_SPLASH_FREQ + rnd(2000) - 5000), 64, 0, 0, -1);
 						}
 					}
 					/* slowly move up to water surface */
