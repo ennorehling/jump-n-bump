@@ -53,25 +53,21 @@ function create_object_anims() {
 function add_object(type, x, y, x_add, y_add, anim, frame) {
     for (var c1 = 0; c1 < NUM_OBJECTS; c1++) {
         if (!objects[c1].used) {
-            set_object(c1, type, x, y, x_add, y_add, anim, frame);
+            objects[c1].used = true;
+            objects[c1].type = type;
+            objects[c1].x = x << 16;
+            objects[c1].y = y << 16;
+            objects[c1].x_add = x_add;
+            objects[c1].y_add = y_add;
+            objects[c1].x_acc = 0;
+            objects[c1].y_acc = 0;
+            objects[c1].anim = anim;
+            objects[c1].frame = frame;
+            objects[c1].ticks = object_anims[anim].frame[frame].ticks;
+            objects[c1].image = object_anims[anim].frame[frame].image;
             break;
         }
     }
-}
-
-function set_object(c1, type, x, y, x_add, y_add, anim, frame) {
-    objects[c1].used = true;
-    objects[c1].type = type;
-    objects[c1].x = x << 16;
-    objects[c1].y = y << 16;
-    objects[c1].x_add = x_add;
-    objects[c1].y_add = y_add;
-    objects[c1].x_acc = 0;
-    objects[c1].y_acc = 0;
-    objects[c1].anim = anim;
-    objects[c1].frame = frame;
-    objects[c1].ticks = object_anims[anim].frame[frame].ticks;
-    objects[c1].image = object_anims[anim].frame[frame].image;
 }
 
 function create_butterfly(obj) {
@@ -96,7 +92,7 @@ function create_objects() {
     for (c1 = 0; c1 < 16; c1++) {
         for (c2 = 0; c2 < 22; c2++) {
             if (GET_BAN_MAP(c2, c1) == BAN_SPRING) {
-                set_object(idx++, OBJ_SPRING, c2 << 4, c1 << 4, 0, 0, OBJ_ANIM_SPRING, 5);
+                add_object(OBJ_SPRING, c2 << 4, c1 << 4, 0, 0, OBJ_ANIM_SPRING, 5);
             }
         }
     }

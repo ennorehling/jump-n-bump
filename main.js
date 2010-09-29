@@ -6,6 +6,8 @@ var pogostick = 0;
 var bunnies_in_space = 0;
 var flies_enabled = 0;
 
+var is_server = true;
+
 var JNB_MAX_PLAYERS = 4;
 
 var NUM_POBS = 200;
@@ -68,6 +70,10 @@ function onKeyUp(evt) {
 
 function key_pressed(key) {
     return keys_pressed[key];
+}
+
+function player_kill(c1, c2) {
+    position_player(c2);
 }
 
 function update_player_actions() {
@@ -481,9 +487,9 @@ function collision_check() {
 			c1 = 2;
 			c2 = 3;
 		}
-		if (player[c1].enabled == 1 && player[c2].enabled == 1) {
-			if (labs(player[c1].x - player[c2].x) < 0xC0000 && labs(player[c1].y - player[c2].y) < 0xC0000) {
-				if ((labs(player[c1].y - player[c2].y) >> 16) > 5) {
+		if (player[c1].enabled && player[c2].enabled) {
+			if (Math.abs(player[c1].x - player[c2].x) < 0xC0000 && Math.abs(player[c1].y - player[c2].y) < 0xC0000) {
+				if ((Math.abs(player[c1].y - player[c2].y) >> 16) > 5) {
 					if (player[c1].y < player[c2].y) {
 						player_kill(c1,c2);
 					} else {
@@ -556,9 +562,12 @@ function draw_pobs(ctx) {
 	var back_buf_ofs = 0;
     var page_info = main_info.page_info;
 
-    ctx.fillStyle = "rgba(" + (frame%256) + ",0,0,0.5)";
-    ctx.fillRect(player[0].x >> 16, player[0].y >> 16, 16, 16);
-
+    for (c1=0;c1!=JNB_MAX_PLAYERS;++c1) {
+        if (player[c1].enabled) {
+            ctx.fillStyle = "rgba(" + (frame%256) + ",0,0,0.5)";
+            ctx.fillRect(player[c1].x >> 16, player[c1].y >> 16, 16, 16);
+        }
+    }
 	for (c1 = page_info.num_pobs - 1; c1 >= 0; c1--) {
         var pob = page_info.pobs[c1];
         put_pob(ctx, pob.x, pob.y, pob.gob, pob.image);
@@ -939,10 +948,61 @@ function pump() {
     }
 }
 
+function position_player(player_num)
+{
+	var c1;
+	var s1, s2;
+
+	while (1) {
+		while (1) {
+			s1 = rnd(22);
+			s2 = rnd(16);
+			if (GET_BAN_MAP(s1, s2) == BAN_VOID && (GET_BAN_MAP(s1, s2+1) == BAN_SOLID || GET_BAN_MAP(s1, s2+1) == BAN_ICE))
+				break;
+		}
+		for (c1 = 0; c1 < JNB_MAX_PLAYERS; c1++) {
+			if (c1 != player_num && player[c1].enabled) {
+				if (Math.abs((s1 << 4) - (player[c1].x >> 16)) < 32 && Math.abs((s2 << 4) - (player[c1].y >> 16)) < 32)
+					break;
+			}
+		}
+		if (c1 == JNB_MAX_PLAYERS) {
+			player[player_num].x = s1 << 20;
+			player[player_num].y = s2 << 20;
+			player[player_num].x_add = player[player_num].y_add = 0;
+			player[player_num].direction = 0;
+			player[player_num].jump_ready = 1;
+			player[player_num].in_water = 0;
+			player[player_num].anim = 0;
+			player[player_num].frame = 0;
+			player[player_num].frame_tick = 0;
+			player[player_num].image = player_anims[player[player_num].anim].frame[player[player_num].frame].image;
+
+			if (is_server) {
+				player[player_num].dead_flag = 0;
+			}
+
+			break;
+		}
+	}
+
+}
+
+
 function init_level() {
     create_map();
     create_object_anims();
     create_objects();
+    
+	for (var c1 = 0; c1 < JNB_MAX_PLAYERS; c1++) {
+		if (player[c1].enabled) {
+			player[c1].bumps = 0;
+			for (var c2 = 0; c2 < JNB_MAX_PLAYERS; c2++) {
+				player[c1].bumped[c2] = 0;
+            }
+			position_player(c1);
+		}
+	}
 }
 
 function init() {
@@ -956,14 +1016,15 @@ function init() {
     main_info.draw_page = ctx;
     ctx.mozImageSmoothingEnabled = false;
     
-    init_level();
-
     player = [];
     player[0] = create_player([37,39,38]);
-    player[0].enabled = true;
     player[1] = create_player([65,68,87]);
     player[2] = create_player([100,102,104]);
     player[3] = create_player([74,76,73]);
+    player[0].enabled = true;
+    player[1].enabled = true;
+
+    init_level();
 
     document.onkeydown = onKeyDown;
     document.onkeyup = onKeyUp;
