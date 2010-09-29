@@ -12,6 +12,11 @@ var NUM_POBS = 200;
 var NUM_FLIES = 20;
 var NUM_LEFTOVERS = 50;
 
+var img_objects;
+var img_rabbits;
+var img_level;
+var img_mask;
+
 function rnd(max_value) {
     return Math.floor(Math.random()*max_value);
 }
@@ -524,9 +529,25 @@ function collision_check() {
 	}
 }
 
-function put_pob(ctx, x, y, image) {
-    var img = document.getElementById('objects');
-    ctx.drawImage(img, 0, 14, 29, 10, x, y, 29, 10);
+function add_pob(x, y, image, gob) {
+    var page_info = main_info.page_info;
+	if (page_info.num_pobs >= NUM_POBS) {
+		return;
+    }
+    debug(page_info.num_pobs + " " + x + " " + y + " " + y);
+    page_info.pobs[page_info.num_pobs] = { x : x, y : y, gob : gob, image : image };
+	page_info.num_pobs++;
+}
+
+function put_pob(ctx, x, y, gob, img) {
+    var sx, sy, sw, sh, hs_x, hs_y;
+    sx = gob.x;
+    sy = gob.y;
+    sw = gob.width;
+    sh = gob.height;
+    hs_x = gob.hotspot_x;
+    hs_y = gob.hotspot_y;
+    ctx.drawImage(img, sx, sy, sw, sh, x-hs_x, y-hs_y, sw, sh);
 //    ctx.fillStyle = "rgba(" + image*16 + ",0,0,0.5)";
 //    ctx.fillRect(x, y, 16, 16);
 }
@@ -541,7 +562,7 @@ function draw_pobs(ctx) {
 
 	for (c1 = page_info.num_pobs - 1; c1 >= 0; c1--) {
         var pob = page_info.pobs[c1];
-        put_pob(ctx, pob.x, pob.y, pob.image);
+        put_pob(ctx, pob.x, pob.y, pob.gob, pob.image);
 	}
 }
 
@@ -566,7 +587,7 @@ function update_objects() {
 					}
 				}
 				if (obj.used)
-					add_pob(obj.x >> 16, obj.y >> 16, obj.image);
+					add_pob(obj.x >> 16, obj.y >> 16, img_objects, object_gobs[obj.image]);
 				break;
 			case OBJ_SPLASH:
 				obj.ticks--;
@@ -580,7 +601,7 @@ function update_objects() {
 					}
 				}
 				if (obj.used)
-					add_pob(obj.x >> 16, obj.y >> 16, obj.image);
+					add_pob(obj.x >> 16, obj.y >> 16, img_objects, object_gobs[obj.image]);
 				break;
 			case OBJ_SMOKE:
 				obj.x += obj.x_add;
@@ -596,7 +617,7 @@ function update_objects() {
 					}
 				}
 				if (obj.used)
-					add_pob(obj.x >> 16, obj.y >> 16, obj.image);
+					add_pob(obj.x >> 16, obj.y >> 16, img_objects, object_gobs[obj.image]);
 				break;
 			case OBJ_YEL_BUTFLY:
 			case OBJ_PINK_BUTFLY:
@@ -694,7 +715,7 @@ function update_objects() {
 					}
 				}
 				if (obj.used)
-					add_pob(obj.x >> 16, obj.y >> 16, obj.image);
+					add_pob(obj.x >> 16, obj.y >> 16, img_objects, object_gobs[obj.image]);
 				break;
 			case OBJ_FUR:
 				if (rnd(100) < 30)
@@ -870,7 +891,7 @@ function update_objects() {
 					}
 				}
 				if (obj.used)
-					add_pob(obj.x >> 16, obj.y >> 16, obj.image);
+					add_pob(obj.x >> 16, obj.y >> 16, img_objects, object_gobs[obj.image]);
 				break;
 			}
 		}
@@ -878,28 +899,15 @@ function update_objects() {
 }
 
 
-function add_pob(x, y, image) {
-    var page_info = main_info.page_info;
-	if (page_info.num_pobs >= NUM_POBS) {
-		return;
-    }
-    debug(page_info.num_pobs + " " + x + " " + y + " " + y);
-    page_info.pobs[page_info.num_pobs] = { x : x, y : y, image : image };
-	page_info.num_pobs++;
-}
-
-
 function draw() {
     var ctx = main_info.draw_page;
 
-    var level = document.getElementById('level');
-    ctx.drawImage(level, 0, 0);
+    ctx.drawImage(img_level, 0, 0);
 
     ctx.fillStyle = "blue";
     draw_pobs(ctx);
 
-    var mask = document.getElementById('mask');
-    ctx.drawImage(mask, 0, 0);
+    ctx.drawImage(img_mask, 0, 0);
 }
 
 function game_loop() {
@@ -932,12 +940,25 @@ function pump() {
     }
 }
 
+function init_level() {
+    create_map();
+    create_object_anims();
+    create_objects();
+}
+
 function init() {
+    img_level = document.getElementById('level');
+    img_mask = document.getElementById('mask');
+    img_rabbits = document.getElementById('rabbits');
+    img_objects = document.getElementById('objects');
+
     var canvas = document.getElementById('screen');
     var ctx = canvas.getContext('2d');
     main_info.draw_page = ctx;
     ctx.mozImageSmoothingEnabled = false;
     
+    init_level();
+
     player = [];
     player[0] = create_player([37,39,38]);
     player[0].enabled = true;

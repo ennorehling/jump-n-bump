@@ -1,3 +1,6 @@
+var objects;
+var object_anims;
+
 var NUM_OBJECTS = 200;
 
 var OBJ_SPRING = 0;
@@ -20,6 +23,7 @@ var OBJ_ANIM_PINK_BUTFLY_LEFT = 6;
 var OBJ_ANIM_FLESH_TRACE = 7;
 
 function create_object_anims() {
+    object_anims = [];
 	var object_anim_data = [
         [ 6, 0, [[0, 3], [1, 3], [2, 3], [3, 3], [4, 3], [5, 3], [0, 0], [0, 0], [0, 0], [0, 0]]], 
         [ 9, 0, [[6, 2], [7, 2], [8, 2], [9, 2], [10, 2], [11, 2], [12, 2], [13, 2], [14, 2], [0, 0]]],
@@ -30,7 +34,6 @@ function create_object_anims() {
         [ 10, 0, [[38, 2], [39, 2], [40, 2], [41, 2], [42, 2], [43, 2], [42, 2], [41, 2], [40, 2], [39, 2]]],
         [ 4, 0, [[76, 4], [77, 4], [78, 4], [79, 4], [0, 0], [ 0, 0], [ 0, 0], [ 0, 0], [ 0, 0], [0, 0]]]
     ];
-    var result = [];
     for (var i=0;i!=8;++i) {
         var frames = [];
         for (var j=0;j!=10;++j) {
@@ -39,51 +42,52 @@ function create_object_anims() {
                 ticks: object_anim_data[i][2][j][1]
             };
         }
-        result[i] = { 
+        object_anims[i] = { 
             num_frames : object_anim_data[i][0],
             restart_frame : object_anim_data[i][1],
             frame : frames
         };
     }
-    return result;
 }
 
 function add_object(type, x, y, x_add, y_add, anim, frame) {
 	for (var c1 = 0; c1 < NUM_OBJECTS; c1++) {
 		if (!objects[c1].used) {
-			objects[c1].used = true;
-			objects[c1].type = type;
-			objects[c1].x = x << 16;
-			objects[c1].y = y << 16;
-			objects[c1].x_add = x_add;
-			objects[c1].y_add = y_add;
-			objects[c1].x_acc = 0;
-			objects[c1].y_acc = 0;
-			objects[c1].anim = anim;
-			objects[c1].frame = frame;
-			objects[c1].ticks = object_anims[anim].frame[frame].ticks;
-			objects[c1].image = object_anims[anim].frame[frame].image;
-			break;
-		}
-	}
+            set_object(c1, type, x, y, x_add, y_add, anim, frame);
+            break;
+        }
+    }
+}
+
+function set_object(c1, type, x, y, x_add, y_add, anim, frame) {
+    objects[c1].used = true;
+    objects[c1].type = type;
+    objects[c1].x = x << 16;
+    objects[c1].y = y << 16;
+    objects[c1].x_add = x_add;
+    objects[c1].y_add = y_add;
+    objects[c1].x_acc = 0;
+    objects[c1].y_acc = 0;
+    objects[c1].anim = anim;
+    objects[c1].frame = frame;
+    objects[c1].ticks = object_anims[anim].frame[frame].ticks;
+    objects[c1].image = object_anims[anim].frame[frame].image;
 }
 
 function create_objects() {
-    var objects = [];
     var c1, c2;
+    var idx = 0;
 
+    objects = [];
     for (c1 = 0; c1 < NUM_OBJECTS; c1++) {
         objects[c1] = { used : false };
     }
 	for (c1 = 0; c1 < 16; c1++) {
 		for (c2 = 0; c2 < 22; c2++) {
-			if (ban_map[c1][c2] == BAN_SPRING) {
-				add_object(OBJ_SPRING, c2 << 4, c1 << 4, 0, 0, OBJ_ANIM_SPRING, 5);
+			if (ban_map[c1*22+c2] == BAN_SPRING) {
+				set_object(idx++, OBJ_SPRING, c2 << 4, c1 << 4, 0, 0, OBJ_ANIM_SPRING, 5);
             }
 		}
 	}
     return objects;
 }
-
-var object_anims = create_object_anims();
-var objects = create_objects();
