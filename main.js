@@ -19,12 +19,13 @@ var SFX_DEATH_FREQ = 20000;
 var SFX_SPRING_FREQ = 15000;
 var SFX_SPLASH_FREQ = 12000;
 var SFX_FLY_FREQ = 12000;
-
+var leftovers = { num_pobs: 0, pobs:[]};
 
 var img_objects;
 var img_rabbits;
 var img_level;
 var img_mask;
+var img_numbers;
 
 function rnd(max_value) {
     return Math.floor(Math.random()*max_value);
@@ -116,8 +117,10 @@ function processKill(c1, c2, x, y)
 		player[c1].bumps++;
 		player[c1].bumped[c2]++;
 		s1 = player[c1].bumps % 100;
-		// add_leftovers(360, 34 + c1 * 64, s1 / 10, &number_gobs);
-		// add_leftovers(376, 34 + c1 * 64, s1 - (s1 / 10) * 10, &number_gobs);
+        if (s1 % 10 == 0) {
+            add_leftovers(360, 34 + c1 * 64, img_numbers, number_gobs[Math.floor(s1/10)%10]);
+        }
+        add_leftovers(376, 34 + c1 * 64, img_numbers, number_gobs[s1 % 10]);
 	}
 }
 
@@ -579,7 +582,10 @@ function collision_check() {
 	}
 }
 
-function add_leftovers(x, y, frame) {}
+function add_leftovers(x, y, image, gob) {
+    leftovers.pobs[leftovers.num_pobs] = { x : x, y : y, gob : gob, image : image };
+	leftovers.num_pobs++;
+}
 
 function add_pob(x, y, image, gob) {
     var page_info = main_info.page_info;
@@ -602,13 +608,19 @@ function put_pob(ctx, x, y, gob, img) {
 }
 
 function draw_pobs(ctx) {
-	var c1;
-	var back_buf_ofs = 0;
     var page_info = main_info.page_info;
 
-	for (c1 = page_info.num_pobs - 1; c1 >= 0; c1--) {
+	for (var c1 = page_info.num_pobs - 1; c1 >= 0; c1--) {
         var pob = page_info.pobs[c1];
         put_pob(ctx, pob.x, pob.y, pob.gob, pob.image);
+	}
+}
+
+function draw_leftovers(ctx) {
+	for (var c1 = 0; c1!=leftovers.num_pobs; ++c1) {
+        var pob = leftovers.pobs[c1];
+        put_pob(ctx, pob.x, pob.y, pob.gob, pob.image);
+        // debug(pob.x + " " + pob.y);
 	}
 }
 
@@ -904,7 +916,7 @@ function update_objects() {
 							} else {
 								if (rnd(100) < 10) {
 									s1 = rnd(4) - 2;
-									add_leftovers(obj.x >> 16, (obj.y >> 16) + s1, obj.frame);
+									add_leftovers(obj.x >> 16, (obj.y >> 16) + s1, img_objects, object_gobs[obj.frame]);
 								}
 								obj.used = false;
 							}
@@ -956,6 +968,7 @@ function draw() {
             add_pob(player[i].x >> 16, player[i].y >> 16, img_rabbits, rabbit_gobs[player[i].image + i * 18]);
         }
     }
+    draw_leftovers(ctx);
     draw_pobs(ctx);
 
     ctx.drawImage(img_mask, 0, 0);
@@ -986,7 +999,7 @@ function pump() {
             setTimeout("pump()", time_diff);
             break;
         }
-        debug("frametime exceeded: " + (-time_diff));
+        // debug("frametime exceeded: " + (-time_diff));
     }
 }
 
@@ -1067,6 +1080,7 @@ function init() {
     img_mask = document.getElementById('mask');
     img_rabbits = document.getElementById('rabbits');
     img_objects = document.getElementById('objects');
+    img_numbers = document.getElementById('numbers');
 
     var canvas = document.getElementById('screen');
     var ctx = canvas.getContext('2d');
