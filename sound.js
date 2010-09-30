@@ -30,11 +30,7 @@ function play_sound(sfx, loop) {
             }
         }
     }
-    if (replace>=0) {
-        audio = sounds[i].audio;
-    } else {
-        audio = document.createElement('audio');
-    }
+    audio = document.createElement('audio');
     sfx_extension = audio.canPlayType('audio/mpeg')?'mp3':'ogg';
     audio.addEventListener('canplaythrough', function(ev) {
         this.removeEventListener('canplaythrough', arguments.callee,false);
@@ -50,11 +46,7 @@ function play_sound(sfx, loop) {
             break;
         }
     }
-    if (replace>=0) {
-        sounds[replace] = { audio: audio, sfx: sfx };
-    } else {
-        sounds.push({ audio: audio, sfx: sfx });
-    }
+    sounds.push({ audio: audio, sfx: sfx });
 }
 
 function dj_play_sfx(sfx, freq, volume, panning, delay, channel) {
