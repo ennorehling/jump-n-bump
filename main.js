@@ -13,13 +13,6 @@ var NUM_POBS = 200;
 var NUM_FLIES = 20;
 var NUM_LEFTOVERS = 50;
 
-var SFX_JUMP = 0;
-var SFX_LAND = 1;
-var SFX_DEATH = 2;
-var SFX_SPRING = 3;
-var SFX_SPLASH = 4;
-var SFX_FLY = 5;
-
 var SFX_JUMP_FREQ = 15000;
 var SFX_LAND_FREQ = 15000;
 var SFX_DEATH_FREQ = 20000;
@@ -27,15 +20,11 @@ var SFX_SPRING_FREQ = 15000;
 var SFX_SPLASH_FREQ = 12000;
 var SFX_FLY_FREQ = 12000;
 
-var NUM_SFX = 6;
 
 var img_objects;
 var img_rabbits;
 var img_level;
 var img_mask;
-
-var sounds = [];
-var snd_tune = null;
 
 function rnd(max_value) {
     return Math.floor(Math.random()*max_value);
@@ -50,17 +39,6 @@ var main_info = {
 		pobs : []
 	}
 };
-
-
-function dj_play_sfx(sfx, freq, volume, panning, delay, channel) {
-    if (!main_info.music_no_sound) {
-        var name = ["jump.ogg", "land.ogg", "death.ogg", "spring.ogg", "splash.ogg", "fly.ogg" ];
-        var audio = new Audio('sound/' + name[sfx]);
-        audio.play();
-        sounds.push(audio);
-        if (sounds.length>NUM_SFX) sounds.shift();
-    }
-}
 
 var player = [];
 function create_player(keys) {
@@ -1111,11 +1089,6 @@ function init() {
     document.onkeyup = onKeyUp;
     next_time = timeGetTime() + 1000;
 
-    if (!main_info.music_no_sound) {
-        var audio = new Audio('sound/bump.ogg');
-        audio.load();
-        audio.play();
-        snd_tune = audio;
-    }
+    play_sound(SFX_MUSIC, true);
     pump();
 }
