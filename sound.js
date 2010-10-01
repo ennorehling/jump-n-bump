@@ -14,6 +14,12 @@ var sfx_name = ["jump", "land", "death", "spring", "splash", "fly", "bump" ];
 var sounds = [];
 var sfx_extension;
 
+function silence_all() {
+    for (i in sounds) {
+        sounds[i].audio.pause();
+    }
+}
+
 function play_sound(sfx, loop) {
     if (main_info.music_no_sound) {
         return;
