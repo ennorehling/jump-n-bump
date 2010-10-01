@@ -76,6 +76,9 @@ function onKeyDown(evt) {
 
 function onKeyUp(evt) {
     keys_pressed[evt.keyCode] = false;
+    if (evt.keyCode>=49 && evt.keyCode<=52) {
+        player[evt.keyCode-49].enabled = !player[evt.keyCode-49].enabled;
+    }
 }
 
 function key_pressed(key) {
