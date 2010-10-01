@@ -20,7 +20,7 @@ var SFX_SPRING_FREQ = 15000;
 var SFX_SPLASH_FREQ = 12000;
 var SFX_FLY_FREQ = 12000;
 var leftovers = { num_pobs: 0, pobs:[]};
-var ai = [ false, false, false, false ];
+var ai = [ false, false, false, true ];
 var img_objects;
 var img_rabbits;
 var img_level;
@@ -77,7 +77,13 @@ function onKeyDown(evt) {
 function onKeyUp(evt) {
     keys_pressed[evt.keyCode] = false;
     if (evt.keyCode>=49 && evt.keyCode<=52) {
-        player[evt.keyCode-49].enabled = !player[evt.keyCode-49].enabled;
+        var i = evt.keyCode-49;
+        if (ai[i] && player[i].enabled) player[i].enabled = false;
+        else if (player[i].enabled) ai[i] = true;
+        else {
+            player[i].enabled = true;
+            ai[i] = false;
+        }
     } else if (evt.keyCode==77) { // 'm'
         main_info.music_no_sound = !main_info.music_no_sound;
         if (main_info.music_no_sound) {
@@ -234,6 +240,17 @@ function player_action_right(p) {
         p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
     }
 }
+function map_tile(x, y) {
+    return GET_BAN_MAP(x>>4, y>>4);
+}
+
+function addkey(i, k) {
+    keys_pressed[player[i].keys[k]] = true;
+}
+
+function delkey(i, k) {
+    keys_pressed[player[i].keys[k]] = false;
+}
 
 function cpu_move() {
     var lm, rm, jm;
@@ -274,147 +291,74 @@ function cpu_move() {
             /* here goes the artificial intelligence code */
 
             /* X-axis movement */
-            if(tar_posx > cur_posx)       // if true target is on the right side
-                {    // go after him
-                lm=0;
-                rm=1;
-                }
-            else    // target on the left side
-                {
-                lm=1;
-                rm=0;
-                }
+            if(tar_posx > cur_posx) { // if true target is on the right side
+                // go after him
+                lm=false;
+                rm=true;
+            } else { // target on the left side
+                lm=true;
+                rm=false;
+            }
 
-            if(cur_posy - tar_posy < 32 && cur_posy - tar_posy > 0 &&
-              tar_posx - cur_posx < 32+8 && tar_posx - cur_posx > -32)
-                {
+            if (cur_posy - tar_posy < 32 && cur_posy - tar_posy > 0
+                && tar_posx - cur_posx < 32+8 && tar_posx - cur_posx > -32) {
                 lm = !lm;
                 rm = !rm;
-                }
+            }
             else if(tar_posx - cur_posx < 4+8 && tar_posx - cur_posx > -4)
                 {      // makes the bunnies less "nervous"
-                lm=0;
-                lm=0;
+                lm=false;
+                lm=false;
                 }
 
             /* Y-axis movement */
             if(map_tile(cur_posx, cur_posy+16) != BAN_VOID &&
-                ((i == 0 && key_pressed(KEY_PL1_JUMP)) ||
-                (i == 1 && key_pressed(KEY_PL2_JUMP)) ||
-                (i == 2 && key_pressed(KEY_PL3_JUMP)) ||
-                (i == 3 && key_pressed(KEY_PL4_JUMP))))
-                    jm=0;   // if we are on ground and jump key is being pressed,
+                key_pressed(player[i].keys[2]))
+                    jm=false;   // if we are on ground and jump key is being pressed,
                                     //first we have to release it or else we won't be able to jump more than once
 
             else if(map_tile(cur_posx, cur_posy-8) != BAN_VOID &&
-                map_tile(cur_posx, cur_posy-8) != BAN_WATER)
-                    jm=0;   // don't jump if there is something over it
-
+                map_tile(cur_posx, cur_posy-8) != BAN_WATER) {
+                    jm=false;   // don't jump if there is something over it
+            }
             else if(map_tile(cur_posx-(lm*8)+(rm*16), cur_posy) != BAN_VOID &&
                 map_tile(cur_posx-(lm*8)+(rm*16), cur_posy) != BAN_WATER &&
                 cur_posx > 16 && cur_posx < 352-16-8)  // obstacle, jump
-                    jm=1;   // if there is something on the way, jump over it
+                    jm=true;   // if there is something on the way, jump over it
 
-            else if(((i == 0 && key_pressed(KEY_PL1_JUMP)) ||
-                            (i == 1 && key_pressed(KEY_PL2_JUMP)) ||
-                            (i == 2 && key_pressed(KEY_PL3_JUMP)) ||
-                            (i == 3 && key_pressed(KEY_PL4_JUMP))) &&
+            else if(key_pressed(player[i].keys[2]) &&
                             (map_tile(cur_posx-(lm*8)+(rm*16), cur_posy+8) != BAN_VOID &&
-                            map_tile(cur_posx-(lm*8)+(rm*16), cur_posy+8) != BAN_WATER))
-                jm=1;   // this makes it possible to jump over 2 tiles
-
+                            map_tile(cur_posx-(lm*8)+(rm*16), cur_posy+8) != BAN_WATER)) {
+                jm=true;   // this makes it possible to jump over 2 tiles
+            }
             else if(cur_posy - tar_posy < 32 && cur_posy - tar_posy > 0 &&
-              tar_posx - cur_posx < 32+8 && tar_posx - cur_posx > -32)  // don't jump - running away
-                jm=0;
+              tar_posx - cur_posx < 32+8 && tar_posx - cur_posx > -32) { // don't jump - running away
+                jm=false;
+            }
 
-            else if(tar_posy <= cur_posy)   // target on the upper side
-                jm=1;
-            else   // target below
-                jm=0;
+            else if(tar_posy <= cur_posy) {  // target on the upper side
+                jm=true;
+            } else {  // target below
+                jm=false;
+            }
 
             /** Artificial intelligence done, now apply movements */
             if (lm) {
-                
-                if(i == 0)
-                    key = KEY_PL1_LEFT;
-                else if(i == 1)
-                    key = KEY_PL2_LEFT;
-                else if(i == 2)
-                    key = KEY_PL3_LEFT;
-                else
-                    key = KEY_PL4_LEFT;
-
-                key &= 0x7f;
-                addkey(key);
+                addkey(i, 0);
             } else {
-                
-                if(i == 0)
-                    key = KEY_PL1_LEFT;
-                else if(i == 1)
-                    key = KEY_PL2_LEFT;
-                else if(i == 2)
-                    key = KEY_PL3_LEFT;
-                else
-                    key = KEY_PL4_LEFT;
-
-                key &= 0x7f;
-                addkey(key | 0x8000);
+                delkey(i, 0);
             }
 
             if (rm) {
-                
-                if(i == 0)
-                    key = KEY_PL1_RIGHT;
-                else if(i == 1)
-                    key = KEY_PL2_RIGHT;
-                else if(i == 2)
-                    key = KEY_PL3_RIGHT;
-                else
-                    key = KEY_PL4_RIGHT;
-
-                key &= 0x7f;
-                addkey(key);
+                addkey(i, 1);
             } else {
-                
-                if(i == 0)
-                    key = KEY_PL1_RIGHT;
-                else if(i == 1)
-                    key = KEY_PL2_RIGHT;
-                else if(i == 2)
-                    key = KEY_PL3_RIGHT;
-                else
-                    key = KEY_PL4_RIGHT;
-
-                key &= 0x7f;
-                addkey(key | 0x8000);
+                delkey(i, 1);
             }
 
             if(jm) {
-                
-                if(i == 0)
-                    key = KEY_PL1_JUMP;
-                else if(i == 1)
-                    key = KEY_PL2_JUMP;
-                else if(i == 2)
-                    key = KEY_PL3_JUMP;
-                else
-                    key = KEY_PL4_JUMP;
-
-                key &= 0x7f;
-                addkey(key);
+                addkey(i, 2);
             } else {
-                
-                if(i == 0)
-                    key = KEY_PL1_JUMP;
-                else if(i == 1)
-                    key = KEY_PL2_JUMP;
-                else if(i == 2)
-                    key = KEY_PL3_JUMP;
-                else
-                    key = KEY_PL4_JUMP;
-
-                key &= 0x7f;
-                addkey(key | 0x8000);
+                delkey(i, 2);
             }
         }
     }
@@ -817,7 +761,6 @@ function draw_leftovers(ctx) {
     for (var c1 = 0; c1!=leftovers.num_pobs; ++c1) {
         var pob = leftovers.pobs[c1];
         put_pob(ctx, pob.x, pob.y, pob.gob, pob.image);
-        // debug(pob.x + " " + pob.y);
     }
 }
 
