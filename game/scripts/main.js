@@ -367,28 +367,14 @@ function cpu_move() {
 function steer_players() {  
     cpu_move();
     update_player_actions();
-    for (var c1=0;c1!=player.length;++c1) {
-        var p = player[c1];
+    for (var playerIndex=0;playerIndex!=player.length;++playerIndex) {
+        var p = player[playerIndex];
         if (p.enabled) {
             if (!p.dead_flag) {
                 steer_player(p);
             }
-
-            p.frame_tick++;
-            if (p.frame_tick >= player_anims[p.anim].frame[p.frame].ticks) {
-                p.frame++;
-                if (p.frame >= player_anims[p.anim].num_frames) {
-                    if (p.anim != 6)
-                        p.frame = player_anims[p.anim].restart_frame;
-                    else
-                        position_player(c1);
-                }
-                p.frame_tick = 0;
-            }
-            p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
-
+            update_player_animation(p, playerIndex);
         }
-
     }
 }
 

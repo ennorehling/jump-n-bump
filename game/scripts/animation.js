@@ -1,4 +1,19 @@
 
+function update_player_animation(p, playerIndex) {
+	p.frame_tick++;
+	if (p.frame_tick >= player_anims[p.anim].frame[p.frame].ticks) {
+		p.frame++;
+		if (p.frame >= player_anims[p.anim].num_frames) {
+			if (p.anim != 6)
+				p.frame = player_anims[p.anim].restart_frame;
+			else
+				position_player(playerIndex);
+		}
+		p.frame_tick = 0;
+	}
+	p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
+}
+
 function update_object_animations() {
     var c1;
     var s1 = 0;
