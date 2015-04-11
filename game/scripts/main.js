@@ -21,6 +21,7 @@ var SFX_SPLASH_FREQ = 12000;
 var SFX_FLY_FREQ = 12000;
 var leftovers = { num_pobs: 0, pobs:[]};
 var ai = [ false, false, false, true ];
+var canvas_scale = 1;
 var img_objects;
 var img_rabbits;
 var img_level;
@@ -410,6 +411,7 @@ function debug(str) {
 function pump() {
     while (1) {
        
+	    resize_canvas();
         game_loop();
         var now = timeGetTime();
         var time_diff = next_time - now;
@@ -422,6 +424,25 @@ function pump() {
         }
         // debug("frametime exceeded: " + (-time_diff));
     }
+}
+
+function resize_canvas()
+{
+	var canvas = document.getElementById('screen');
+    var ctx = canvas.getContext('2d');
+	var x_scale = window.innerWidth / img_level.width;
+	var y_scale = window.innerHeight / img_level.height;
+	var new_scale = Math.floor(Math.min(x_scale, y_scale));
+	
+	if (canvas_scale != new_scale)
+	{
+		canvas_scale = new_scale;
+		canvas.width = 0;
+		canvas.height = 0;
+		canvas.width = img_level.width * canvas_scale;
+		canvas.height = img_level.height * canvas_scale;
+		ctx.scale(canvas_scale, canvas_scale);
+	}
 }
 
 function position_player(player_num)
