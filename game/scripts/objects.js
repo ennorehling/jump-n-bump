@@ -74,10 +74,10 @@ function add_object(type, x, y, x_add, y_add, anim, frame) {
 
 function create_butterfly(obj) {
     while (1) {
-        var s1 = rnd(22);
-        var s2 = rnd(16);
+        var s1 = rnd(LEVEL_WIDTH);
+        var s2 = rnd(LEVEL_HEIGHT);
         if (GET_BAN_MAP(s2, s1) == BAN_VOID) {
-            add_object(obj, (s1 << 4) + 8, (s2 << 4) + 8, (rnd(65535) - 32768) * 2, (rnd(65535) - 32768) * 2, 0, 0);
+            add_object(obj, (s1 << LEVEL_SCALE_FACTOR) + 8, (s2 << LEVEL_SCALE_FACTOR) + 8, (rnd(65535) - 32768) * 2, (rnd(65535) - 32768) * 2, 0, 0);
             break;
         }
     }
@@ -91,10 +91,10 @@ function create_objects() {
     for (c1 = 0; c1 < NUM_OBJECTS; c1++) {
         objects[c1] = { used : false };
     }
-    for (c1 = 0; c1 < 16; c1++) {
-        for (c2 = 0; c2 < 22; c2++) {
+    for (c1 = 0; c1 < LEVEL_HEIGHT; c1++) {
+        for (c2 = 0; c2 < LEVEL_WIDTH; c2++) {
             if (GET_BAN_MAP(c2, c1) == BAN_SPRING) {
-                add_object(OBJ_SPRING, c2 << 4, c1 << 4, 0, 0, OBJ_ANIM_SPRING, 5);
+                add_object(OBJ_SPRING, c2 << LEVEL_SCALE_FACTOR, c1 << LEVEL_SCALE_FACTOR, 0, 0, OBJ_ANIM_SPRING, 5);
             }
         }
     }

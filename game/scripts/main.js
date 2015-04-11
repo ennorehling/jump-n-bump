@@ -431,14 +431,14 @@ function position_player(player_num)
 
     while (1) {
         while (1) {
-            s1 = rnd(22);
-            s2 = rnd(16);
+            s1 = rnd(LEVEL_WIDTH);
+            s2 = rnd(LEVEL_HEIGHT);
             if (GET_BAN_MAP(s1, s2) == BAN_VOID && (GET_BAN_MAP(s1, s2+1) == BAN_SOLID || GET_BAN_MAP(s1, s2+1) == BAN_ICE))
                 break;
         }
         for (c1 = 0; c1 < JNB_MAX_PLAYERS; c1++) {
             if (c1 != player_num && player[c1].enabled) {
-                if (Math.abs((s1 << 4) - (player[c1].x >> 16)) < 32 && Math.abs((s2 << 4) - (player[c1].y >> 16)) < 32)
+                if (Math.abs((s1 << LEVEL_SCALE_FACTOR) - (player[c1].x >> 16)) < 32 && Math.abs((s2 << LEVEL_SCALE_FACTOR) - (player[c1].y >> 16)) < 32)
                     break;
             }
         }

@@ -152,7 +152,7 @@ function steer_player(p)
 		for (c2 = 0; c2 < NUM_OBJECTS; c2++) {
 			if (objects[c2].used == 1 && objects[c2].type == OBJ_SPRING) {
 				if (GET_BAN_MAP_XY((s1 + 8), (s2 + 15)) == BAN_SPRING) {
-					if ((objects[c2].x >> 20) == ((s1 + 8) >> 4) && (objects[c2].y >> 20) == ((s2 + 15) >> 4)) {
+					if ((objects[c2].x >> 20) == ((s1 + 8) >> LEVEL_SCALE_FACTOR) && (objects[c2].y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
 						objects[c2].frame = 0;
 						objects[c2].ticks = object_anims[objects[c2].anim].frame[objects[c2].frame].ticks;
 						objects[c2].image = object_anims[objects[c2].anim].frame[objects[c2].frame].image;
@@ -160,14 +160,14 @@ function steer_player(p)
 					}
 				} else {
 					if (GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING) {
-						if ((objects[c2].x >> 20) == (s1 >> 4) && (objects[c2].y >> 20) == ((s2 + 15) >> 4)) {
+						if ((objects[c2].x >> 20) == (s1 >> LEVEL_SCALE_FACTOR) && (objects[c2].y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
 							objects[c2].frame = 0;
 							objects[c2].ticks = object_anims[objects[c2].anim].frame[objects[c2].frame].ticks;
 							objects[c2].image = object_anims[objects[c2].anim].frame[objects[c2].frame].image;
 							break;
 						}
 					} else if (GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING) {
-						if ((objects[c2].x >> 20) == ((s1 + 15) >> 4) && (objects[c2].y >> 20) == ((s2 + 15) >> 4)) {
+						if ((objects[c2].x >> 20) == ((s1 + 15) >> LEVEL_SCALE_FACTOR) && (objects[c2].y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
 							objects[c2].frame = 0;
 							objects[c2].ticks = object_anims[objects[c2].anim].frame[objects[c2].frame].ticks;
 							objects[c2].image = object_anims[objects[c2].anim].frame[objects[c2].frame].image;
