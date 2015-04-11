@@ -419,7 +419,7 @@ function steer_players() {
                         s1 = (p.x >> 16);
                         s2 = (p.y >> 16);
                         if (s2 < -16)
-                            s2 = -16;
+                            s2 = -16; //Allow player to jump off screen but not negative overflow if using jetpack
                         /* jump */
                         if (GET_BAN_MAP_XY(s1, (s2 + 16)) == BAN_SOLID || GET_BAN_MAP_XY(s1, (s2 + 16)) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), (s2 + 16)) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), (s2 + 16)) == BAN_ICE) {
                             p.y_add = -280000;
