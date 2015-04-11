@@ -42,7 +42,7 @@ function play_sound(sfx, loop) {
         this.removeEventListener('canplaythrough', arguments.callee,false);
         this.play();
     }, false);
-    audio.src = "sound/" + sfx_name[sfx] + "." + sfx_extension;
+    audio.src = "game/sound/" + sfx_name[sfx] + "." + sfx_extension;
     if (loop) audio.loop = true;
     audio.load();
     for (var i in sounds) {

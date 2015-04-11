@@ -3,14 +3,14 @@
 <title>Jump'n'Bump - HTML5</title>
 <META NAME="description" CONTENT="An instant real-time multiplayer-only keyboard-crowding classic, this game pits up to four human-operated cute fuzzy widdle bunnies against each other for one goal only: lagomorphic cranial domination.">
 <link rel="shortcut icon" href="rabbit.ico" />
-<script type="text/javascript" src="sound.js"></script>
-<script type="text/javascript" src="object_gobs.js"></script>
-<script type="text/javascript" src="number_gobs.js"></script>
-<script type="text/javascript" src="rabbit_gobs.js"></script>
-<script type="text/javascript" src="level.js"></script>
-<script type="text/javascript" src="objects.js"></script>
-<script type="text/javascript" src="players.js"></script>
-<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="game/scripts/sound.js"></script>
+<script type="text/javascript" src="game/sprites/object_gobs.js"></script>
+<script type="text/javascript" src="game/sprites/number_gobs.js"></script>
+<script type="text/javascript" src="game/sprites/rabbit_gobs.js"></script>
+<script type="text/javascript" src="game/levels/default/level.js"></script>
+<script type="text/javascript" src="game/scripts/objects.js"></script>
+<script type="text/javascript" src="game/scripts/players.js"></script>
+<script type="text/javascript" src="game/scripts/main.js"></script>
 <style type="text/css">
   canvas { border: 0px solid black; }
   img.resource { display:none; }
@@ -22,11 +22,11 @@
 This game is a HTML5 reimplementation of a <a href="https://icculus.org/jumpnbump/">DOS classic</a>. As of October 2010, it is still in development.<br/>
 Maybe you would like to take a look at the <a href="http://github.org/badgerman/jump-n-bump">Source code</a>?</p>
 <br clear="all"/>
-<img class="resource" id='level' src='level.png'/>
-<img class="resource" id='mask' src='mask.png'/>
-<img class="resource" id='objects' src='objects.png'/>
-<img class="resource" id='numbers' src='numbers.png'/>
-<img class="resource" id='rabbits' src='rabbit.png'/>
+<img class="resource" id='level' src='game/levels/default/level.png'/>
+<img class="resource" id='mask' src='game/levels/default/mask.png'/>
+<img class="resource" id='objects' src='game/sprites/objects.png'/>
+<img class="resource" id='numbers' src='game/sprites/numbers.png'/>
+<img class="resource" id='rabbits' src='game/sprites/rabbit.png'/>
 <canvas id="screen" width="400" height="256"></canvas>  
 <br/><tt>Debug: <span id='debug'></span></tt>
 <h3>Keyboard map:</h3>
