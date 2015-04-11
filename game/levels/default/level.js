@@ -1,19 +1,23 @@
-var ban_map;
-
 var BAN_VOID	= 0;
+var SCALE_FACTOR = 4;
+var SQUARE_SIZE = 1 << SCALE_FACTOR;
+var LEVEL_WIDTH = 22;
+var LEVEL_HEIGHT = 16
 var BAN_SOLID	= 1;
 var BAN_WATER	= 2;
 var BAN_ICE		= 3;
 var BAN_SPRING	= 4;
 
+var ban_map;
+
 function GET_BAN_MAP_XY(x, y) {
     if (y<0) y = 0;
-    return ban_map[(x>>4)+(y>>4)*22];
+    return ban_map[(x>>SCALE_FACTOR)+(y>>SCALE_FACTOR)*LEVEL_WIDTH];
 }
 
 function GET_BAN_MAP(x, y) {
     if (y<0) y = 0;
-    return ban_map[x+y*22];
+    return ban_map[x+y*LEVEL_WIDTH];
 }
 
 function GET_BAN_MAP_IN_WATER(s1, s2) {
@@ -39,7 +43,7 @@ function create_map() {
         "2222222214000001333111" +
         "1111111111111111111111";
     ban_map = [];
-    for (i=0;i!=22*16;++i) {
-        ban_map[i] = levelmap[i]*1;
+    for (i=0; i!= LEVEL_WIDTH * LEVEL_HEIGHT; ++i) {
+        ban_map[i] = levelmap[i]*1; //Convert to integer
     }
 }
