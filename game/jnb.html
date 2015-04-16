@@ -16,8 +16,17 @@
 <script type="text/javascript" src="scripts/animation.js"></script>
 <script type="text/javascript" src="scripts/main.js"></script>
 <style type="text/css">
-  canvas { border: 0px solid black; }
+  canvas { 
+	border: 0px solid black;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin:auto;
+	}
   img.resource { display:none; }
+  
 </style>
 <body onload="init()" text="#FFFFFF" bgcolor="#000000">
 <img class="resource" id='level' src='levels/default/level.png'/>
