@@ -1,4 +1,16 @@
 
+
+var main_info = {
+    draw_page : null,
+    music_no_sound : false,
+    no_gore : false,
+    page_info : {
+        num_pobs : 0,
+        pobs : []
+    }
+};
+
+
 var env =
 {
     JNB_MAX_PLAYERS: 4,
@@ -46,16 +58,6 @@ var env =
 function rnd(max_value) {
     return Math.floor(Math.random()*max_value);
 }
-
-var main_info = {
-    draw_page : null,
-    music_no_sound : false,
-    no_gore : false,
-    page_info : {
-        num_pobs : 0,
-        pobs : []
-    }
-};
 
 var player = [];
 function create_player(keys) {
@@ -105,7 +107,7 @@ function onKeyUp(evt) {
         if (main_info.music_no_sound) {
             env.sound.silence_all();
         } else {
-            env.sound.play_sound(env.sound.consts.MUSIC, true);
+            env.sound.play.music();
         }
         debug(evt.keyCode);
     }
@@ -146,7 +148,7 @@ function processKill(c1, c2, x, y)
         if (main_info.no_gore == 0) {
             add_gore(x, y, c2);
         }
-        env.sound.dj_play_sfx(env.sound.consts.DEATH, (env.sound.consts.DEATH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+        env.sound.play.death();
         player[c1].bumps++;
         player[c1].bumped[c2]++;
         s1 = player[c1].bumps % 100;
@@ -559,6 +561,6 @@ function init() {
     document.onkeyup = onKeyUp;
     env.next_time = timeGetTime() + 1000;
 
-    env.sound.play_sound(env.sound.consts.MUSIC, true);
+    env.sound.play.music();
     pump();
 }
