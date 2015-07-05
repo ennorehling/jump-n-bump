@@ -27,8 +27,8 @@ var env =
     sfx: new Sfx(new Sound_Player()),
     ai:
         {
-            
-            enabledForPlayer: [ false, false, false, true ],
+            enabledForPlayer: [false, false, false, true],
+            cpu_move: new AI().cpu_move,
         },
     render:
         {
@@ -268,7 +268,7 @@ function delkey(i, k) {
 }
 
 function steer_players() {  
-    cpu_move();
+    env.ai.cpu_move();
     update_player_actions();
     for (var playerIndex=0;playerIndex!=player.length;++playerIndex) {
         var p = player[playerIndex];
