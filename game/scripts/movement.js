@@ -42,9 +42,9 @@ function steer_player(p)
 			p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
 		}
 	}
-	if (jetpack == 0) {
+	if (env.settings.jetpack == 0) {
 		/* no jetpack */
-		if (pogostick == 1 || (p.jump_ready == 1 && p.action_up)) {
+	    if (env.settings.pogostick == 1 || (p.jump_ready == 1 && p.action_up)) {
 			s1 = (p.x >> 16);
 			s2 = (p.y >> 16);
 			if (s2 < -16)
@@ -58,10 +58,10 @@ function steer_player(p)
 				p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
 				p.jump_ready = 0;
 				p.jump_abort = 1;
-				if (pogostick == 0)
-					dj_play_sfx(SFX_JUMP, (SFX_JUMP_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+				if (env.settings.pogostick == 0)
+					dj_play_sfx(env.sound.JUMP, (env.sound.JUMP_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 				else
-					dj_play_sfx(SFX_SPRING, (SFX_SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+					dj_play_sfx(env.sound.SPRING, (env.sound.SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 			}
 			/* jump out of water */
 			if (GET_BAN_MAP_IN_WATER(s1, s2)) {
@@ -73,17 +73,17 @@ function steer_player(p)
 				p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
 				p.jump_ready = 0;
 				p.jump_abort = 1;
-				if (pogostick == 0)
-					dj_play_sfx(SFX_JUMP, (SFX_JUMP_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+				if (env.settings.pogostick == 0)
+					dj_play_sfx(env.sound.JUMP, (env.sound.JUMP_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 				else
-					dj_play_sfx(SFX_SPRING, (SFX_SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+					dj_play_sfx(env.sound.SPRING, (env.sound.SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 			}
 		}
 		/* fall down by gravity */
-		if (pogostick == 0 && (!p.action_up)) {
+	    if (env.settings.pogostick == 0 && (!p.action_up)) {
 			p.jump_ready = 1;
 			if (p.in_water == 0 && p.y_add < 0 && p.jump_abort == 1) {
-				if (bunnies_in_space == 0)
+			    if (env.settings.bunnies_in_space == 0)
 					/* normal gravity */
 					p.y_add += 32768;
 				else
@@ -149,7 +149,7 @@ function steer_player(p)
 		p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
 		p.jump_ready = 0;
 		p.jump_abort = 0;
-		for (c2 = 0; c2 < NUM_OBJECTS; c2++) {
+		for (c2 = 0; c2 < env.render.max.OBJECTS; c2++) {
 			if (objects[c2].used == 1 && objects[c2].type == OBJ_SPRING) {
 				if (GET_BAN_MAP_XY((s1 + 8), (s2 + 15)) == BAN_SPRING) {
 					if ((objects[c2].x >> 20) == ((s1 + 8) >> LEVEL_SCALE_FACTOR) && (objects[c2].y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
@@ -177,7 +177,7 @@ function steer_player(p)
 				}
 			}
 		}
-		dj_play_sfx(SFX_SPRING, (SFX_SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+		dj_play_sfx(env.sound.SPRING, (env.sound.SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 	}
 	s1 = (p.x >> 16);
 	s2 = (p.y >> 16);
@@ -206,10 +206,10 @@ function steer_player(p)
 			if (p.y_add >= 32768) {
 				add_object(OBJ_SPLASH, (p.x >> 16) + 8, ((p.y >> 16) & 0xfff0) + 15, 0, 0, OBJ_ANIM_SPLASH, 0);
 
-				if (blood_is_thicker_than_water == 0)
-					dj_play_sfx(SFX_SPLASH, (SFX_SPLASH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+				if (env.settings.blood_is_thicker_than_water == 0)
+					dj_play_sfx(env.sound.SPLASH, (env.sound.SPLASH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 				else
-					dj_play_sfx(SFX_SPLASH, (SFX_SPLASH_FREQ + rnd(2000) - 5000), 64, 0, 0, -1);
+					dj_play_sfx(env.sound.SPLASH, (env.sound.SPLASH_FREQ + rnd(2000) - 5000), 64, 0, 0, -1);
 			}
 		}
 		/* slowly move up to water surface */
@@ -240,7 +240,7 @@ function steer_player(p)
 		}
 	} else {
 		if (p.in_water == 0) {
-			if (bunnies_in_space == 0)
+			if (env.settings.bunnies_in_space == 0)
 				p.y_add += 12288;
 			else
 				p.y_add += 6144;

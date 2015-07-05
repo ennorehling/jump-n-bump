@@ -1,14 +1,6 @@
 // sound.js
 
-var SFX_JUMP = 0;
-var SFX_LAND = 1;
-var SFX_DEATH = 2;
-var SFX_SPRING = 3;
-var SFX_SPLASH = 4;
-var SFX_FLY = 5;
-var SFX_MUSIC = 6;
 
-var NUM_SFX = 6;
 
 var sfx_name = ["jump", "land", "death", "spring", "splash", "fly", "bump" ];
 var sounds = [];

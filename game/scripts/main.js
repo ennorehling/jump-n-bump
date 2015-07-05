@@ -1,32 +1,64 @@
-var next_time = 0;
 
-var jetpack = 0;
-var pogostick = 0;
-var bunnies_in_space = 0;
-var flies_enabled = 0;
-var blood_is_thicker_than_water = 0;
-var is_server = true;
+var env =
+{
+    JNB_MAX_PLAYERS: 4,
+    next_time: 0,
+    settings:
+        {
+            is_server: true,
+            jetpack: 0,
+            pogostick: 0,
+            bunnies_in_space: 0,
+            flies_enabled: 0,
+            blood_is_thicker_than_water: 0
+        },
+    sound: 
+        {
+            JUMP_FREQ: 15000,
+            LAND_FREQ: 15000,
+            DEATH_FREQ: 20000,
+            SPRING_FREQ: 15000,
+            SPLASH_FREQ: 12000,
+            FLY_FREQ: 12000,
+            
+            JUMP: 0,
+            LAND: 1,
+            DEATH: 2,
+            SPRING: 3,
+            SPLASH: 4,
+            FLY: 5,
+            MUSIC: 6,
+            NUM_SFX: 6
+        },
+    ai:
+        {
+            
+            enabledForPlayer: [ false, false, false, true ],
+        },
+    render:
+        {
+            leftovers: { num_pobs: 0, pobs:[]},
+            canvas_scale: 1,
+            img:
+                {
+                   //objects,
+                   //rabbits,
+                   //level,
+                   //mask,
+                   //numbers
+                },
+            max:
+                {
+                    
+                    OBJECTS: 200,
+                    POBS: 200,
+                    FLIES: 20,
+                    LEFTOVERS: 50,
+                }
 
-var JNB_MAX_PLAYERS = 4;
+        }
 
-var NUM_POBS = 200;
-var NUM_FLIES = 20;
-var NUM_LEFTOVERS = 50;
-
-var SFX_JUMP_FREQ = 15000;
-var SFX_LAND_FREQ = 15000;
-var SFX_DEATH_FREQ = 20000;
-var SFX_SPRING_FREQ = 15000;
-var SFX_SPLASH_FREQ = 12000;
-var SFX_FLY_FREQ = 12000;
-var leftovers = { num_pobs: 0, pobs:[]};
-var ai = [ false, false, false, true ];
-var canvas_scale = 1;
-var img_objects;
-var img_rabbits;
-var img_level;
-var img_mask;
-var img_numbers;
+};
 
 function rnd(max_value) {
     return Math.floor(Math.random()*max_value);
@@ -79,18 +111,18 @@ function onKeyUp(evt) {
     keys_pressed[evt.keyCode] = false;
     if (evt.keyCode>=49 && evt.keyCode<=52) {
         var i = evt.keyCode-49;
-        if (ai[i] && player[i].enabled) player[i].enabled = false;
-        else if (player[i].enabled) ai[i] = true;
+        if (env.ai.enabledForPlayer[i] && player[i].enabled) player[i].enabled = false;
+        else if (player[i].enabled) env.ai.enabledForPlayer[i] = true;
         else {
             player[i].enabled = true;
-            ai[i] = false;
+            env.ai.enabledForPlayer[i] = false;
         }
     } else if (evt.keyCode==77) { // 'm'
         main_info.music_no_sound = !main_info.music_no_sound;
         if (main_info.music_no_sound) {
             silence_all();
         } else {
-            play_sound(SFX_MUSIC, true);
+            play_sound(env.sound.MUSIC, true);
         }
         debug(evt.keyCode);
     }
@@ -131,14 +163,14 @@ function processKill(c1, c2, x, y)
         if (main_info.no_gore == 0) {
             add_gore(x, y, c2);
         }
-        dj_play_sfx(SFX_DEATH, (SFX_DEATH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+        dj_play_sfx(env.sound.DEATH, (env.sound.DEATH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
         player[c1].bumps++;
         player[c1].bumped[c2]++;
         s1 = player[c1].bumps % 100;
         if (s1 % 10 == 0) {
-            add_leftovers(360, 34 + c1 * 64, img_numbers, number_gobs[Math.floor(s1/10)%10]);
+            add_leftovers(360, 34 + c1 * 64, env.render.img.numbers, number_gobs[Math.floor(s1/10)%10]);
         }
-        add_leftovers(376, 34 + c1 * 64, img_numbers, number_gobs[s1 % 10]);
+        add_leftovers(376, 34 + c1 * 64, env.render.img.numbers, number_gobs[s1 % 10]);
     }
 }
 
@@ -338,13 +370,13 @@ function collision_check() {
 }
 
 function add_leftovers(x, y, image, gob) {
-    leftovers.pobs[leftovers.num_pobs] = { x : x, y : y, gob : gob, image : image };
-    leftovers.num_pobs++;
+    env.render.leftovers.pobs[env.render.leftovers.num_pobs] = { x: x, y: y, gob: gob, image: image };
+    env.render.leftovers.num_pobs++;
 }
 
 function add_pob(x, y, image, gob) {
     var page_info = main_info.page_info;
-    if (page_info.num_pobs >= NUM_POBS) {
+    if (page_info.num_pobs >= env.render.max.POBS) {
         return;
     }
     page_info.pobs[page_info.num_pobs] = { x : x, y : y, gob : gob, image : image };
@@ -372,8 +404,8 @@ function draw_pobs(ctx) {
 }
 
 function draw_leftovers(ctx) {
-    for (var c1 = 0; c1!=leftovers.num_pobs; ++c1) {
-        var pob = leftovers.pobs[c1];
+    for (var c1 = 0; c1 != env.render.leftovers.num_pobs; ++c1) {
+        var pob = env.render.leftovers.pobs[c1];
         put_pob(ctx, pob.x, pob.y, pob.gob, pob.image);
     }
 }
@@ -381,19 +413,19 @@ function draw_leftovers(ctx) {
 function draw() {
     var ctx = main_info.draw_page;
 
-    ctx.drawImage(img_level, 0, 0);
+    ctx.drawImage(env.render.img.level, 0, 0);
 
     var page_info = main_info.page_info;
 
-    for (var i = 0; i < JNB_MAX_PLAYERS; i++) {
+    for (var i = 0; i < env.JNB_MAX_PLAYERS; i++) {
         if (player[i].enabled) {
-            add_pob(player[i].x >> 16, player[i].y >> 16, img_rabbits, rabbit_gobs[player[i].image + i * 18]);
+            add_pob(player[i].x >> 16, player[i].y >> 16, env.render.img.rabbits, rabbit_gobs[player[i].image + i * 18]);
         }
     }
     draw_leftovers(ctx);
     draw_pobs(ctx);
 
-    ctx.drawImage(img_mask, 0, 0);
+    ctx.drawImage(env.render.img.mask, 0, 0);
 }
 
 function game_loop() {
@@ -414,8 +446,8 @@ function pump() {
 	    resize_canvas();
         game_loop();
         var now = timeGetTime();
-        var time_diff = next_time - now;
-        next_time += (1000 / 60);
+        var time_diff = env.next_time - now;
+        env.next_time += (1000 / 60);
 
         if (time_diff>0) {
             // we have time left
@@ -430,18 +462,18 @@ function resize_canvas()
 {
 	var canvas = document.getElementById('screen');
     var ctx = canvas.getContext('2d');
-	var x_scale = window.innerWidth / img_level.width;
-	var y_scale = window.innerHeight / img_level.height;
+	var x_scale = window.innerWidth / env.render.img.level.width;
+	var y_scale = window.innerHeight / env.render.img.level.height;
 	var new_scale = Math.floor(Math.min(x_scale, y_scale));
 	
-	if (canvas_scale != new_scale)
+	if (env.render.canvas_scale != new_scale)
 	{
-		canvas_scale = new_scale;
+	    env.render.canvas_scale = new_scale;
 		canvas.width = 0;
 		canvas.height = 0;
-		canvas.width = img_level.width * canvas_scale;
-		canvas.height = img_level.height * canvas_scale;
-		ctx.scale(canvas_scale, canvas_scale);
+		canvas.width = env.render.img.level.width * env.render.canvas_scale;
+		canvas.height = env.render.img.level.height * env.render.canvas_scale;
+		ctx.scale(env.render.canvas_scale, env.render.canvas_scale);
 	}
 }
 
@@ -457,13 +489,13 @@ function position_player(player_num)
             if (GET_BAN_MAP(s1, s2) == BAN_VOID && (GET_BAN_MAP(s1, s2+1) == BAN_SOLID || GET_BAN_MAP(s1, s2+1) == BAN_ICE))
                 break;
         }
-        for (c1 = 0; c1 < JNB_MAX_PLAYERS; c1++) {
+        for (c1 = 0; c1 < env.JNB_MAX_PLAYERS; c1++) {
             if (c1 != player_num && player[c1].enabled) {
                 if (Math.abs((s1 << LEVEL_SCALE_FACTOR) - (player[c1].x >> 16)) < 32 && Math.abs((s2 << LEVEL_SCALE_FACTOR) - (player[c1].y >> 16)) < 32)
                     break;
             }
         }
-        if (c1 == JNB_MAX_PLAYERS) {
+        if (c1 == env.JNB_MAX_PLAYERS) {
             player[player_num].x = s1 << 20;
             player[player_num].y = s2 << 20;
             player[player_num].x_add = player[player_num].y_add = 0;
@@ -475,7 +507,7 @@ function position_player(player_num)
             player[player_num].frame_tick = 0;
             player[player_num].image = player_anims[player[player_num].anim].frame[player[player_num].frame].image;
 
-            if (is_server) {
+            if (env.settings.is_server) {
                 player[player_num].dead_flag = 0;
             }
 
@@ -490,10 +522,10 @@ function init_level() {
     create_object_anims();
     create_objects();
     
-    for (var c1 = 0; c1 < JNB_MAX_PLAYERS; c1++) {
+    for (var c1 = 0; c1 < env.JNB_MAX_PLAYERS; c1++) {
         if (player[c1].enabled) {
             player[c1].bumps = 0;
-            for (var c2 = 0; c2 < JNB_MAX_PLAYERS; c2++) {
+            for (var c2 = 0; c2 < env.JNB_MAX_PLAYERS; c2++) {
                 player[c1].bumped[c2] = 0;
             }
             position_player(c1);
@@ -514,14 +546,14 @@ function gup(name) {
 
 function init() {
     if (gup('nosound')=='1') main_info.music_no_sound = true;
-    if (gup('pogostick')=='1') pogostick = 1;
-    if (gup('jetpack')=='1') jetpack = 1;
-    if (gup('space')=='1') bunnies_in_space = 1;
-    img_level = document.getElementById('level');
-    img_mask = document.getElementById('mask');
-    img_rabbits = document.getElementById('rabbits');
-    img_objects = document.getElementById('objects');
-    img_numbers = document.getElementById('numbers');
+    if (gup('pogostick') == '1') env.settings.pogostick = 1;
+    if (gup('jetpack')=='1') env.settings.jetpack = 1;
+    if (gup('space') == '1') env.settings.bunnies_in_space = 1;
+    env.render.img.level = document.getElementById('level');
+    env.render.img.mask = document.getElementById('mask');
+    env.render.img.rabbits = document.getElementById('rabbits');
+    env.render.img.objects = document.getElementById('objects');
+    env.render.img.numbers = document.getElementById('numbers');
 
     var canvas = document.getElementById('screen');
     var ctx = canvas.getContext('2d');
@@ -542,8 +574,8 @@ function init() {
 
     document.onkeydown = onKeyDown;
     document.onkeyup = onKeyUp;
-    next_time = timeGetTime() + 1000;
+    env.next_time = timeGetTime() + 1000;
 
-    play_sound(SFX_MUSIC, true);
+    play_sound(env.sound.MUSIC, true);
     pump();
 }

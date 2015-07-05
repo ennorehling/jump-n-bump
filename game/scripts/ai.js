@@ -8,11 +8,11 @@ function cpu_move() {
     var target, key;
     var nearest_distance;
 
-    for (i = 0; i < JNB_MAX_PLAYERS; i++) {
+    for (i = 0; i < env.JNB_MAX_PLAYERS; i++) {
         nearest_distance = -1;
         target = null;
-        if (ai[i] && player[i].enabled) {
-            for (j = 0; j < JNB_MAX_PLAYERS; j++) {
+        if (env.ai.enabledForPlayer[i] && player[i].enabled) {
+            for (j = 0; j < env.JNB_MAX_PLAYERS; j++) {
                 if (i == j || !player[j].enabled) {
                     continue;
                 }
