@@ -1,21 +1,3 @@
-// sound.js
-
-var Sfx = function(sound_player) 
-{
-    var playOnce = function(filename_without_extension)
-    {
-        return function () { sound_player.play_sound(filename_without_extension, false); };
-    }; 
-    this.jump = playOnce("jump");
-    this.land = playOnce("land");
-    this.death = playOnce("death");
-    this.spring = playOnce("spring");
-    this.splash = playOnce("splash");
-    this.fly = playOnce("fly");
-    this.music = function() { sound_player.play_sound("bump", true); };
-    this.silence_all = sound_player.silence_all;
-};
-
 var Sound_Player = function()
 {
     var sounds = [];
