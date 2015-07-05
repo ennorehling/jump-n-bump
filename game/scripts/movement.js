@@ -59,9 +59,9 @@ function steer_player(p)
 				p.jump_ready = 0;
 				p.jump_abort = 1;
 				if (env.settings.pogostick == 0)
-					env.sound.play.jump();
+					env.sfx.jump();
 				else
-					env.sound.play.spring();
+					env.sfx.spring();
 			}
 			/* jump out of water */
 			if (GET_BAN_MAP_IN_WATER(s1, s2)) {
@@ -74,9 +74,9 @@ function steer_player(p)
 				p.jump_ready = 0;
 				p.jump_abort = 1;
 				if (env.settings.pogostick == 0)
-					env.sound.play.jump();
+					env.sfx.jump();
 				else
-					env.sound.play.spring();
+					env.sfx.spring();
 			}
 		}
 		/* fall down by gravity */
@@ -177,7 +177,7 @@ function steer_player(p)
 				}
 			}
 		}
-		env.sound.play.spring();
+		env.sfx.spring();
 	}
 	s1 = (p.x >> 16);
 	s2 = (p.y >> 16);
@@ -207,9 +207,9 @@ function steer_player(p)
 				add_object(OBJ_SPLASH, (p.x >> 16) + 8, ((p.y >> 16) & 0xfff0) + 15, 0, 0, OBJ_ANIM_SPLASH, 0);
 
 				if (env.settings.blood_is_thicker_than_water == 0)
-					env.sound.play.splash();
+					env.sfx.splash();
 				else
-					env.sound.play.splash();
+					env.sfx.splash();
 			}
 		}
 		/* slowly move up to water surface */

@@ -1,17 +1,22 @@
 // sound.js
 
-var Sfx = function(play_sound) 
+var Sfx = function(sound_player) 
 {
-    this.jump = function() { play_sound("jump", false); };
-    this.land = function() { play_sound("land", false); };
-    this.death = function() { play_sound("death", false); };
-    this.spring = function() { play_sound("spring", false); };
-    this.splash = function() { play_sound("splash", false); };
-    this.fly = function() { play_sound("fly", false); };
-    this.music = function() { play_sound("bump", true); };
+    var playOnce = function(filename_without_extension)
+    {
+        return function () { sound_player.play_sound(filename_without_extension, false); };
+    }; 
+    this.jump = playOnce("jump");
+    this.land = playOnce("land");
+    this.death = playOnce("death");
+    this.spring = playOnce("spring");
+    this.splash = playOnce("splash");
+    this.fly = playOnce("fly");
+    this.music = function() { sound_player.play_sound("bump", true); };
+    this.silence_all = sound_player.silence_all;
 };
 
-var Sound = function()
+var Sound_Player = function()
 {
     var sounds = [];
     var sfx_extension;
@@ -22,7 +27,7 @@ var Sound = function()
         }
     };
     
-    var play_sound = function(sfx_name, loop) {
+    this.play_sound = function(sfx_name, loop) {
         if (main_info.music_no_sound) {
             return;
         }
@@ -56,5 +61,4 @@ var Sound = function()
         }
         sounds.push({ audio: audio, sfx_name: sfx_name });
     };
-    this.play = new Sfx(play_sound);
 };

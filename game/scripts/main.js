@@ -24,7 +24,7 @@ var env =
             flies_enabled: 0,
             blood_is_thicker_than_water: 0
         },
-    sound: new Sound(),
+    sfx: new Sfx(new Sound_Player()),
     ai:
         {
             
@@ -105,9 +105,9 @@ function onKeyUp(evt) {
     } else if (evt.keyCode==77) { // 'm'
         main_info.music_no_sound = !main_info.music_no_sound;
         if (main_info.music_no_sound) {
-            env.sound.silence_all();
+            env.sfx.silence_all();
         } else {
-            env.sound.play.music();
+            env.sfx.music();
         }
         debug(evt.keyCode);
     }
@@ -148,7 +148,7 @@ function processKill(c1, c2, x, y)
         if (main_info.no_gore == 0) {
             add_gore(x, y, c2);
         }
-        env.sound.play.death();
+        env.sfx.death();
         player[c1].bumps++;
         player[c1].bumped[c2]++;
         s1 = player[c1].bumps % 100;
@@ -561,6 +561,6 @@ function init() {
     document.onkeyup = onKeyUp;
     env.next_time = timeGetTime() + 1000;
 
-    env.sound.play.music();
+    env.sfx.music();
     pump();
 }
