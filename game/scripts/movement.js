@@ -59,9 +59,9 @@ function steer_player(p)
 				p.jump_ready = 0;
 				p.jump_abort = 1;
 				if (env.settings.pogostick == 0)
-					dj_play_sfx(env.sound.JUMP, (env.sound.JUMP_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+					env.sound.dj_play_sfx(env.sound.consts.JUMP, (env.sound.consts.JUMP_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 				else
-					dj_play_sfx(env.sound.SPRING, (env.sound.SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+					env.sound.dj_play_sfx(env.sound.consts.SPRING, (env.sound.consts.SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 			}
 			/* jump out of water */
 			if (GET_BAN_MAP_IN_WATER(s1, s2)) {
@@ -74,9 +74,9 @@ function steer_player(p)
 				p.jump_ready = 0;
 				p.jump_abort = 1;
 				if (env.settings.pogostick == 0)
-					dj_play_sfx(env.sound.JUMP, (env.sound.JUMP_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+					env.sound.dj_play_sfx(env.sound.consts.JUMP, (env.sound.consts.JUMP_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 				else
-					dj_play_sfx(env.sound.SPRING, (env.sound.SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+					env.sound.dj_play_sfx(env.sound.consts.SPRING, (env.sound.consts.SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 			}
 		}
 		/* fall down by gravity */
@@ -177,7 +177,7 @@ function steer_player(p)
 				}
 			}
 		}
-		dj_play_sfx(env.sound.SPRING, (env.sound.SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+		env.sound.dj_play_sfx(env.sound.consts.SPRING, (env.sound.consts.SPRING_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 	}
 	s1 = (p.x >> 16);
 	s2 = (p.y >> 16);
@@ -207,9 +207,9 @@ function steer_player(p)
 				add_object(OBJ_SPLASH, (p.x >> 16) + 8, ((p.y >> 16) & 0xfff0) + 15, 0, 0, OBJ_ANIM_SPLASH, 0);
 
 				if (env.settings.blood_is_thicker_than_water == 0)
-					dj_play_sfx(env.sound.SPLASH, (env.sound.SPLASH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+					env.sound.dj_play_sfx(env.sound.consts.SPLASH, (env.sound.consts.SPLASH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
 				else
-					dj_play_sfx(env.sound.SPLASH, (env.sound.SPLASH_FREQ + rnd(2000) - 5000), 64, 0, 0, -1);
+					env.sound.dj_play_sfx(env.sound.consts.SPLASH, (env.sound.consts.SPLASH_FREQ + rnd(2000) - 5000), 64, 0, 0, -1);
 			}
 		}
 		/* slowly move up to water surface */

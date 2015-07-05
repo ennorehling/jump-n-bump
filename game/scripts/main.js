@@ -12,24 +12,7 @@ var env =
             flies_enabled: 0,
             blood_is_thicker_than_water: 0
         },
-    sound: 
-        {
-            JUMP_FREQ: 15000,
-            LAND_FREQ: 15000,
-            DEATH_FREQ: 20000,
-            SPRING_FREQ: 15000,
-            SPLASH_FREQ: 12000,
-            FLY_FREQ: 12000,
-            
-            JUMP: 0,
-            LAND: 1,
-            DEATH: 2,
-            SPRING: 3,
-            SPLASH: 4,
-            FLY: 5,
-            MUSIC: 6,
-            NUM_SFX: 6
-        },
+    sound: new Sound(),
     ai:
         {
             
@@ -120,9 +103,9 @@ function onKeyUp(evt) {
     } else if (evt.keyCode==77) { // 'm'
         main_info.music_no_sound = !main_info.music_no_sound;
         if (main_info.music_no_sound) {
-            silence_all();
+            env.sound.silence_all();
         } else {
-            play_sound(env.sound.MUSIC, true);
+            env.sound.play_sound(env.sound.consts.MUSIC, true);
         }
         debug(evt.keyCode);
     }
@@ -163,7 +146,7 @@ function processKill(c1, c2, x, y)
         if (main_info.no_gore == 0) {
             add_gore(x, y, c2);
         }
-        dj_play_sfx(env.sound.DEATH, (env.sound.DEATH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+        env.sound.dj_play_sfx(env.sound.consts.DEATH, (env.sound.consts.DEATH_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
         player[c1].bumps++;
         player[c1].bumped[c2]++;
         s1 = player[c1].bumps % 100;
@@ -576,6 +559,6 @@ function init() {
     document.onkeyup = onKeyUp;
     env.next_time = timeGetTime() + 1000;
 
-    play_sound(env.sound.MUSIC, true);
+    env.sound.play_sound(env.sound.consts.MUSIC, true);
     pump();
 }
