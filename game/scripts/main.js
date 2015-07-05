@@ -25,11 +25,7 @@ var env =
             blood_is_thicker_than_water: 0
         },
     sfx: new Sfx(new Sound_Player()),
-    ai:
-        {
-            enabledForPlayer: [false, false, false, true],
-            cpu_move: new AI().cpu_move,
-        },
+    ai: new AI([false, false, false, true]),
     render:
         {
             leftovers: { num_pobs: 0, pobs:[]},
@@ -92,16 +88,16 @@ function onKeyDown(evt) {
     keys_pressed[evt.keyCode] = true;
 }
 
+function togglePlayerEnabled(playerIndex) {
+    player[playerIndex].enabled = !player[playerIndex].enabled;
+}
+
 function onKeyUp(evt) {
     keys_pressed[evt.keyCode] = false;
     if (evt.keyCode>=49 && evt.keyCode<=52) {
-        var i = evt.keyCode-49;
-        if (env.ai.enabledForPlayer[i] && player[i].enabled) player[i].enabled = false;
-        else if (player[i].enabled) env.ai.enabledForPlayer[i] = true;
-        else {
-            player[i].enabled = true;
-            env.ai.enabledForPlayer[i] = false;
-        }
+        var i = evt.keyCode - 49;
+        if (evt.altKey) env.ai.toggleForPlayer(i);
+        else togglePlayerEnabled(i);
     } else if (evt.keyCode==77) { // 'm'
         main_info.music_no_sound = !main_info.music_no_sound;
         if (main_info.music_no_sound) {

@@ -1,7 +1,14 @@
 
-var AI = function () {
+var AI = function (enabledForPlayer) {
+
     var map_tile = function (x, y) {
         return GET_BAN_MAP(x >> 4, y >> 4);
+    }
+    
+    this.toggleForPlayer = function(playerIndex)
+    {
+        enabledForPlayer[playerIndex] = !enabledForPlayer[playerIndex];
+        player[playerIndex].direction = 0;
     }
 
     this.cpu_move = function() {
@@ -16,7 +23,7 @@ var AI = function () {
         for (i = 0; i < env.JNB_MAX_PLAYERS; i++) {
             nearest_distance = -1;
             target = null;
-            if (env.ai.enabledForPlayer[i] && player[i].enabled) {
+            if (enabledForPlayer[i] && player[i].enabled) {
                 for (j = 0; j < env.JNB_MAX_PLAYERS; j++) {
                     if (i == j || !player[j].enabled) {
                         continue;
