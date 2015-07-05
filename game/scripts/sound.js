@@ -1,5 +1,4 @@
-function Sound_Player()
-{
+function Sound_Player() {
     var sounds = [];
     var sfx_extension;
     

@@ -1,9 +1,8 @@
-function Sfx(sound_player)
-{
-    function playOnce(filename_without_extension)
-    {
+function Sfx(sound_player) {
+    function playOnce(filename_without_extension) {
         return function () { sound_player.play_sound(filename_without_extension, false); };
-    }; 
+    };
+
     this.jump = playOnce("jump");
     this.land = playOnce("land");
     this.death = playOnce("death");

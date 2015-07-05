@@ -11,12 +11,10 @@ var main_info = {
 };
 
 
-var env =
-{
+var env = {
     JNB_MAX_PLAYERS: 4,
     next_time: 0,
-    settings:
-        {
+    settings: {
             is_server: true,
             jetpack: 0,
             pogostick: 0,
@@ -26,28 +24,23 @@ var env =
         },
     sfx: new Sfx(new Sound_Player()),
     ai: new AI([false, false, false, true]),
-    render:
-        {
-            leftovers: { num_pobs: 0, pobs:[]},
-            canvas_scale: 1,
-            img:
-                {
-                   //objects,
-                   //rabbits,
-                   //level,
-                   //mask,
-                   //numbers
-                },
-            max:
-                {
-                    
-                    OBJECTS: 200,
-                    POBS: 200,
-                    FLIES: 20,
-                    LEFTOVERS: 50,
-                }
-
+    render: {
+        leftovers: { num_pobs: 0, pobs:[]},
+        canvas_scale: 1,
+        img: {
+                //objects,
+                //rabbits,
+                //level,
+                //mask,
+                //numbers
+        },
+        max: {    
+            OBJECTS: 200,
+            POBS: 200,
+            FLIES: 20,
+            LEFTOVERS: 50,
         }
+    }
 
 };
 
