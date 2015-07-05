@@ -1,6 +1,6 @@
-var Sfx = function(sound_player) 
+function Sfx(sound_player)
 {
-    var playOnce = function(filename_without_extension)
+    function playOnce(filename_without_extension)
     {
         return function () { sound_player.play_sound(filename_without_extension, false); };
     }; 

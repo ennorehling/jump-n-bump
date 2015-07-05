@@ -1,7 +1,7 @@
 
-var AI = function (enabledForPlayer) {
+function AI(enabledForPlayer) {
 
-    var map_tile = function (x, y) {
+    function map_tile(x, y) {
         return GET_BAN_MAP(x >> 4, y >> 4);
     }
     
