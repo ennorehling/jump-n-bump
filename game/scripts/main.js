@@ -49,28 +49,32 @@ function rnd(max_value) {
 }
 
 var player = [];
-function create_player(keys) {
-    return {
-        action_left : false,
-        action_up : false,
-        action_right : false,
-        enabled : false,
-        dead_flag : false,
-        bumps : false,
-        bumped : [],
-        x : 0, y : 0,
-        x_add : 0, y_add : 0,
-        direction : 0,
-        jump_ready : false,
-        jump_abort : false,
-        in_water : false,
-        anim : 0,
-        frame : 0,
-        frame_tick : 0,
-        image : 0,
-        keys : keys
+
+function Player(keys) {
+    this.action_left = false;
+    this.action_up = false;
+    this.action_right = false;
+    this.enabled = false;
+    this.dead_flag = false;
+    this.bumps = false;
+    this.bumped = [];
+    this.x = 0; y = 0;
+    this.x_add = 0; y_add = 0;
+    this.direction = 0;
+    this.jump_ready = false;
+    this.jump_abort = false;
+    this.in_water = false;
+    this.anim = 0;
+    this.frame = 0;
+    this.frame_tick = 0;
+    this.set_anim = function (animIndex) {
+        this.anim = animIndex;
+        this.frame = 0;
+        this.frame_tick = 0;
     };
-}
+    this.get_image = function () { return player_anims[this.anim].frame[this.frame].image + this.direction * 9; };
+    this.keys = keys
+};
 
 function timeGetTime() {
     return new Date().getTime();
@@ -130,10 +134,7 @@ function processKill(c1, c2, x, y)
     player[c1].jump_abort = true;
     player[c2].dead_flag = true;
     if (player[c2].anim != 6) {
-        player[c2].anim = 6;
-        player[c2].frame = 0;
-        player[c2].frame_tick = 0;
-        player[c2].image = player_anims[player[c2].anim].frame[player[c2].frame].image + player[c2].direction * 9;
+        player[c2].set_anim(6);
         if (main_info.no_gore == 0) {
             add_gore(x, y, c2);
         }
@@ -197,10 +198,7 @@ function player_action_left(p) {
     }
     p.direction = 1;
     if (p.anim == 0) {
-        p.anim = 1;
-        p.frame = 0;
-        p.frame_tick = 0;
-        p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
+        p.set_anim(1);
     }
 }
 
@@ -241,10 +239,7 @@ function player_action_right(p) {
     }
     p.direction = 0;
     if (p.anim == 0) {
-        p.anim = 1;
-        p.frame = 0;
-        p.frame_tick = 0;
-        p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
+        p.set_anim(1);
     }
 }
 
@@ -417,10 +412,7 @@ function position_player(player_num)
             player[player_num].direction = 0;
             player[player_num].jump_ready = 1;
             player[player_num].in_water = 0;
-            player[player_num].anim = 0;
-            player[player_num].frame = 0;
-            player[player_num].frame_tick = 0;
-            player[player_num].image = player_anims[player[player_num].anim].frame[player[player_num].frame].image;
+            player[player_num].set_anim(0);
 
             if (env.settings.is_server) {
                 player[player_num].dead_flag = 0;
@@ -476,10 +468,10 @@ function init() {
     ctx.mozImageSmoothingEnabled = false;
     
     player = [];
-    player[0] = create_player([37,39,38]);
-    player[1] = create_player([65,68,87]);
-    player[2] = create_player([100,102,104]);
-    player[3] = create_player([74,76,73]);
+    player[0] = new Player([37,39,38]);
+    player[1] = new Player([65, 68, 87]);
+    player[2] = new Player([100, 102, 104]);
+    player[3] = new Player([74, 76, 73]);
     player[0].enabled = true;
     player[1].enabled = true;
     player[2].enabled = true;

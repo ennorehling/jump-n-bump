@@ -11,7 +11,6 @@ function update_player_animation(p, playerIndex) {
 		}
 		p.frame_tick = 0;
 	}
-	p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
 }
 
 function update_object_animations(renderer) {

@@ -36,10 +36,7 @@ function steer_player(p)
 				add_object(OBJ_SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), OBJ_ANIM_SMOKE, 0);
 		}
 		if (p.anim == 1) {
-			p.anim = 0;
-			p.frame = 0;
-			p.frame_tick = 0;
-			p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
+		    p.set_anim(0);
 		}
 	}
 	if (env.settings.jetpack == 0) {
@@ -52,10 +49,7 @@ function steer_player(p)
 			/* jump */
 			if (GET_BAN_MAP_XY(s1, (s2 + 16)) == BAN_SOLID || GET_BAN_MAP_XY(s1, (s2 + 16)) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), (s2 + 16)) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), (s2 + 16)) == BAN_ICE) {
 				p.y_add = -280000;
-				p.anim = 2;
-				p.frame = 0;
-				p.frame_tick = 0;
-				p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
+				p.set_anim(2);
 				p.jump_ready = 0;
 				p.jump_abort = 1;
 				if (env.settings.pogostick == 0)
@@ -67,10 +61,7 @@ function steer_player(p)
 			if (GET_BAN_MAP_IN_WATER(s1, s2)) {
 				p.y_add = -196608;
 				p.in_water = 0;
-				p.anim = 2;
-				p.frame = 0;
-				p.frame_tick = 0;
-				p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
+				p.set_anim(2);
 				p.jump_ready = 0;
 				p.jump_abort = 1;
 				if (env.settings.pogostick == 0)
@@ -143,10 +134,7 @@ function steer_player(p)
 	if (GET_BAN_MAP_XY((s1 + 8), (s2 + 15)) == BAN_SPRING || ((GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING && GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) != BAN_SOLID) || (GET_BAN_MAP_XY(s1, (s2 + 15)) != BAN_SOLID && GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING))) {
 		p.y = ((p.y >> 16) & 0xfff0) << 16;
 		p.y_add = -400000;
-		p.anim = 2;
-		p.frame = 0;
-		p.frame_tick = 0;
-		p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
+		p.set_anim(2);
 		p.jump_ready = 0;
 		p.jump_abort = 0;
 		for (c2 = 0; c2 < env.render.max.OBJECTS; c2++) {
@@ -186,10 +174,7 @@ function steer_player(p)
 	if (GET_BAN_MAP_XY(s1, s2) == BAN_SOLID || GET_BAN_MAP_XY(s1, s2) == BAN_ICE || GET_BAN_MAP_XY(s1, s2) == BAN_SPRING || GET_BAN_MAP_XY((s1 + 15), s2) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), s2) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), s2) == BAN_SPRING) {
 		p.y = (((s2 + 16) & 0xfff0)) << 16;
 		p.y_add = 0;
-		p.anim = 0;
-		p.frame = 0;
-		p.frame_tick = 0;
-		p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
+		p.set_anim(0);
 	}
 	s1 = (p.x >> 16);
 	s2 = (p.y >> 16);
@@ -199,10 +184,7 @@ function steer_player(p)
 		if (p.in_water == 0) {
 			/* falling into water */
 			p.in_water = 1;
-			p.anim = 4;
-			p.frame = 0;
-			p.frame_tick = 0;
-			p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
+			p.set_anim(4);
 			if (p.y_add >= 32768) {
 				add_object(OBJ_SPLASH, (p.x >> 16) + 8, ((p.y >> 16) & 0xfff0) + 15, 0, 0, OBJ_ANIM_SPLASH, 0);
 
@@ -215,10 +197,7 @@ function steer_player(p)
 		/* slowly move up to water surface */
 		p.y_add -= 1536;
 		if (p.y_add < 0 && p.anim != 5) {
-			p.anim = 5;
-			p.frame = 0;
-			p.frame_tick = 0;
-			p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
+		    p.set_anim(5);
 		}
 		if (p.y_add < -65536)
 			p.y_add = -65536;
@@ -233,10 +212,7 @@ function steer_player(p)
 		p.y = (((s2 + 16) & 0xfff0) - 16) << 16;
 		p.y_add = 0;
 		if (p.anim != 0 && p.anim != 1) {
-			p.anim = 0;
-			p.frame = 0;
-			p.frame_tick = 0;
-			p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
+		    p.set_anim(0);
 		}
 	} else {
 		if (p.in_water == 0) {
@@ -253,9 +229,6 @@ function steer_player(p)
 		p.in_water = 0;
 	}
 	if (p.y_add > 36864 && p.anim != 3 && p.in_water == 0) {
-		p.anim = 3;
-		p.frame = 0;
-		p.frame_tick = 0;
-		p.image = player_anims[p.anim].frame[p.frame].image + p.direction * 9;
+	    p.set_anim(3);
 	}
 }

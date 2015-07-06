@@ -51,7 +51,7 @@ function Renderer() {
 
         for (var i = 0; i < env.JNB_MAX_PLAYERS; i++) {
             if (player[i].enabled) {
-                this.add_pob(player[i].x >> 16, player[i].y >> 16, env.render.img.rabbits, rabbit_gobs[player[i].image + i * 18]);
+                this.add_pob(player[i].x >> 16, player[i].y >> 16, env.render.img.rabbits, rabbit_gobs[player[i].get_image() + i * 18]);
             }
         }
         draw_leftovers(ctx);
