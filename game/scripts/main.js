@@ -25,7 +25,6 @@ var env = {
     sfx: new Sfx(new Sound_Player()),
     ai: new AI([false, false, false, true]),
     render: {
-        leftovers: { num_pobs: 0, pobs:[]},
         canvas_scale: 1,
         img: {
                 //objects,
@@ -34,12 +33,13 @@ var env = {
                 //mask,
                 //numbers
         },
-        max: {    
+        max: {
             OBJECTS: 200,
             POBS: 200,
             FLIES: 20,
             LEFTOVERS: 50,
-        }
+        },
+        renderer: new Renderer()
     }
 
 };
@@ -142,9 +142,9 @@ function processKill(c1, c2, x, y)
         player[c1].bumped[c2]++;
         s1 = player[c1].bumps % 100;
         if (s1 % 10 == 0) {
-            add_leftovers(360, 34 + c1 * 64, env.render.img.numbers, number_gobs[Math.floor(s1/10)%10]);
+            env.render.renderer.add_leftovers(360, 34 + c1 * 64, env.render.img.numbers, number_gobs[Math.floor(s1 / 10) % 10]);
         }
-        add_leftovers(376, 34 + c1 * 64, env.render.img.numbers, number_gobs[s1 % 10]);
+        env.render.renderer.add_leftovers(376, 34 + c1 * 64, env.render.img.numbers, number_gobs[s1 % 10]);
     }
 }
 
@@ -343,71 +343,12 @@ function collision_check() {
     }
 }
 
-function add_leftovers(x, y, image, gob) {
-    env.render.leftovers.pobs[env.render.leftovers.num_pobs] = { x: x, y: y, gob: gob, image: image };
-    env.render.leftovers.num_pobs++;
-}
-
-function add_pob(x, y, image, gob) {
-    var page_info = main_info.page_info;
-    if (page_info.num_pobs >= env.render.max.POBS) {
-        return;
-    }
-    page_info.pobs[page_info.num_pobs] = { x : x, y : y, gob : gob, image : image };
-    page_info.num_pobs++;
-}
-
-function put_pob(ctx, x, y, gob, img) {
-    var sx, sy, sw, sh, hs_x, hs_y;
-    sx = gob.x;
-    sy = gob.y;
-    sw = gob.width;
-    sh = gob.height;
-    hs_x = gob.hotspot_x;
-    hs_y = gob.hotspot_y;
-    ctx.drawImage(img, sx, sy, sw, sh, x-hs_x, y-hs_y, sw, sh);
-}
-
-function draw_pobs(ctx) {
-    var page_info = main_info.page_info;
-
-    for (var c1 = page_info.num_pobs - 1; c1 >= 0; c1--) {
-        var pob = page_info.pobs[c1];
-        put_pob(ctx, pob.x, pob.y, pob.gob, pob.image);
-    }
-}
-
-function draw_leftovers(ctx) {
-    for (var c1 = 0; c1 != env.render.leftovers.num_pobs; ++c1) {
-        var pob = env.render.leftovers.pobs[c1];
-        put_pob(ctx, pob.x, pob.y, pob.gob, pob.image);
-    }
-}
-
-function draw() {
-    var ctx = main_info.draw_page;
-
-    ctx.drawImage(env.render.img.level, 0, 0);
-
-    var page_info = main_info.page_info;
-
-    for (var i = 0; i < env.JNB_MAX_PLAYERS; i++) {
-        if (player[i].enabled) {
-            add_pob(player[i].x >> 16, player[i].y >> 16, env.render.img.rabbits, rabbit_gobs[player[i].image + i * 18]);
-        }
-    }
-    draw_leftovers(ctx);
-    draw_pobs(ctx);
-
-    ctx.drawImage(env.render.img.mask, 0, 0);
-}
-
 function game_loop() {
     steer_players();
     collision_check();
     main_info.page_info.num_pobs = 0;
-    update_object_animations();
-    draw();
+    update_object_animations(env.render.renderer);
+    env.render.renderer.draw();
 }
 
 function debug(str) {
