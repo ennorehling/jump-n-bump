@@ -232,3 +232,188 @@ function steer_player(p)
 	    p.set_anim(3);
 	}
 }
+
+
+function collision_check() {
+    var c1 = 0, c2 = 0, c3 = 0;
+    var l1;
+
+    /* collision check */
+    for (c3 = 0; c3 < 6; c3++) {
+        if (c3 == 0) {
+            c1 = 0;
+            c2 = 1;
+        } else if (c3 == 1) {
+            c1 = 0;
+            c2 = 2;
+        } else if (c3 == 2) {
+            c1 = 0;
+            c2 = 3;
+        } else if (c3 == 3) {
+            c1 = 1;
+            c2 = 2;
+        } else if (c3 == 4) {
+            c1 = 1;
+            c2 = 3;
+        } else if (c3 == 5) {
+            c1 = 2;
+            c2 = 3;
+        }
+        if (player[c1].enabled && player[c2].enabled) {
+            if (Math.abs(player[c1].x - player[c2].x) < 0xC0000 && Math.abs(player[c1].y - player[c2].y) < 0xC0000) {
+                if ((Math.abs(player[c1].y - player[c2].y) >> 16) > 5) {
+                    if (player[c1].y < player[c2].y) {
+                        player_kill(c1, c2);
+                    } else {
+                        player_kill(c2, c1);
+                    }
+                } else {
+                    if (player[c1].x < player[c2].x) {
+                        if (player[c1].x_add > 0)
+                            player[c1].x = player[c2].x - 0xC0000;
+                        else if (player[c2].x_add < 0)
+                            player[c2].x = player[c1].x + 0xC0000;
+                        else {
+                            player[c1].x -= player[c1].x_add;
+                            player[c2].x -= player[c2].x_add;
+                        }
+                        l1 = player[c2].x_add;
+                        player[c2].x_add = player[c1].x_add;
+                        player[c1].x_add = l1;
+                        if (player[c1].x_add > 0)
+                            player[c1].x_add = -player[c1].x_add;
+                        if (player[c2].x_add < 0)
+                            player[c2].x_add = -player[c2].x_add;
+                    } else {
+                        if (player[c1].x_add > 0)
+                            player[c2].x = player[c1].x - 0xC0000;
+                        else if (player[c2].x_add < 0)
+                            player[c1].x = player[c2].x + 0xC0000;
+                        else {
+                            player[c1].x -= player[c1].x_add;
+                            player[c2].x -= player[c2].x_add;
+                        }
+                        l1 = player[c2].x_add;
+                        player[c2].x_add = player[c1].x_add;
+                        player[c1].x_add = l1;
+                        if (player[c1].x_add < 0)
+                            player[c1].x_add = -player[c1].x_add;
+                        if (player[c2].x_add > 0)
+                            player[c2].x_add = -player[c2].x_add;
+                    }
+                }
+            }
+        }
+    }
+}
+
+function processKill(c1, c2, x, y) {
+    var s1 = 0;
+
+    player[c1].y_add = -player[c1].y_add;
+    if (player[c1].y_add > -262144)
+        player[c1].y_add = -262144;
+    player[c1].jump_abort = true;
+    player[c2].dead_flag = true;
+    if (player[c2].anim != 6) {
+        player[c2].set_anim(6);
+        if (main_info.no_gore == 0) {
+            add_gore(x, y, c2);
+        }
+        env.sfx.death();
+        player[c1].bumps++;
+        player[c1].bumped[c2]++;
+        s1 = player[c1].bumps % 100;
+        if (s1 % 10 == 0) {
+            env.render.renderer.add_leftovers(360, 34 + c1 * 64, env.render.img.numbers, number_gobs[Math.floor(s1 / 10) % 10]);
+        }
+        env.render.renderer.add_leftovers(376, 34 + c1 * 64, env.render.img.numbers, number_gobs[s1 % 10]);
+    }
+}
+
+function player_kill(c1, c2) {
+    processKill(c1, c2, player[c2].x, player[c2].y);
+}
+
+
+function player_action_left(p) {
+    var s1 = 0, s2 = 0;
+    var below_left, below, below_right;
+
+    s1 = (p.x >> 16);
+    s2 = (p.y >> 16);
+    below_left = GET_BAN_MAP_XY(s1, s2 + 16);
+    below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
+    below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
+
+    if (below == BAN_ICE) {
+        if (p.x_add > 0) {
+            p.x_add -= 1024;
+        } else {
+            p.x_add -= 768;
+        }
+    } else if ((below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID)) {
+        if (p.x_add > 0) {
+            p.x_add -= 1024;
+        } else {
+            p.x_add -= 768;
+        }
+    } else {
+        if (p.x_add > 0) {
+            p.x_add -= 16384;
+            if (p.x_add > -98304 && p.in_water == 0 && below == BAN_SOLID) {
+                add_object(OBJ_SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), OBJ_ANIM_SMOKE, 0);
+            }
+        } else {
+            p.x_add -= 12288;
+        }
+    }
+    if (p.x_add < -98304) {
+        p.x_add = -98304;
+    }
+    p.direction = 1;
+    if (p.anim == 0) {
+        p.set_anim(1);
+    }
+}
+
+function player_action_right(p) {
+    var s1 = 0, s2 = 0;
+    var below_left, below, below_right;
+
+    s1 = (p.x >> 16);
+    s2 = (p.y >> 16);
+    below_left = GET_BAN_MAP_XY(s1, s2 + 16);
+    below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
+    below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
+
+    if (below == BAN_ICE) {
+        if (p.x_add < 0) {
+            p.x_add += 1024;
+        } else {
+            p.x_add += 768;
+        }
+    } else if ((below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID)) {
+        if (p.x_add > 0) {
+            p.x_add += 1024;
+        } else {
+            p.x_add += 768;
+        }
+    } else {
+        if (p.x_add < 0) {
+            p.x_add += 16384;
+            if (p.x_add < 98304 && p.in_water == 0 && below == BAN_SOLID) {
+                add_object(OBJ_SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), OBJ_ANIM_SMOKE, 0);
+            }
+        } else {
+            p.x_add += 12288;
+        }
+    }
+    if (p.x_add > 98304) {
+        p.x_add = 98304;
+    }
+    p.direction = 0;
+    if (p.anim == 0) {
+        p.set_anim(1);
+    }
+}

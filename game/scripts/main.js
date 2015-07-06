@@ -84,136 +84,11 @@ function key_pressed(key) {
     return keys_pressed[key];
 }
 
-function add_gore(x, y, c2) {
-    var c4;
-    for (c4 = 0; c4 < 6; c4++)
-        add_object(OBJ_FUR, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 44 + c2 * 8);
-    for (c4 = 0; c4 < 6; c4++)
-        add_object(OBJ_FLESH, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 76);
-    for (c4 = 0; c4 < 6; c4++)
-        add_object(OBJ_FLESH, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 77);
-    for (c4 = 0; c4 < 8; c4++)
-        add_object(OBJ_FLESH, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 78);
-    for (c4 = 0; c4 < 10; c4++)
-        add_object(OBJ_FLESH, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 79);
-}
-
-function processKill(c1, c2, x, y)
-{
-    var s1 = 0;
-
-    player[c1].y_add = -player[c1].y_add;
-    if (player[c1].y_add > -262144)
-        player[c1].y_add = -262144;
-    player[c1].jump_abort = true;
-    player[c2].dead_flag = true;
-    if (player[c2].anim != 6) {
-        player[c2].set_anim(6);
-        if (main_info.no_gore == 0) {
-            add_gore(x, y, c2);
-        }
-        env.sfx.death();
-        player[c1].bumps++;
-        player[c1].bumped[c2]++;
-        s1 = player[c1].bumps % 100;
-        if (s1 % 10 == 0) {
-            env.render.renderer.add_leftovers(360, 34 + c1 * 64, env.render.img.numbers, number_gobs[Math.floor(s1 / 10) % 10]);
-        }
-        env.render.renderer.add_leftovers(376, 34 + c1 * 64, env.render.img.numbers, number_gobs[s1 % 10]);
-    }
-}
-
-function player_kill(c1, c2) {
-    processKill(c1, c2, player[c2].x, player[c2].y);
-}
-
 function update_player_actions() {
     for (var i=0;i!=player.length;++i) {
         player[i].action_left = key_pressed(player[i].keys[0]);
         player[i].action_right = key_pressed(player[i].keys[1]);
         player[i].action_up = key_pressed(player[i].keys[2]);
-    }
-}
-
-function player_action_left(p) {
-    var s1 = 0, s2 = 0;
-    var below_left, below, below_right;
-
-    s1 = (p.x >> 16);
-    s2 = (p.y >> 16);
-    below_left = GET_BAN_MAP_XY(s1, s2 + 16);
-    below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
-    below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
-
-    if (below == BAN_ICE) {
-        if (p.x_add > 0) {
-            p.x_add -= 1024;
-        } else {
-            p.x_add -= 768;
-        }
-    } else if ((below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID)) {
-        if (p.x_add > 0) {
-            p.x_add -= 1024;
-        } else {
-            p.x_add -= 768;
-        }
-    } else {
-        if (p.x_add > 0) {
-            p.x_add -= 16384;
-            if (p.x_add > -98304 && p.in_water == 0 && below == BAN_SOLID) {
-                add_object(OBJ_SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), OBJ_ANIM_SMOKE, 0);
-            }
-        } else {
-            p.x_add -= 12288;
-        }
-    }
-    if (p.x_add < -98304) {
-        p.x_add = -98304;
-    }
-    p.direction = 1;
-    if (p.anim == 0) {
-        p.set_anim(1);
-    }
-}
-
-function player_action_right(p) {
-    var s1 = 0, s2 = 0;
-    var below_left, below, below_right;
-
-    s1 = (p.x >> 16);
-    s2 = (p.y >> 16);
-    below_left = GET_BAN_MAP_XY(s1, s2 + 16);
-    below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
-    below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
-
-    if (below == BAN_ICE) {
-        if (p.x_add < 0) {
-            p.x_add += 1024;
-        } else {
-            p.x_add += 768;
-        }
-    } else if ((below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID)) {
-        if (p.x_add > 0) {
-            p.x_add += 1024;
-        } else {
-            p.x_add += 768;
-        }
-    } else {
-        if (p.x_add < 0) {
-            p.x_add += 16384;
-            if (p.x_add < 98304 && p.in_water == 0 && below == BAN_SOLID) {
-                add_object(OBJ_SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), OBJ_ANIM_SMOKE, 0);
-            }
-        } else {
-            p.x_add += 12288;
-        }
-    }
-    if (p.x_add > 98304) {
-        p.x_add = 98304;
-    }
-    p.direction = 0;
-    if (p.anim == 0) {
-        p.set_anim(1);
     }
 }
 
@@ -239,78 +114,6 @@ function steer_players() {
     }
 }
 
-function collision_check() {
-    var c1 = 0, c2 = 0, c3 = 0;
-    var l1;
-
-    /* collision check */
-    for (c3 = 0; c3 < 6; c3++) {
-        if (c3 == 0) {
-            c1 = 0;
-            c2 = 1;
-        } else if (c3 == 1) {
-            c1 = 0;
-            c2 = 2;
-        } else if (c3 == 2) {
-            c1 = 0;
-            c2 = 3;
-        } else if (c3 == 3) {
-            c1 = 1;
-            c2 = 2;
-        } else if (c3 == 4) {
-            c1 = 1;
-            c2 = 3;
-        } else if (c3 == 5) {
-            c1 = 2;
-            c2 = 3;
-        }
-        if (player[c1].enabled && player[c2].enabled) {
-            if (Math.abs(player[c1].x - player[c2].x) < 0xC0000 && Math.abs(player[c1].y - player[c2].y) < 0xC0000) {
-                if ((Math.abs(player[c1].y - player[c2].y) >> 16) > 5) {
-                    if (player[c1].y < player[c2].y) {
-                        player_kill(c1,c2);
-                    } else {
-                        player_kill(c2,c1);
-                    }
-                } else {
-                    if (player[c1].x < player[c2].x) {
-                        if (player[c1].x_add > 0)
-                            player[c1].x = player[c2].x - 0xC0000;
-                        else if (player[c2].x_add < 0)
-                            player[c2].x = player[c1].x + 0xC0000;
-                        else {
-                            player[c1].x -= player[c1].x_add;
-                            player[c2].x -= player[c2].x_add;
-                        }
-                        l1 = player[c2].x_add;
-                        player[c2].x_add = player[c1].x_add;
-                        player[c1].x_add = l1;
-                        if (player[c1].x_add > 0)
-                            player[c1].x_add = -player[c1].x_add;
-                        if (player[c2].x_add < 0)
-                            player[c2].x_add = -player[c2].x_add;
-                    } else {
-                        if (player[c1].x_add > 0)
-                            player[c2].x = player[c1].x - 0xC0000;
-                        else if (player[c2].x_add < 0)
-                            player[c1].x = player[c2].x + 0xC0000;
-                        else {
-                            player[c1].x -= player[c1].x_add;
-                            player[c2].x -= player[c2].x_add;
-                        }
-                        l1 = player[c2].x_add;
-                        player[c2].x_add = player[c1].x_add;
-                        player[c1].x_add = l1;
-                        if (player[c1].x_add < 0)
-                            player[c1].x_add = -player[c1].x_add;
-                        if (player[c2].x_add > 0)
-                            player[c2].x_add = -player[c2].x_add;
-                    }
-                }
-            }
-        }
-    }
-}
 
 function game_loop() {
     steer_players();
@@ -359,43 +162,6 @@ function resize_canvas()
 		canvas.height = env.render.img.level.height * env.render.canvas_scale;
 		ctx.scale(env.render.canvas_scale, env.render.canvas_scale);
 	}
-}
-
-function position_player(player_num)
-{
-    var c1;
-    var s1, s2;
-
-    while (1) {
-        while (1) {
-            s1 = rnd(LEVEL_WIDTH);
-            s2 = rnd(LEVEL_HEIGHT);
-            if (GET_BAN_MAP(s1, s2) == BAN_VOID && (GET_BAN_MAP(s1, s2+1) == BAN_SOLID || GET_BAN_MAP(s1, s2+1) == BAN_ICE))
-                break;
-        }
-        for (c1 = 0; c1 < env.JNB_MAX_PLAYERS; c1++) {
-            if (c1 != player_num && player[c1].enabled) {
-                if (Math.abs((s1 << LEVEL_SCALE_FACTOR) - (player[c1].x >> 16)) < 32 && Math.abs((s2 << LEVEL_SCALE_FACTOR) - (player[c1].y >> 16)) < 32)
-                    break;
-            }
-        }
-        if (c1 == env.JNB_MAX_PLAYERS) {
-            player[player_num].x = s1 << 20;
-            player[player_num].y = s2 << 20;
-            player[player_num].x_add = player[player_num].y_add = 0;
-            player[player_num].direction = 0;
-            player[player_num].jump_ready = 1;
-            player[player_num].in_water = 0;
-            player[player_num].set_anim(0);
-
-            if (env.settings.is_server) {
-                player[player_num].dead_flag = 0;
-            }
-
-            break;
-        }
-    }
-
 }
 
 function init_level() {

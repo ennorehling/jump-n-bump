@@ -71,6 +71,20 @@ function add_object(type, x, y, x_add, y_add, anim, frame) {
     }
 }
 
+function add_gore(x, y, c2) {
+    var c4;
+    for (c4 = 0; c4 < 6; c4++)
+        add_object(OBJ_FUR, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 44 + c2 * 8);
+    for (c4 = 0; c4 < 6; c4++)
+        add_object(OBJ_FLESH, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 76);
+    for (c4 = 0; c4 < 6; c4++)
+        add_object(OBJ_FLESH, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 77);
+    for (c4 = 0; c4 < 8; c4++)
+        add_object(OBJ_FLESH, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 78);
+    for (c4 = 0; c4 < 10; c4++)
+        add_object(OBJ_FLESH, (x >> 16) + 6 + rnd(5), (y >> 16) + 6 + rnd(5), (rnd(65535) - 32768) * 3, (rnd(65535) - 32768) * 3, 0, 79);
+}
+
 function create_butterfly(obj) {
     while (1) {
         var s1 = rnd(LEVEL_WIDTH);
