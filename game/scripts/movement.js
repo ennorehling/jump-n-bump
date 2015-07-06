@@ -142,23 +142,23 @@ function steer_player(p)
 				if (GET_BAN_MAP_XY((s1 + 8), (s2 + 15)) == BAN_SPRING) {
 					if ((objects[c2].x >> 20) == ((s1 + 8) >> LEVEL_SCALE_FACTOR) && (objects[c2].y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
 						objects[c2].frame = 0;
-						objects[c2].ticks = object_anims[objects[c2].anim].frame[objects[c2].frame].ticks;
-						objects[c2].image = object_anims[objects[c2].anim].frame[objects[c2].frame].image;
+						objects[c2].ticks = env.animation_data.objects[objects[c2].anim].frame[objects[c2].frame].ticks;
+						objects[c2].image = env.animation_data.objects[objects[c2].anim].frame[objects[c2].frame].image;
 						break;
 					}
 				} else {
 					if (GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING) {
 						if ((objects[c2].x >> 20) == (s1 >> LEVEL_SCALE_FACTOR) && (objects[c2].y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
 							objects[c2].frame = 0;
-							objects[c2].ticks = object_anims[objects[c2].anim].frame[objects[c2].frame].ticks;
-							objects[c2].image = object_anims[objects[c2].anim].frame[objects[c2].frame].image;
+							objects[c2].ticks = env.animation_data.objects[objects[c2].anim].frame[objects[c2].frame].ticks;
+							objects[c2].image = env.animation_data.objects[objects[c2].anim].frame[objects[c2].frame].image;
 							break;
 						}
 					} else if (GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING) {
 						if ((objects[c2].x >> 20) == ((s1 + 15) >> LEVEL_SCALE_FACTOR) && (objects[c2].y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
 							objects[c2].frame = 0;
-							objects[c2].ticks = object_anims[objects[c2].anim].frame[objects[c2].frame].ticks;
-							objects[c2].image = object_anims[objects[c2].anim].frame[objects[c2].frame].image;
+							objects[c2].ticks = env.animation_data.objects[objects[c2].anim].frame[objects[c2].frame].ticks;
+							objects[c2].image = env.animation_data.objects[objects[c2].anim].frame[objects[c2].frame].image;
 							break;
 						}
 					}

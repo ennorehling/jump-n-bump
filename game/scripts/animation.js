@@ -10,12 +10,12 @@ function update_object_animations(renderer) {
                 obj.ticks--;
                 if (obj.ticks <= 0) {
                     obj.frame++;
-                    if (obj.frame >= object_anims[obj.anim].num_frames) {
+                    if (obj.frame >= env.animation_data.objects[obj.anim].num_frames) {
                         obj.frame--;
-                        obj.ticks = object_anims[obj.anim].frame[obj.frame].ticks;
+                        obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
                     } else {
-                        obj.ticks = object_anims[obj.anim].frame[obj.frame].ticks;
-                        obj.image = object_anims[obj.anim].frame[obj.frame].image;
+                        obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+                        obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                     }
                 }
                 if (obj.used)
@@ -25,11 +25,11 @@ function update_object_animations(renderer) {
                 obj.ticks--;
                 if (obj.ticks <= 0) {
                     obj.frame++;
-                    if (obj.frame >= object_anims[obj.anim].num_frames)
+                    if (obj.frame >= env.animation_data.objects[obj.anim].num_frames)
                         obj.used = false;
                     else {
-                        obj.ticks = object_anims[obj.anim].frame[obj.frame].ticks;
-                        obj.image = object_anims[obj.anim].frame[obj.frame].image;
+                        obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+                        obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                     }
                 }
                 if (obj.used)
@@ -41,11 +41,11 @@ function update_object_animations(renderer) {
                 obj.ticks--;
                 if (obj.ticks <= 0) {
                     obj.frame++;
-                    if (obj.frame >= object_anims[obj.anim].num_frames)
+                    if (obj.frame >= env.animation_data.objects[obj.anim].num_frames)
                         obj.used = false;
                     else {
-                        obj.ticks = object_anims[obj.anim].frame[obj.frame].ticks;
-                        obj.image = object_anims[obj.anim].frame[obj.frame].image;
+                        obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+                        obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                     }
                 }
                 if (obj.used)
@@ -115,35 +115,35 @@ function update_object_animations(renderer) {
                     if (obj.x_add < 0 && obj.anim != OBJ_ANIM_YEL_BUTFLY_LEFT) {
                         obj.anim = OBJ_ANIM_YEL_BUTFLY_LEFT;
                         obj.frame = 0;
-                        obj.ticks = object_anims[obj.anim].frame[obj.frame].ticks;
-                        obj.image = object_anims[obj.anim].frame[obj.frame].image;
+                        obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+                        obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                     } else if (obj.x_add > 0 && obj.anim != OBJ_ANIM_YEL_BUTFLY_RIGHT) {
                         obj.anim = OBJ_ANIM_YEL_BUTFLY_RIGHT;
                         obj.frame = 0;
-                        obj.ticks = object_anims[obj.anim].frame[obj.frame].ticks;
-                        obj.image = object_anims[obj.anim].frame[obj.frame].image;
+                        obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+                        obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                     }
                 } else {
                     if (obj.x_add < 0 && obj.anim != OBJ_ANIM_PINK_BUTFLY_LEFT) {
                         obj.anim = OBJ_ANIM_PINK_BUTFLY_LEFT;
                         obj.frame = 0;
-                        obj.ticks = object_anims[obj.anim].frame[obj.frame].ticks;
-                        obj.image = object_anims[obj.anim].frame[obj.frame].image;
+                        obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+                        obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                     } else if (obj.x_add > 0 && obj.anim != OBJ_ANIM_PINK_BUTFLY_RIGHT) {
                         obj.anim = OBJ_ANIM_PINK_BUTFLY_RIGHT;
                         obj.frame = 0;
-                        obj.ticks = object_anims[obj.anim].frame[obj.frame].ticks;
-                        obj.image = object_anims[obj.anim].frame[obj.frame].image;
+                        obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+                        obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                     }
                 }
                 obj.ticks--;
                 if (obj.ticks <= 0) {
                     obj.frame++;
-                    if (obj.frame >= object_anims[obj.anim].num_frames)
-                        obj.frame = object_anims[obj.anim].restart_frame;
+                    if (obj.frame >= env.animation_data.objects[obj.anim].num_frames)
+                        obj.frame = env.animation_data.objects[obj.anim].restart_frame;
                     else {
-                        obj.ticks = object_anims[obj.anim].frame[obj.frame].ticks;
-                        obj.image = object_anims[obj.anim].frame[obj.frame].image;
+                        obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+                        obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                     }
                 }
                 if (obj.used)
@@ -314,11 +314,11 @@ function update_object_animations(renderer) {
                 obj.ticks--;
                 if (obj.ticks <= 0) {
                     obj.frame++;
-                    if (obj.frame >= object_anims[obj.anim].num_frames)
+                    if (obj.frame >= env.animation_data.objects[obj.anim].num_frames)
                         obj.used = false;
                     else {
-                        obj.ticks = object_anims[obj.anim].frame[obj.frame].ticks;
-                        obj.image = object_anims[obj.anim].frame[obj.frame].image;
+                        obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+                        obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                     }
                 }
                 if (obj.used)

@@ -40,8 +40,8 @@ var env = {
             LEFTOVERS: 50,
         },
         renderer: new Renderer()
-    }
-
+    },
+    animation_data: new Animation_Data()
 };
 
 function rnd(max_value) {
@@ -166,7 +166,6 @@ function resize_canvas()
 
 function init_level() {
     create_map();
-    create_object_anims();
     create_objects();
     
     for (var c1 = 0; c1 < env.JNB_MAX_PLAYERS; c1++) {

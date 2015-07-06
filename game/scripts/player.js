@@ -23,18 +23,18 @@ function Player(playerIndex, keys) {
 
     this.update_player_animation = function () {
         this.frame_tick++;
-        if (this.frame_tick >= player_anims[this.anim].frame[this.frame].ticks) {
+        if (this.frame_tick >= env.animation_data.players[this.anim].frame[this.frame].ticks) {
             this.frame++;
-            if (this.frame >= player_anims[this.anim].num_frames) {
+            if (this.frame >= env.animation_data.players[this.anim].num_frames) {
                 if (this.anim != 6)
-                    this.frame = player_anims[this.anim].restart_frame;
+                    this.frame = env.animation_data.players[this.anim].restart_frame;
                 else
                     position_player(playerIndex);
             }
             this.frame_tick = 0;
         }
     }
-    this.get_image = function () { return player_anims[this.anim].frame[this.frame].image + this.direction * 9; };
+    this.get_image = function () { return env.animation_data.players[this.anim].frame[this.frame].image + this.direction * 9; };
     this.keys = keys
 };
 
