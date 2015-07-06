@@ -50,11 +50,11 @@ function rnd(max_value) {
 
 var player = [];
 
-function Player(keys) {
+function Player(playerIndex, keys) {
     this.action_left = false;
     this.action_up = false;
     this.action_right = false;
-    this.enabled = false;
+    this.enabled = true;
     this.dead_flag = false;
     this.bumps = false;
     this.bumped = [];
@@ -72,6 +72,20 @@ function Player(keys) {
         this.frame = 0;
         this.frame_tick = 0;
     };
+
+    this.update_player_animation = function() {
+        this.frame_tick++;
+        if (this.frame_tick >= player_anims[this.anim].frame[this.frame].ticks) {
+            this.frame++;
+            if (this.frame >= player_anims[this.anim].num_frames) {
+                if (this.anim != 6)
+                    this.frame = player_anims[this.anim].restart_frame;
+                else
+                    position_player(playerIndex);
+            }
+            this.frame_tick = 0;
+        }
+    }
     this.get_image = function () { return player_anims[this.anim].frame[this.frame].image + this.direction * 9; };
     this.keys = keys
 };
@@ -260,7 +274,7 @@ function steer_players() {
             if (!p.dead_flag) {
                 steer_player(p);
             }
-            update_player_animation(p, playerIndex);
+            p.update_player_animation();
         }
     }
 }
@@ -468,14 +482,10 @@ function init() {
     ctx.mozImageSmoothingEnabled = false;
     
     player = [];
-    player[0] = new Player([37,39,38]);
-    player[1] = new Player([65, 68, 87]);
-    player[2] = new Player([100, 102, 104]);
-    player[3] = new Player([74, 76, 73]);
-    player[0].enabled = true;
-    player[1].enabled = true;
-    player[2].enabled = true;
-    player[3].enabled = true;
+    player[0] = new Player(0, [37,39,38]);
+    player[1] = new Player(1, [65, 68, 87]);
+    player[2] = new Player(2, [100, 102, 104]);
+    player[3] = new Player(3, [74, 76, 73]);
 
     init_level();
 
