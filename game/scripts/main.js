@@ -4,32 +4,20 @@ var env = {
     animation_data: new Animation_Data()
 };
 
-
-var keys_pressed = {}
-function key_pressed(key) {
-    return keys_pressed[key];
-}
-
-function addkey(i, k) {
-    keys_pressed[player[i].keys[k]] = true;
-}
-
-function delkey(i, k) {
-    keys_pressed[player[i].keys[k]] = false;
-}
-
-function gup(name) {
-    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-    var regexS = "[\\?&]" + name + "=([^&#]*)";
-    var regex = new RegExp(regexS);
-    var results = regex.exec(window.location.href);
-    if (results == null)
-        return "";
-    else
-        return results[1];
-}
+var player = [];
 
 function init() {
+    function gup(name) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(window.location.href);
+        if (results == null)
+            return "";
+        else
+            return results[1];
+    }
+
     var canvas = document.getElementById('screen');
     var img = {};
     img.level = document.getElementById('level');
@@ -50,11 +38,12 @@ function init() {
 
     var sound_player = new Sound_Player(muted);
     var sfx = new Sfx(sound_player);
-    movement = new Movement(sfx, settings);
-    
-    var game = new Game(canvas, img, movement, sound_player);
-    document.onkeydown = game.onKeyDown;
-    document.onkeyup = game.onKeyUp;
+    var movement = new Movement(sfx, settings);
+    var keyboard = new Keyboard(sound_player);
+    var ai = new AI(keyboard);
+    var game = new Game(canvas, img, movement, ai, sound_player, keyboard.key_pressed, true);
+    document.onkeydown = keyboard.onKeyDown;
+    document.onkeyup = keyboard.onKeyUp;
     sfx.music();
     game.start();
 }
@@ -62,5 +51,3 @@ function init() {
 function rnd(max_value) {
     return Math.floor(Math.random()*max_value);
 }
-
-var player = [];

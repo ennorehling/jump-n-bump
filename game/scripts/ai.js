@@ -1,14 +1,8 @@
 
-function AI(enabledForPlayer) {
+function AI(keyboard_state) {
 
     function map_tile(x, y) {
         return GET_BAN_MAP(x >> 4, y >> 4);
-    }
-    
-    this.toggleForPlayer = function(playerIndex)
-    {
-        enabledForPlayer[playerIndex] = !enabledForPlayer[playerIndex];
-        player[playerIndex].direction = 0;
     }
 
     this.cpu_move = function() {
@@ -23,7 +17,8 @@ function AI(enabledForPlayer) {
         for (i = 0; i < env.JNB_MAX_PLAYERS; i++) {
             nearest_distance = -1;
             target = null;
-            if (enabledForPlayer[i] && player[i].enabled) {
+            var current_player = player[i];
+            if (current_player.enabled && current_player.ai) {
                 for (j = 0; j < env.JNB_MAX_PLAYERS; j++) {
                     if (i == j || !player[j].enabled) {
                         continue;
@@ -71,7 +66,7 @@ function AI(enabledForPlayer) {
 
                 /* Y-axis movement */
                 if (map_tile(cur_posx, cur_posy + 16) != BAN_VOID &&
-                    key_pressed(player[i].keys[2]))
+                    keyboard_state.key_pressed(player[i].keys[2]))
                     jm = false;   // if we are on ground and jump key is being pressed,
                     //first we have to release it or else we won't be able to jump more than once
 
@@ -84,7 +79,7 @@ function AI(enabledForPlayer) {
                     cur_posx > 16 && cur_posx < 352 - 16 - 8)  // obstacle, jump
                     jm = true;   // if there is something on the way, jump over it
 
-                else if (key_pressed(player[i].keys[2]) &&
+                else if (keyboard_state.key_pressed(player[i].keys[2]) &&
                                 (map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy + 8) != BAN_VOID &&
                                 map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy + 8) != BAN_WATER)) {
                     jm = true;   // this makes it possible to jump over 2 tiles
@@ -102,21 +97,21 @@ function AI(enabledForPlayer) {
 
                 /** Artificial intelligence done, now apply movements */
                 if (lm) {
-                    addkey(i, 0);
+                    keyboard_state.addkey(i, 0);
                 } else {
-                    delkey(i, 0);
+                    keyboard_state.delkey(i, 0);
                 }
 
                 if (rm) {
-                    addkey(i, 1);
+                    keyboard_state.addkey(i, 1);
                 } else {
-                    delkey(i, 1);
+                    keyboard_state.delkey(i, 1);
                 }
 
                 if (jm) {
-                    addkey(i, 2);
+                    keyboard_state.addkey(i, 2);
                 } else {
-                    delkey(i, 2);
+                    keyboard_state.delkey(i, 2);
                 }
             }
         }

@@ -1,9 +1,8 @@
-function Game(canvas, img, movement, sound_player, is_server) {
+function Game(canvas, img, movement, ai, sound_player, key_pressed, is_server) {
     var next_time = 0;
     var canvas_scale = 1;
     var ctx = canvas.getContext('2d');
     var renderer = new Renderer(ctx, img);
-    var ai = new AI([false, false, false, true]);
 
     reset_players();
     reset_level();
@@ -15,6 +14,7 @@ function Game(canvas, img, movement, sound_player, is_server) {
         new Player(2, [100, 102, 104], is_server),
         new Player(3, [74, 76, 73], is_server)
         ];
+        player[3].ai = true;
     }
 
     function reset_level() {
@@ -34,26 +34,6 @@ function Game(canvas, img, movement, sound_player, is_server) {
 
     function timeGetTime() {
         return new Date().getTime();
-    }
-
-    function onKeyDown(evt) {
-        keys_pressed[evt.keyCode] = true;
-    }
-
-    function togglePlayerEnabled(playerIndex) {
-        player[playerIndex].enabled = !player[playerIndex].enabled;
-    }
-
-    function onKeyUp(evt) {
-        keys_pressed[evt.keyCode] = false;
-        if (evt.keyCode >= 49 && evt.keyCode <= 52) {
-            var i = evt.keyCode - 49;
-            if (evt.altKey) ai.toggleForPlayer(i);
-            else togglePlayerEnabled(i);
-        } else if (evt.keyCode == 77) { // 'm'
-            sound_player.toggle_sound();
-            debug(evt.keyCode);
-        }
     }
 
     function update_player_actions() {
@@ -84,10 +64,6 @@ function Game(canvas, img, movement, sound_player, is_server) {
         movement.collision_check(renderer, img);
         update_object_animations(renderer, img);
         renderer.draw();
-    }
-
-    function debug(str) {
-        document.getElementById('debug').innerHTML = str;
     }
 
     function pump() {

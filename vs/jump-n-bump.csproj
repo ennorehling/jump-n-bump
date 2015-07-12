@@ -46,6 +46,9 @@
     <Content Include="..\game\scripts\game.js">
       <Link>js\game.js</Link>
     </Content>
+    <Content Include="..\game\scripts\keyboard.js">
+      <Link>js\keyboard.js</Link>
+    </Content>
     <Content Include="..\game\scripts\level.js">
       <Link>js\level.js</Link>
     </Content>
