@@ -10,7 +10,6 @@ var env = {
     JNB_MAX_PLAYERS: 4,
     MAX_OBJECTS: 200,
     settings: {
-        is_server: true,
         jetpack: 0,
         pogostick: 0,
         bunnies_in_space: 0,
@@ -169,7 +168,7 @@ function Game(canvas, img) {
                 for (var c2 = 0; c2 < env.JNB_MAX_PLAYERS; c2++) {
                     player[c1].bumped[c2] = 0;
                 }
-                position_player(c1);
+                player[c1].position_player(c1);
             }
         }
     }
@@ -193,11 +192,12 @@ function Game(canvas, img) {
 
         ctx.mozImageSmoothingEnabled = false;
 
+        var is_server = true;
         player = [];
-        player[0] = new Player(0, [37, 39, 38]);
-        player[1] = new Player(1, [65, 68, 87]);
-        player[2] = new Player(2, [100, 102, 104]);
-        player[3] = new Player(3, [74, 76, 73]);
+        player[0] = new Player(0, [37, 39, 38], is_server);
+        player[1] = new Player(1, [65, 68, 87], is_server);
+        player[2] = new Player(2, [100, 102, 104], is_server);
+        player[3] = new Player(3, [74, 76, 73], is_server);
 
         init_level();
 
