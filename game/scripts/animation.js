@@ -1,12 +1,15 @@
 function Animation(renderer, img, objects) {
 
-    function advance_frame(obj, pause_at_end)
+    function advance_frame(obj, pause_at_end, loop)
     {
         obj.frame++;
         if (obj.frame >= env.animation_data.objects[obj.anim].num_frames) {
             if (pause_at_end) {
                 obj.frame--;
                 obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+            }
+            else if (loop) {
+                obj.frame = env.animation_data.objects[obj.anim].restart_frame;
             }
             else {
                 obj.used = false;
@@ -17,15 +20,21 @@ function Animation(renderer, img, objects) {
         }
     }
 
-    function tick(obj, pause_at_end) {
+    function tick(obj, pause_at_end, loop) {
         obj.ticks--;
         if (obj.ticks <= 0) {
-            advance_frame(obj, pause_at_end);
+            advance_frame(obj, pause_at_end, loop);
         }
         if (obj.used)
             renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
     }
 
+    function start_anim(obj, anim) {
+        obj.anim = anim;
+        obj.frame = 0;
+        obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+        obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
+    }
 
     this.update_object = function () {
         var c1;
@@ -36,12 +45,12 @@ function Animation(renderer, img, objects) {
             if (obj.used) {
                 switch (obj.type) {
                     case objects.SPRING:
-                        tick(obj, true);
+                        tick(obj, true, false);
                         break;
                     case objects.SPLASH:
                     case objects.SMOKE:
                     case objects.FLESH_TRACE:
-                        tick(obj, false);
+                        tick(obj, false, false);
                         break;
                     case objects.YEL_BUTFLY:
                     case objects.PINK_BUTFLY:
@@ -105,41 +114,18 @@ function Animation(renderer, img, objects) {
                         }
                         if (obj.type == objects.YEL_BUTFLY) {
                             if (obj.x_add < 0 && obj.anim != objects.ANIM_YEL_BUTFLY_LEFT) {
-                                obj.anim = objects.ANIM_YEL_BUTFLY_LEFT;
-                                obj.frame = 0;
-                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
-                                obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
+                                start_anim(obj, objects.ANIM_YEL_BUTFLY_LEFT);
                             } else if (obj.x_add > 0 && obj.anim != objects.ANIM_YEL_BUTFLY_RIGHT) {
-                                obj.anim = objects.ANIM_YEL_BUTFLY_RIGHT;
-                                obj.frame = 0;
-                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
-                                obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
+                                start_anim(obj, objects.ANIM_YEL_BUTFLY_RIGHT);
                             }
                         } else {
                             if (obj.x_add < 0 && obj.anim != objects.ANIM_PINK_BUTFLY_LEFT) {
-                                obj.anim = objects.ANIM_PINK_BUTFLY_LEFT;
-                                obj.frame = 0;
-                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
-                                obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
+                                start_anim(obj, objects.ANIM_PINK_BUTFLY_LEFT);
                             } else if (obj.x_add > 0 && obj.anim != objects.ANIM_PINK_BUTFLY_RIGHT) {
-                                obj.anim = objects.ANIM_PINK_BUTFLY_RIGHT;
-                                obj.frame = 0;
-                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
-                                obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
+                                start_anim(obj, objects.ANIM_PINK_BUTFLY_RIGHT);
                             }
                         }
-                        obj.ticks--;
-                        if (obj.ticks <= 0) {
-                            obj.frame++;
-                            if (obj.frame >= env.animation_data.objects[obj.anim].num_frames)
-                                obj.frame = env.animation_data.objects[obj.anim].restart_frame;
-                            else {
-                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
-                                obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
-                            }
-                        }
-                        if (obj.used)
-                            renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
+                        tick(obj, false, true);
                         break;
                     case objects.FUR:
                         if (rnd(100) < 30)
