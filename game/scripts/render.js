@@ -33,8 +33,6 @@ function Renderer(ctx, img) {
     }
 
     function draw_pobs() {
-        var page_info = main_info.page_info;
-
         for (var c1 = main.num_pobs - 1; c1 >= 0; c1--) {
             var pob = main.pobs[c1];
             put_pob(pob.x, pob.y, pob.gob, pob.image);
@@ -50,9 +48,7 @@ function Renderer(ctx, img) {
 
     this.draw = function() {
         ctx.drawImage(img.level, 0, 0);
-
-        var page_info = main_info.page_info;
-
+        
         for (var i = 0; i < env.JNB_MAX_PLAYERS; i++) {
             if (player[i].enabled) {
                 this.add_pob(player[i].x >> 16, player[i].y >> 16, img.rabbits, rabbit_gobs[player[i].get_image() + i * 18]);
