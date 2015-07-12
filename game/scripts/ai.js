@@ -87,7 +87,7 @@ function AI(keyboard_state) {
             return false;
         }
 
-        else if (tar_dist_above >= 0) {  // target on the upper side
+        else if (tar_dist_above >= 0 && tar_dist_above < 32) {  // Try to get higher than the target
             return true;
         } else {  // target below
             return false;
