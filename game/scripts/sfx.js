@@ -10,5 +10,4 @@ function Sfx(sound_player) {
     this.splash = playOnce("splash");
     this.fly = playOnce("fly");
     this.music = function() { sound_player.play_sound("bump", true); };
-    this.silence_all = sound_player.silence_all;
 };

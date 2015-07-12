@@ -1,7 +1,6 @@
 
 
 var main_info = {
-    music_no_sound : false,
     no_gore : false
 };
 
@@ -52,7 +51,8 @@ function Game(canvas, img) {
     var canvas_scale = 1;
     var ctx = canvas.getContext('2d');
     var renderer = new Renderer(ctx, img);
-    var sfx = new Sfx(new Sound_Player());
+    var sound_player = new Sound_Player(gup('nosound') == '1');
+    var sfx = new Sfx(sound_player);
     var ai = new AI([false, false, false, true]);
     var movement = null;
 
@@ -75,12 +75,7 @@ function Game(canvas, img) {
             if (evt.altKey) ai.toggleForPlayer(i);
             else togglePlayerEnabled(i);
         } else if (evt.keyCode == 77) { // 'm'
-            main_info.music_no_sound = !main_info.music_no_sound;
-            if (main_info.music_no_sound) {
-                sfx.silence_all();
-            } else {
-                sfx.music();
-            }
+            sound_player.toggle_sound();
             debug(evt.keyCode);
         }
     }
@@ -179,8 +174,6 @@ function Game(canvas, img) {
     }
 
     this.start = function () {
-        if (gup('nosound') == '1') main_info.music_no_sound = true;
-
         var settings = {
             pogostick: gup('pogostick') == '1',
             jetpack: gup('jetpack') == '1',
