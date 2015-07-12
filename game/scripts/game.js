@@ -1,4 +1,4 @@
-function Game(movement, ai, animation, renderer, key_pressed, is_server) {
+function Game(movement, ai, animation, renderer, objects, key_pressed, is_server) {
     var next_time = 0;
 
     reset_players();
@@ -16,7 +16,7 @@ function Game(movement, ai, animation, renderer, key_pressed, is_server) {
 
     function reset_level() {
         create_map();
-        create_objects();
+        objects.reset_objects();
 
         for (var c1 = 0; c1 < env.JNB_MAX_PLAYERS; c1++) {
             if (player[c1].enabled) {

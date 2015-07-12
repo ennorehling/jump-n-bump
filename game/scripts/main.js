@@ -39,11 +39,12 @@ function init() {
     var sound_player = new Sound_Player(muted);
     var sfx = new Sfx(sound_player);
     var renderer = new Renderer(canvas, img);
-    var movement = new Movement(renderer, img, sfx, settings);
+    var objects = new Objects();
+    var movement = new Movement(renderer, img, sfx, objects, settings);
     var keyboard = new Keyboard(sound_player);
     var ai = new AI(keyboard);
-    var animation = new Animation(renderer, img);
-    var game = new Game(movement, ai, animation, renderer, keyboard.key_pressed, true);
+    var animation = new Animation(renderer, img, objects);
+    var game = new Game(movement, ai, animation, renderer, objects, keyboard.key_pressed, true);
     document.onkeydown = keyboard.onKeyDown;
     document.onkeyup = keyboard.onKeyUp;
     sfx.music();

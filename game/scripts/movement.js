@@ -1,4 +1,4 @@
-function Movement(renderer, img, sfx, settings) {
+function Movement(renderer, img, sfx, objects, settings) {
 
     this.steer_player = function(p) {
         if (p.action_left && p.action_right) {
@@ -34,7 +34,7 @@ function Movement(renderer, img, sfx, settings) {
                         p.x_add = 0;
                 }
                 if (p.x_add != 0 && GET_BAN_MAP_XY((s1 + 8), (s2 + 16)) == BAN_SOLID)
-                    add_object(OBJ_SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), OBJ_ANIM_SMOKE, 0);
+                    objects.add(objects.SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
             }
             if (p.anim == 1) {
                 p.set_anim(0);
@@ -94,7 +94,7 @@ function Movement(renderer, img, sfx, settings) {
                 if (GET_BAN_MAP_IN_WATER(s1, s2))
                     p.in_water = 0;
                 if (rnd(100) < 50)
-                    add_object(OBJ_SMOKE, (p.x >> 16) + 6 + rnd(5), (p.y >> 16) + 10 + rnd(5), 0, 16384 + rnd(8192), OBJ_ANIM_SMOKE, 0);
+                    objects.add(objects.SMOKE, (p.x >> 16) + 6 + rnd(5), (p.y >> 16) + 10 + rnd(5), 0, 16384 + rnd(8192), objects.ANIM_SMOKE, 0);
             }
         }
 
@@ -139,27 +139,28 @@ function Movement(renderer, img, sfx, settings) {
             p.jump_ready = 0;
             p.jump_abort = 0;
             for (c2 = 0; c2 < env.MAX_OBJECTS; c2++) {
-                if (objects[c2].used == 1 && objects[c2].type == OBJ_SPRING) {
+                var obj = objects.objects[c2];
+                if (obj.used == 1 && obj.type == objects.SPRING) {
                     if (GET_BAN_MAP_XY((s1 + 8), (s2 + 15)) == BAN_SPRING) {
-                        if ((objects[c2].x >> 20) == ((s1 + 8) >> LEVEL_SCALE_FACTOR) && (objects[c2].y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
-                            objects[c2].frame = 0;
-                            objects[c2].ticks = env.animation_data.objects[objects[c2].anim].frame[objects[c2].frame].ticks;
-                            objects[c2].image = env.animation_data.objects[objects[c2].anim].frame[objects[c2].frame].image;
+                        if ((obj.x >> 20) == ((s1 + 8) >> LEVEL_SCALE_FACTOR) && (obj.y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
+                            obj.frame = 0;
+                            obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+                            obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                             break;
                         }
                     } else {
                         if (GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING) {
-                            if ((objects[c2].x >> 20) == (s1 >> LEVEL_SCALE_FACTOR) && (objects[c2].y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
-                                objects[c2].frame = 0;
-                                objects[c2].ticks = env.animation_data.objects[objects[c2].anim].frame[objects[c2].frame].ticks;
-                                objects[c2].image = env.animation_data.objects[objects[c2].anim].frame[objects[c2].frame].image;
+                            if ((obj.x >> 20) == (s1 >> LEVEL_SCALE_FACTOR) && (obj.y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
+                                obj.frame = 0;
+                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+                                obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                                 break;
                             }
                         } else if (GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING) {
-                            if ((objects[c2].x >> 20) == ((s1 + 15) >> LEVEL_SCALE_FACTOR) && (objects[c2].y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
-                                objects[c2].frame = 0;
-                                objects[c2].ticks = env.animation_data.objects[objects[c2].anim].frame[objects[c2].frame].ticks;
-                                objects[c2].image = env.animation_data.objects[objects[c2].anim].frame[objects[c2].frame].image;
+                            if ((obj.x >> 20) == ((s1 + 15) >> LEVEL_SCALE_FACTOR) && (obj.y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
+                                obj.frame = 0;
+                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+                                obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                                 break;
                             }
                         }
@@ -187,7 +188,7 @@ function Movement(renderer, img, sfx, settings) {
                 p.in_water = 1;
                 p.set_anim(4);
                 if (p.y_add >= 32768) {
-                    add_object(OBJ_SPLASH, (p.x >> 16) + 8, ((p.y >> 16) & 0xfff0) + 15, 0, 0, OBJ_ANIM_SPLASH, 0);
+                    objects.add(objects.SPLASH, (p.x >> 16) + 8, ((p.y >> 16) & 0xfff0) + 15, 0, 0, objects.ANIM_SPLASH, 0);
                     sfx.splash();
                 }
             }
@@ -314,7 +315,7 @@ function Movement(renderer, img, sfx, settings) {
         if (player[c2].anim != 6) {
             player[c2].set_anim(6);
             if (!settings.no_gore) {
-                add_gore(x, y, c2);
+                objects.add_gore(x, y, c2);
             }
             sfx.death();
             player[c1].bumps++;
@@ -357,7 +358,7 @@ function Movement(renderer, img, sfx, settings) {
             if (p.x_add > 0) {
                 p.x_add -= 16384;
                 if (p.x_add > -98304 && p.in_water == 0 && below == BAN_SOLID) {
-                    add_object(OBJ_SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), OBJ_ANIM_SMOKE, 0);
+                    objects.add(objects.SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
                 }
             } else {
                 p.x_add -= 12288;
@@ -398,7 +399,7 @@ function Movement(renderer, img, sfx, settings) {
             if (p.x_add < 0) {
                 p.x_add += 16384;
                 if (p.x_add < 98304 && p.in_water == 0 && below == BAN_SOLID) {
-                    add_object(OBJ_SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), OBJ_ANIM_SMOKE, 0);
+                    objects.add(objects.SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
                 }
             } else {
                 p.x_add += 12288;

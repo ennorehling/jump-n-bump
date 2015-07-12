@@ -1,13 +1,13 @@
-function Animation(renderer, img) {
+function Animation(renderer, img, objects) {
     this.update_object = function () {
         var c1;
         var s1 = 0;
 
         for (c1 = 0; c1 < env.MAX_OBJECTS; c1++) {
-            var obj = objects[c1];
+            var obj = objects.objects[c1];
             if (obj.used) {
                 switch (obj.type) {
-                    case OBJ_SPRING:
+                    case objects.SPRING:
                         obj.ticks--;
                         if (obj.ticks <= 0) {
                             obj.frame++;
@@ -22,7 +22,7 @@ function Animation(renderer, img) {
                         if (obj.used)
                             renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
                         break;
-                    case OBJ_SPLASH:
+                    case objects.SPLASH:
                         obj.ticks--;
                         if (obj.ticks <= 0) {
                             obj.frame++;
@@ -36,7 +36,7 @@ function Animation(renderer, img) {
                         if (obj.used)
                             renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
                         break;
-                    case OBJ_SMOKE:
+                    case objects.SMOKE:
                         obj.x += obj.x_add;
                         obj.y += obj.y_add;
                         obj.ticks--;
@@ -52,8 +52,8 @@ function Animation(renderer, img) {
                         if (obj.used)
                             renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
                         break;
-                    case OBJ_YEL_BUTFLY:
-                    case OBJ_PINK_BUTFLY:
+                    case objects.YEL_BUTFLY:
+                    case objects.PINK_BUTFLY:
                         obj.x_acc += rnd(128) - 64;
                         if (obj.x_acc < -1024)
                             obj.x_acc = -1024;
@@ -112,26 +112,26 @@ function Animation(renderer, img) {
                             obj.y_add = -obj.y_add >> 2;
                             obj.y_acc = 0;
                         }
-                        if (obj.type == OBJ_YEL_BUTFLY) {
-                            if (obj.x_add < 0 && obj.anim != OBJ_ANIM_YEL_BUTFLY_LEFT) {
-                                obj.anim = OBJ_ANIM_YEL_BUTFLY_LEFT;
+                        if (obj.type == objects.YEL_BUTFLY) {
+                            if (obj.x_add < 0 && obj.anim != objects.ANIM_YEL_BUTFLY_LEFT) {
+                                obj.anim = objects.ANIM_YEL_BUTFLY_LEFT;
                                 obj.frame = 0;
                                 obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
                                 obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
-                            } else if (obj.x_add > 0 && obj.anim != OBJ_ANIM_YEL_BUTFLY_RIGHT) {
-                                obj.anim = OBJ_ANIM_YEL_BUTFLY_RIGHT;
+                            } else if (obj.x_add > 0 && obj.anim != objects.ANIM_YEL_BUTFLY_RIGHT) {
+                                obj.anim = objects.ANIM_YEL_BUTFLY_RIGHT;
                                 obj.frame = 0;
                                 obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
                                 obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                             }
                         } else {
-                            if (obj.x_add < 0 && obj.anim != OBJ_ANIM_PINK_BUTFLY_LEFT) {
-                                obj.anim = OBJ_ANIM_PINK_BUTFLY_LEFT;
+                            if (obj.x_add < 0 && obj.anim != objects.ANIM_PINK_BUTFLY_LEFT) {
+                                obj.anim = objects.ANIM_PINK_BUTFLY_LEFT;
                                 obj.frame = 0;
                                 obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
                                 obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
-                            } else if (obj.x_add > 0 && obj.anim != OBJ_ANIM_PINK_BUTFLY_RIGHT) {
-                                obj.anim = OBJ_ANIM_PINK_BUTFLY_RIGHT;
+                            } else if (obj.x_add > 0 && obj.anim != objects.ANIM_PINK_BUTFLY_RIGHT) {
+                                obj.anim = objects.ANIM_PINK_BUTFLY_RIGHT;
                                 obj.frame = 0;
                                 obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
                                 obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
@@ -150,9 +150,9 @@ function Animation(renderer, img) {
                         if (obj.used)
                             renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
                         break;
-                    case OBJ_FUR:
+                    case objects.FUR:
                         if (rnd(100) < 30)
-                            add_object(OBJ_FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, OBJ_ANIM_FLESH_TRACE, 0);
+                            objects.add(objects.FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 0);
                         if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 0) {
                             obj.y_add += 3072;
                             if (obj.y_add > 196608)
@@ -229,14 +229,14 @@ function Animation(renderer, img) {
                             renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.frame + s1]);
                         }
                         break;
-                    case OBJ_FLESH:
+                    case objects.FLESH:
                         if (rnd(100) < 30) {
                             if (obj.frame == 76)
-                                add_object(OBJ_FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, OBJ_ANIM_FLESH_TRACE, 1);
+                                objects.add(objects.FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 1);
                             else if (obj.frame == 77)
-                                add_object(OBJ_FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, OBJ_ANIM_FLESH_TRACE, 2);
+                                objects.add(objects.FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 2);
                             else if (obj.frame == 78)
-                                add_object(OBJ_FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, OBJ_ANIM_FLESH_TRACE, 3);
+                                objects.add(objects.FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 3);
                         }
                         if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 0) {
                             obj.y_add += 3072;
@@ -311,7 +311,7 @@ function Animation(renderer, img) {
                         if (obj.used)
                             renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.frame]);
                         break;
-                    case OBJ_FLESH_TRACE:
+                    case objects.FLESH_TRACE:
                         obj.ticks--;
                         if (obj.ticks <= 0) {
                             obj.frame++;
