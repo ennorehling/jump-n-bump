@@ -32,30 +32,33 @@ function AI(keyboard_state) {
             var target = nearest_player(i);
             if (target == null) continue;
 
-            var cur_posx = current_player.x >> 16;
-            var cur_posy = current_player.y >> 16;
-            var tar_posx = target.x >> 16;
-            var tar_posy = target.y >> 16;
-            
-            var tar_dist_above = cur_posy - tar_posy;
-            var tar_dist_right = tar_posx - cur_posx;
-            var tar_is_right = tar_dist_right > 0;
-            
-            var tar_above_nearby = tar_dist_above > 0 && tar_dist_above < 32
-                && tar_dist_right < 32 + 8 && tar_dist_right > -32;
-
-            var same_vertical_line = tar_dist_right < 4 + 8 && tar_dist_right > -4;
-
-            var rm = should_move_direction(tar_above_nearby, same_vertical_line, tar_is_right);
-            var lm = should_move_direction(tar_above_nearby, same_vertical_line, !tar_is_right);
-            var jm = should_jump(current_player, cur_posx, cur_posy, tar_dist_above, tar_above_nearby, lm, rm);
-
-            press_keys(i, lm, rm, jm);
+            move(current_player, target);
         }
     }
 
-    function should_move_direction(running_away, same_vertical_line, dir_of_target)
-    {
+    function move(current_player, target) {
+        var cur_posx = current_player.x >> 16;
+        var cur_posy = current_player.y >> 16;
+        var tar_posx = target.x >> 16;
+        var tar_posy = target.y >> 16;
+
+        var tar_dist_above = cur_posy - tar_posy;
+        var tar_dist_right = tar_posx - cur_posx;
+        var tar_is_right = tar_dist_right > 0;
+
+        var tar_above_nearby = tar_dist_above > 0 && tar_dist_above < 32
+            && tar_dist_right < 32 + 8 && tar_dist_right > -32;
+
+        var same_vertical_line = tar_dist_right < 4 + 8 && tar_dist_right > -4;
+
+        var rm = should_move_direction(tar_above_nearby, same_vertical_line, tar_is_right);
+        var lm = should_move_direction(tar_above_nearby, same_vertical_line, !tar_is_right);
+        var jm = should_jump(current_player, cur_posx, cur_posy, tar_dist_above, tar_above_nearby, lm, rm);
+
+        press_keys(current_player, lm, rm, jm);
+    }
+
+    function should_move_direction(running_away, same_vertical_line, dir_of_target) {
         //same_vertical_line is a form of hysteresis to prevent "nervous" bunnies that keep changing direction as soon as the player does.
         return running_away && !dir_of_target
             || !running_away && dir_of_target && !same_vertical_line;
@@ -93,23 +96,23 @@ function AI(keyboard_state) {
         return jm;
     }
 
-    function press_keys(i, lm, rm, jm) {
+    function press_keys(p, lm, rm, jm) {
         if (lm) {
-            keyboard_state.addkey(i, 0);
+            keyboard_state.addkey(p, 0);
         } else {
-            keyboard_state.delkey(i, 0);
+            keyboard_state.delkey(p, 0);
         }
 
         if (rm) {
-            keyboard_state.addkey(i, 1);
+            keyboard_state.addkey(p, 1);
         } else {
-            keyboard_state.delkey(i, 1);
+            keyboard_state.delkey(p, 1);
         }
 
         if (jm) {
-            keyboard_state.addkey(i, 2);
+            keyboard_state.addkey(p, 2);
         } else {
-            keyboard_state.delkey(i, 2);
+            keyboard_state.delkey(p, 2);
         }
     }
     

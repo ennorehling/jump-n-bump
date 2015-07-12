@@ -5,12 +5,12 @@ function Keyboard(sound_player) {
         return keys_pressed[key];
     }
 
-    this.addkey = function(i, k) {
-        keys_pressed[player[i].keys[k]] = true;
+    this.addkey = function(player, k) {
+        keys_pressed[player.keys[k]] = true;
     }
 
-    this.delkey = function(i, k) {
-        keys_pressed[player[i].keys[k]] = false;
+    this.delkey = function(player, k) {
+        keys_pressed[player.keys[k]] = false;
     }
     
     this.onKeyDown = function(evt) {
