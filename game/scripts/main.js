@@ -1,7 +1,6 @@
 
 
 var main_info = {
-    draw_page : null,
     music_no_sound : false,
     no_gore : false,
     page_info : {
@@ -13,26 +12,17 @@ var main_info = {
 
 var env = {
     JNB_MAX_PLAYERS: 4,
-    next_time: 0,
+    MAX_OBJECTS: 200,
     settings: {
-            is_server: true,
-            jetpack: 0,
-            pogostick: 0,
-            bunnies_in_space: 0,
-            flies_enabled: 0,
-            blood_is_thicker_than_water: 0
-        },
+        is_server: true,
+        jetpack: 0,
+        pogostick: 0,
+        bunnies_in_space: 0,
+        flies_enabled: 0,
+        blood_is_thicker_than_water: 0
+    },
     sfx: new Sfx(new Sound_Player()),
     ai: new AI([false, false, false, true]),
-    render: {
-        canvas_scale: 1,
-        max: {
-            OBJECTS: 200,
-            POBS: 200,
-            FLIES: 20,
-            LEFTOVERS: 50,
-        }
-    },
     animation_data: new Animation_Data()
 };
 
@@ -72,7 +62,8 @@ function rnd(max_value) {
 var player = [];
 
 function Game(canvas, img) {
-
+    var next_time = 0;
+    var canvas_scale = 1;
     var ctx = canvas.getContext('2d');
     var renderer = new Renderer(ctx, img);
 
@@ -146,8 +137,8 @@ function Game(canvas, img) {
             resize_canvas();
             game_loop();
             var now = timeGetTime();
-            var time_diff = env.next_time - now;
-            env.next_time += (1000 / 60);
+            var time_diff = next_time - now;
+            next_time += (1000 / 60);
 
             if (time_diff > 0) {
                 // we have time left
@@ -163,13 +154,13 @@ function Game(canvas, img) {
         var y_scale = window.innerHeight / img.level.height;
         var new_scale = Math.floor(Math.min(x_scale, y_scale));
 
-        if (env.render.canvas_scale != new_scale) {
-            env.render.canvas_scale = new_scale;
+        if (canvas_scale != new_scale) {
+            canvas_scale = new_scale;
             canvas.width = 0;
             canvas.height = 0;
-            canvas.width = img.level.width * env.render.canvas_scale;
-            canvas.height = img.level.height * env.render.canvas_scale;
-            ctx.scale(env.render.canvas_scale, env.render.canvas_scale);
+            canvas.width = img.level.width * canvas_scale;
+            canvas.height = img.level.height * canvas_scale;
+            ctx.scale(canvas_scale, canvas_scale);
         }
     }
 
@@ -217,7 +208,7 @@ function Game(canvas, img) {
 
         document.onkeydown = onKeyDown;
         document.onkeyup = onKeyUp;
-        env.next_time = timeGetTime() + 1000;
+        next_time = timeGetTime() + 1000;
 
         env.sfx.music();
         pump();

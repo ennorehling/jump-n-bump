@@ -18,7 +18,7 @@ var OBJ_ANIM_PINK_BUTFLY_LEFT = 6;
 var OBJ_ANIM_FLESH_TRACE = 7;
 
 function add_object(type, x, y, x_add, y_add, anim, frame) {
-    for (var c1 = 0; c1 < env.render.max.OBJECTS; c1++) {
+    for (var c1 = 0; c1 < env.MAX_OBJECTS; c1++) {
         if (!objects[c1].used) {
             objects[c1].used = true;
             objects[c1].type = type;
@@ -69,7 +69,7 @@ function create_objects() {
     var idx = 0;
 
     objects = [];
-    for (c1 = 0; c1 < env.render.max.OBJECTS; c1++) {
+    for (c1 = 0; c1 < env.MAX_OBJECTS; c1++) {
         objects[c1] = { used : false };
     }
     for (c1 = 0; c1 < LEVEL_HEIGHT; c1++) {

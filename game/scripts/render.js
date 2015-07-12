@@ -1,5 +1,10 @@
 function Renderer(ctx, img) {
     var leftovers = { num_pobs: 0, pobs: [] };
+    var MAX = {
+        POBS: 200,
+        FLIES: 20,
+        LEFTOVERS: 50,
+    };
 
     this.add_leftovers = function(x, y, image, gob) {
         leftovers.pobs[leftovers.num_pobs] = { x: x, y: y, gob: gob, image: image };
@@ -8,7 +13,7 @@ function Renderer(ctx, img) {
 
     this.add_pob = function(x, y, image, gob) {
         var page_info = main_info.page_info;
-        if (page_info.num_pobs >= env.render.max.POBS) {
+        if (page_info.num_pobs >= MAX.POBS) {
             return;
         }
         page_info.pobs[page_info.num_pobs] = { x: x, y: y, gob: gob, image: image };

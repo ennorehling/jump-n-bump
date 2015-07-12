@@ -2,7 +2,7 @@ function update_object_animations(renderer, img) {
     var c1;
     var s1 = 0;
 
-    for (c1 = 0; c1 < env.render.max.OBJECTS; c1++) {
+    for (c1 = 0; c1 < env.MAX_OBJECTS; c1++) {
         var obj = objects[c1];
         if (obj.used) {
             switch (obj.type) {
