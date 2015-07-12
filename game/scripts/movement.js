@@ -188,11 +188,7 @@ function Movement(sfx, settings) {
                 p.set_anim(4);
                 if (p.y_add >= 32768) {
                     add_object(OBJ_SPLASH, (p.x >> 16) + 8, ((p.y >> 16) & 0xfff0) + 15, 0, 0, OBJ_ANIM_SPLASH, 0);
-
-                    if (settings.blood_is_thicker_than_water == 0)
-                        sfx.splash();
-                    else
-                        sfx.splash();
+                    sfx.splash();
                 }
             }
             /* slowly move up to water surface */
