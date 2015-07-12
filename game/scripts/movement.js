@@ -1,4 +1,4 @@
-function Movement(settings) {
+function Movement(sfx, settings) {
 
     this.steer_player = function(p) {
         if (p.action_left && p.action_right) {
@@ -54,9 +54,9 @@ function Movement(settings) {
                     p.jump_ready = 0;
                     p.jump_abort = 1;
                     if (settings.pogostick == 0)
-                        env.sfx.jump();
+                        sfx.jump();
                     else
-                        env.sfx.spring();
+                        sfx.spring();
                 }
                 /* jump out of water */
                 if (GET_BAN_MAP_IN_WATER(s1, s2)) {
@@ -66,9 +66,9 @@ function Movement(settings) {
                     p.jump_ready = 0;
                     p.jump_abort = 1;
                     if (settings.pogostick == 0)
-                        env.sfx.jump();
+                        sfx.jump();
                     else
-                        env.sfx.spring();
+                        sfx.spring();
                 }
             }
             /* fall down by gravity */
@@ -166,7 +166,7 @@ function Movement(settings) {
                     }
                 }
             }
-            env.sfx.spring();
+            sfx.spring();
         }
         s1 = (p.x >> 16);
         s2 = (p.y >> 16);
@@ -190,9 +190,9 @@ function Movement(settings) {
                     add_object(OBJ_SPLASH, (p.x >> 16) + 8, ((p.y >> 16) & 0xfff0) + 15, 0, 0, OBJ_ANIM_SPLASH, 0);
 
                     if (settings.blood_is_thicker_than_water == 0)
-                        env.sfx.splash();
+                        sfx.splash();
                     else
-                        env.sfx.splash();
+                        sfx.splash();
                 }
             }
             /* slowly move up to water surface */
@@ -321,7 +321,7 @@ function Movement(settings) {
             if (main_info.no_gore == 0) {
                 add_gore(x, y, c2);
             }
-            env.sfx.death();
+            sfx.death();
             player[c1].bumps++;
             player[c1].bumped[c2]++;
             s1 = player[c1].bumps % 100;

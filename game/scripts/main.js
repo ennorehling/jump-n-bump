@@ -9,8 +9,6 @@ var main_info = {
 var env = {
     JNB_MAX_PLAYERS: 4,
     MAX_OBJECTS: 200,
-    sfx: new Sfx(new Sound_Player()),
-    ai: new AI([false, false, false, true]),
     animation_data: new Animation_Data()
 };
 
@@ -54,6 +52,8 @@ function Game(canvas, img) {
     var canvas_scale = 1;
     var ctx = canvas.getContext('2d');
     var renderer = new Renderer(ctx, img);
+    var sfx = new Sfx(new Sound_Player());
+    var ai = new AI([false, false, false, true]);
     var movement = null;
 
     function timeGetTime() {
@@ -72,14 +72,14 @@ function Game(canvas, img) {
         keys_pressed[evt.keyCode] = false;
         if (evt.keyCode >= 49 && evt.keyCode <= 52) {
             var i = evt.keyCode - 49;
-            if (evt.altKey) env.ai.toggleForPlayer(i);
+            if (evt.altKey) ai.toggleForPlayer(i);
             else togglePlayerEnabled(i);
         } else if (evt.keyCode == 77) { // 'm'
             main_info.music_no_sound = !main_info.music_no_sound;
             if (main_info.music_no_sound) {
-                env.sfx.silence_all();
+                sfx.silence_all();
             } else {
-                env.sfx.music();
+                sfx.music();
             }
             debug(evt.keyCode);
         }
@@ -94,7 +94,7 @@ function Game(canvas, img) {
     }
 
     function steer_players() {
-        env.ai.cpu_move();
+        ai.cpu_move();
         update_player_actions();
         for (var playerIndex = 0; playerIndex != player.length; ++playerIndex) {
             var p = player[playerIndex];
@@ -188,7 +188,7 @@ function Game(canvas, img) {
             flies_enabled: 0,
             blood_is_thicker_than_water: 0
         };
-        movement = new Movement(settings);
+        movement = new Movement(sfx, settings);
         ctx.mozImageSmoothingEnabled = false;
 
         var is_server = true;
@@ -204,7 +204,7 @@ function Game(canvas, img) {
         document.onkeyup = onKeyUp;
         next_time = timeGetTime() + 1000;
 
-        env.sfx.music();
+        sfx.music();
         pump();
     }
 }
