@@ -234,7 +234,7 @@ function steer_player(p)
 }
 
 
-function collision_check() {
+function collision_check(renderer, img) {
     var c1 = 0, c2 = 0, c3 = 0;
     var l1;
 
@@ -263,9 +263,9 @@ function collision_check() {
             if (Math.abs(player[c1].x - player[c2].x) < 0xC0000 && Math.abs(player[c1].y - player[c2].y) < 0xC0000) {
                 if ((Math.abs(player[c1].y - player[c2].y) >> 16) > 5) {
                     if (player[c1].y < player[c2].y) {
-                        player_kill(c1, c2);
+                        player_kill(c1, c2, renderer, img);
                     } else {
-                        player_kill(c2, c1);
+                        player_kill(c2, c1, renderer, img);
                     }
                 } else {
                     if (player[c1].x < player[c2].x) {
@@ -307,7 +307,7 @@ function collision_check() {
     }
 }
 
-function processKill(c1, c2, x, y) {
+function processKill(c1, c2, x, y, renderer, img) {
     var s1 = 0;
 
     player[c1].y_add = -player[c1].y_add;
@@ -325,14 +325,14 @@ function processKill(c1, c2, x, y) {
         player[c1].bumped[c2]++;
         s1 = player[c1].bumps % 100;
         if (s1 % 10 == 0) {
-            env.render.renderer.add_leftovers(360, 34 + c1 * 64, env.render.img.numbers, number_gobs[Math.floor(s1 / 10) % 10]);
+            renderer.add_leftovers(360, 34 + c1 * 64, img.numbers, number_gobs[Math.floor(s1 / 10) % 10]);
         }
-        env.render.renderer.add_leftovers(376, 34 + c1 * 64, env.render.img.numbers, number_gobs[s1 % 10]);
+        renderer.add_leftovers(376, 34 + c1 * 64, img.numbers, number_gobs[s1 % 10]);
     }
 }
 
-function player_kill(c1, c2) {
-    processKill(c1, c2, player[c2].x, player[c2].y);
+function player_kill(c1, c2, renderer, img) {
+    processKill(c1, c2, player[c2].x, player[c2].y, renderer, img);
 }
 
 

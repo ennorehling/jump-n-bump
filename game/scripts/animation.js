@@ -1,4 +1,4 @@
-function update_object_animations(renderer) {
+function update_object_animations(renderer, img) {
     var c1;
     var s1 = 0;
 
@@ -19,7 +19,7 @@ function update_object_animations(renderer) {
                     }
                 }
                 if (obj.used)
-                    renderer.add_pob(obj.x >> 16, obj.y >> 16, env.render.img.objects, object_gobs[obj.image]);
+                    renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
                 break;
             case OBJ_SPLASH:
                 obj.ticks--;
@@ -33,7 +33,7 @@ function update_object_animations(renderer) {
                     }
                 }
                 if (obj.used)
-                    renderer.add_pob(obj.x >> 16, obj.y >> 16, env.render.img.objects, object_gobs[obj.image]);
+                    renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
                 break;
             case OBJ_SMOKE:
                 obj.x += obj.x_add;
@@ -49,7 +49,7 @@ function update_object_animations(renderer) {
                     }
                 }
                 if (obj.used)
-                    renderer.add_pob(obj.x >> 16, obj.y >> 16, env.render.img.objects, object_gobs[obj.image]);
+                    renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
                 break;
             case OBJ_YEL_BUTFLY:
             case OBJ_PINK_BUTFLY:
@@ -147,7 +147,7 @@ function update_object_animations(renderer) {
                     }
                 }
                 if (obj.used)
-                    renderer.add_pob(obj.x >> 16, obj.y >> 16, env.render.img.objects, object_gobs[obj.image]);
+                    renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
                 break;
             case OBJ_FUR:
                 if (rnd(100) < 30)
@@ -225,7 +225,7 @@ function update_object_animations(renderer) {
                         s1 = 0;
                     if (s1 > 7)
                         s1 = 7;
-                    renderer.add_pob(obj.x >> 16, obj.y >> 16, env.render.img.objects, object_gobs[obj.frame + s1]);
+                    renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.frame + s1]);
                 }
                 break;
             case OBJ_FLESH:
@@ -290,7 +290,7 @@ function update_object_animations(renderer) {
                             } else {
                                 if (rnd(100) < 10) {
                                     s1 = rnd(4) - 2;
-                                    env.render.renderer.add_leftovers(obj.x >> 16, (obj.y >> 16) + s1, env.render.img.objects, object_gobs[obj.frame]);
+                                    renderer.add_leftovers(obj.x >> 16, (obj.y >> 16) + s1, img.objects, object_gobs[obj.frame]);
                                 }
                                 obj.used = false;
                             }
@@ -308,7 +308,7 @@ function update_object_animations(renderer) {
                 if (obj.x_add > 0 && obj.x_add < 16384)
                     obj.x_add = 16384;
                 if (obj.used)
-                    renderer.add_pob(obj.x >> 16, obj.y >> 16, env.render.img.objects, object_gobs[obj.frame]);
+                    renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.frame]);
                 break;
             case OBJ_FLESH_TRACE:
                 obj.ticks--;
@@ -322,7 +322,7 @@ function update_object_animations(renderer) {
                     }
                 }
                 if (obj.used)
-                    renderer.add_pob(obj.x >> 16, obj.y >> 16, env.render.img.objects, object_gobs[obj.image]);
+                    renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
                 break;
             }
         }
