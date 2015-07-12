@@ -9,13 +9,6 @@ var main_info = {
 var env = {
     JNB_MAX_PLAYERS: 4,
     MAX_OBJECTS: 200,
-    settings: {
-        jetpack: 0,
-        pogostick: 0,
-        bunnies_in_space: 0,
-        flies_enabled: 0,
-        blood_is_thicker_than_water: 0
-    },
     sfx: new Sfx(new Sound_Player()),
     ai: new AI([false, false, false, true]),
     animation_data: new Animation_Data()
@@ -61,6 +54,7 @@ function Game(canvas, img) {
     var canvas_scale = 1;
     var ctx = canvas.getContext('2d');
     var renderer = new Renderer(ctx, img);
+    var movement = null;
 
     function timeGetTime() {
         return new Date().getTime();
@@ -106,7 +100,7 @@ function Game(canvas, img) {
             var p = player[playerIndex];
             if (p.enabled) {
                 if (!p.dead_flag) {
-                    steer_player(p);
+                    movement.steer_player(p);
                 }
                 p.update_player_animation();
             }
@@ -116,7 +110,7 @@ function Game(canvas, img) {
 
     function game_loop() {
         steer_players();
-        collision_check(renderer, img);
+        movement.collision_check(renderer, img);
         update_object_animations(renderer, img);
         renderer.draw();
     }
@@ -184,12 +178,17 @@ function Game(canvas, img) {
             return results[1];
     }
 
-    this.start = function() {
+    this.start = function () {
         if (gup('nosound') == '1') main_info.music_no_sound = true;
-        if (gup('pogostick') == '1') env.settings.pogostick = 1;
-        if (gup('jetpack') == '1') env.settings.jetpack = 1;
-        if (gup('space') == '1') env.settings.bunnies_in_space = 1;
 
+        var settings = {
+            pogostick: gup('pogostick') == '1',
+            jetpack: gup('jetpack') == '1',
+            bunnies_in_space: gup('space') == '1',
+            flies_enabled: 0,
+            blood_is_thicker_than_water: 0
+        };
+        movement = new Movement(settings);
         ctx.mozImageSmoothingEnabled = false;
 
         var is_server = true;
