@@ -37,26 +37,26 @@ function AI(keyboard_state) {
             var tar_posx = target.x >> 16;
             var tar_posy = target.y >> 16;
 
-            /* nearest player found, get him */
-            /* here goes the artificial intelligence code */
-            var lm, rm;
+            /* Run towards target by default */
 
-            /* X-axis movement */
-            if (tar_posx > cur_posx) { // if true target is on the right side
-                // go after him
-                lm = false;
-                rm = true;
-            } else { // target on the left side
-                lm = true;
-                rm = false;
-            }
+            var tar_dist_above = cur_posy - tar_posy;
+            var tar_dist_right = tar_posx - cur_posx;
+            var tar_is_right = tar_dist_right > 0;
+            
+            var tar_above_nearby = tar_dist_above > 0 && tar_dist_above < 32
+                && tar_dist_right < 32 + 8 && tar_dist_right > -32;
 
-            if (cur_posy - tar_posy < 32 && cur_posy - tar_posy > 0
-                && tar_posx - cur_posx < 32 + 8 && tar_posx - cur_posx > -32) {
+            var same_vertical_line = tar_dist_right < 4 + 8 && tar_dist_right > -4;
+
+
+            var rm = tar_is_right;
+            var lm = !tar_is_right;
+
+            if (tar_above_nearby) { //Run away
                 lm = !lm;
                 rm = !rm;
             }
-            else if (tar_posx - cur_posx < 4 + 8 && tar_posx - cur_posx > -4) {      // makes the bunnies less "nervous"
+            else if (same_vertical_line) {      // makes the bunnies less "nervous"
                 lm = false;
                 lm = false;
             }
