@@ -43,6 +43,9 @@
     <Content Include="..\game\scripts\animation.js">
       <Link>js\animation.js</Link>
     </Content>
+    <Content Include="..\game\scripts\game.js">
+      <Link>js\game.js</Link>
+    </Content>
     <Content Include="..\game\scripts\level.js">
       <Link>js\level.js</Link>
     </Content>
@@ -58,7 +61,7 @@
     <Content Include="..\game\scripts\animation_data.js">
       <Link>js\animation_data.js</Link>
     </Content>
-	<Content Include="..\game\scripts\player.js">
+    <Content Include="..\game\scripts\player.js">
       <Link>js\player.js</Link>
     </Content>
     <Content Include="..\game\scripts\render.js">
