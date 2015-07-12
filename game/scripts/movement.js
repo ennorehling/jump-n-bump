@@ -314,7 +314,7 @@ function Movement(sfx, settings) {
         player[c2].dead_flag = true;
         if (player[c2].anim != 6) {
             player[c2].set_anim(6);
-            if (main_info.no_gore == 0) {
+            if (!settings.no_gore) {
                 add_gore(x, y, c2);
             }
             sfx.death();

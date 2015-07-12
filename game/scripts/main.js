@@ -1,10 +1,3 @@
-
-
-var main_info = {
-    no_gore : false
-};
-
-
 var env = {
     JNB_MAX_PLAYERS: 4,
     MAX_OBJECTS: 200,
@@ -49,8 +42,9 @@ function init() {
         pogostick: gup('pogostick') == '1',
         jetpack: gup('jetpack') == '1',
         bunnies_in_space: gup('space') == '1',
-        flies_enabled: 0,
-        blood_is_thicker_than_water: 0
+        flies_enabled: false,
+        blood_is_thicker_than_water: false,
+        no_gore: false
     };
     var muted = gup('nosound') == '1';
 
