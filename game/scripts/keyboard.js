@@ -1,5 +1,6 @@
 
 function Keyboard(sound_player) {
+    var self = this;
     var keys_pressed = {}
     this.key_pressed = function(key) {
         return keys_pressed[key];
@@ -38,7 +39,10 @@ function Keyboard(sound_player) {
     }
     
     function toggle_ai_enabled(playerIndex) {
-        player[playerIndex].ai = !player[playerIndex].ai;
-        player[playerIndex].direction = 0;
+        var p = player[playerIndex];
+        p.ai = !p.ai;
+        self.delkey(p, 0);
+        self.delkey(p, 1);
+        self.delkey(p, 2);
     }
 }
