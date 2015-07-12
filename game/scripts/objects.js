@@ -1,5 +1,6 @@
 function Objects() {
     var self = this;
+    this.objects = [];
 
     this.SPRING = 0;
     this.SPLASH = 1;
@@ -9,7 +10,6 @@ function Objects() {
     this.FUR = 5;
     this.FLESH = 6;
     this.FLESH_TRACE = 7;
-    this.objects = [];
 
     this.ANIM_SPRING = 0;
     this.ANIM_SPLASH = 1;
