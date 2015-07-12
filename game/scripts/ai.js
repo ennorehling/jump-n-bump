@@ -39,7 +39,7 @@ function AI(keyboard_state) {
 
             /* nearest player found, get him */
             /* here goes the artificial intelligence code */
-            var lm, rm, jm;
+            var lm, rm;
 
             /* X-axis movement */
             if (tar_posx > cur_posx) { // if true target is on the right side
@@ -61,39 +61,43 @@ function AI(keyboard_state) {
                 lm = false;
             }
 
-            /* Y-axis movement */
-            if (map_tile(cur_posx, cur_posy + 16) != BAN_VOID &&
-                keyboard_state.key_pressed(player[i].keys[2]))
-                jm = false;   // if we are on ground and jump key is being pressed,
-                //first we have to release it or else we won't be able to jump more than once
+            var jm = should_jump(current_player, cur_posx, cur_posy, tar_posx, tar_posy, lm, rm);
 
-            else if (map_tile(cur_posx, cur_posy - 8) != BAN_VOID &&
-                map_tile(cur_posx, cur_posy - 8) != BAN_WATER) {
-                jm = false;   // don't jump if there is something over it
-            }
-            else if (map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy) != BAN_VOID &&
-                map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy) != BAN_WATER &&
-                cur_posx > 16 && cur_posx < 352 - 16 - 8)  // obstacle, jump
-                jm = true;   // if there is something on the way, jump over it
-
-            else if (keyboard_state.key_pressed(player[i].keys[2]) &&
-                            (map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy + 8) != BAN_VOID &&
-                            map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy + 8) != BAN_WATER)) {
-                jm = true;   // this makes it possible to jump over 2 tiles
-            }
-            else if (cur_posy - tar_posy < 32 && cur_posy - tar_posy > 0 &&
-                tar_posx - cur_posx < 32 + 8 && tar_posx - cur_posx > -32) { // don't jump - running away
-                jm = false;
-            }
-
-            else if (tar_posy <= cur_posy) {  // target on the upper side
-                jm = true;
-            } else {  // target below
-                jm = false;
-            }
-
-            press_keys(i, lm, rm, jm);            
+            press_keys(i, lm, rm, jm);
         }
+    }
+
+    function should_jump(current_player, cur_posx, cur_posy, tar_posx, tar_posy, lm, rm) {
+        if (map_tile(cur_posx, cur_posy + 16) != BAN_VOID &&
+            keyboard_state.key_pressed(current_player.keys[2]))
+            return false;   // if we are on ground and jump key is being pressed,
+            //first we have to release it or else we won't be able to jump more than once
+
+        else if (map_tile(cur_posx, cur_posy - 8) != BAN_VOID &&
+            map_tile(cur_posx, cur_posy - 8) != BAN_WATER) {
+            return false;   // don't jump if there is something over it
+        }
+        else if (map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy) != BAN_VOID &&
+            map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy) != BAN_WATER &&
+            cur_posx > 16 && cur_posx < 352 - 16 - 8)  // obstacle, jump
+            return true;   // if there is something on the way, jump over it
+
+        else if (keyboard_state.key_pressed(current_player.keys[2]) &&
+                        (map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy + 8) != BAN_VOID &&
+                        map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy + 8) != BAN_WATER)) {
+            return true;   // this makes it possible to jump over 2 tiles
+        }
+        else if (cur_posy - tar_posy < 32 && cur_posy - tar_posy > 0 &&
+            tar_posx - cur_posx < 32 + 8 && tar_posx - cur_posx > -32) { // don't jump - running away
+            return false;
+        }
+
+        else if (tar_posy <= cur_posy) {  // target on the upper side
+            return true;
+        } else {  // target below
+            return false;
+        }
+        return jm;
     }
 
     function press_keys(i, lm, rm, jm) {
