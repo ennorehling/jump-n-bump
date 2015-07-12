@@ -25,6 +25,16 @@ function delkey(i, k) {
     keys_pressed[player[i].keys[k]] = false;
 }
 
+function gup(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regexS = "[\\?&]" + name + "=([^&#]*)";
+    var regex = new RegExp(regexS);
+    var results = regex.exec(window.location.href);
+    if (results == null)
+        return "";
+    else
+        return results[1];
+}
 
 function init() {
     var canvas = document.getElementById('screen');
@@ -35,7 +45,21 @@ function init() {
     img.objects = document.getElementById('objects');
     img.numbers = document.getElementById('numbers');
 
-    var game = new Game(canvas, img);
+    var settings = {
+        pogostick: gup('pogostick') == '1',
+        jetpack: gup('jetpack') == '1',
+        bunnies_in_space: gup('space') == '1',
+        flies_enabled: 0,
+        blood_is_thicker_than_water: 0
+    };
+    var muted = gup('nosound') == '1';
+
+    var sound_player = new Sound_Player(muted);
+    var sfx = new Sfx(sound_player);
+    movement = new Movement(sfx, settings);
+    
+    var game = new Game(canvas, img, movement, sound_player);
+    sfx.music();
     game.start();
 
 }
@@ -46,15 +70,12 @@ function rnd(max_value) {
 
 var player = [];
 
-function Game(canvas, img) {
+function Game(canvas, img, movement, sound_player) {
     var next_time = 0;
     var canvas_scale = 1;
     var ctx = canvas.getContext('2d');
     var renderer = new Renderer(ctx, img);
-    var sound_player = new Sound_Player(gup('nosound') == '1');
-    var sfx = new Sfx(sound_player);
     var ai = new AI([false, false, false, true]);
-    var movement = null;
 
     function timeGetTime() {
         return new Date().getTime();
@@ -162,26 +183,7 @@ function Game(canvas, img) {
         }
     }
 
-    function gup(name) {
-        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-        var regexS = "[\\?&]" + name + "=([^&#]*)";
-        var regex = new RegExp(regexS);
-        var results = regex.exec(window.location.href);
-        if (results == null)
-            return "";
-        else
-            return results[1];
-    }
-
     this.start = function () {
-        var settings = {
-            pogostick: gup('pogostick') == '1',
-            jetpack: gup('jetpack') == '1',
-            bunnies_in_space: gup('space') == '1',
-            flies_enabled: 0,
-            blood_is_thicker_than_water: 0
-        };
-        movement = new Movement(sfx, settings);
         ctx.mozImageSmoothingEnabled = false;
 
         var is_server = true;
@@ -197,7 +199,6 @@ function Game(canvas, img) {
         document.onkeyup = onKeyUp;
         next_time = timeGetTime() + 1000;
 
-        sfx.music();
         pump();
     }
 }
