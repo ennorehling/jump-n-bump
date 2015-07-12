@@ -1,4 +1,4 @@
-function Movement(sfx, settings) {
+function Movement(renderer, img, sfx, settings) {
 
     this.steer_player = function(p) {
         if (p.action_left && p.action_right) {
@@ -229,9 +229,8 @@ function Movement(sfx, settings) {
             p.set_anim(3);
         }
     }
-
-
-    this.collision_check = function(renderer, img) {
+    
+    this.collision_check = function() {
         var c1 = 0, c2 = 0, c3 = 0;
         var l1;
 
@@ -260,9 +259,9 @@ function Movement(sfx, settings) {
                 if (Math.abs(player[c1].x - player[c2].x) < 0xC0000 && Math.abs(player[c1].y - player[c2].y) < 0xC0000) {
                     if ((Math.abs(player[c1].y - player[c2].y) >> 16) > 5) {
                         if (player[c1].y < player[c2].y) {
-                            player_kill(c1, c2, renderer, img);
+                            player_kill(c1, c2);
                         } else {
-                            player_kill(c2, c1, renderer, img);
+                            player_kill(c2, c1);
                         }
                     } else {
                         if (player[c1].x < player[c2].x) {
@@ -304,7 +303,7 @@ function Movement(sfx, settings) {
         }
     }
 
-    function processKill(c1, c2, x, y, renderer, img) {
+    function processKill(c1, c2, x, y) {
         var s1 = 0;
 
         player[c1].y_add = -player[c1].y_add;
@@ -328,11 +327,10 @@ function Movement(sfx, settings) {
         }
     }
 
-    function player_kill(c1, c2, renderer, img) {
-        processKill(c1, c2, player[c2].x, player[c2].y, renderer, img);
+    function player_kill(c1, c2) {
+        processKill(c1, c2, player[c2].x, player[c2].y);
     }
-
-
+    
     function player_action_left(p) {
         var s1 = 0, s2 = 0;
         var below_left, below, below_right;

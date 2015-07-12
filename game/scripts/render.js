@@ -1,7 +1,9 @@
-function Renderer(ctx, img) {
+function Renderer(canvas, img) {
     var main = { num_pobs: 0, pobs: [] };
     var leftovers = { num_pobs: 0, pobs: [] };
-    
+    var canvas_scale = 1;
+    var ctx = canvas.getContext('2d');
+
     var MAX = {
         POBS: 200,
         FLIES: 20,
@@ -46,7 +48,24 @@ function Renderer(ctx, img) {
         }
     }
 
-    this.draw = function() {
+
+    function resize_canvas() {
+        var x_scale = window.innerWidth / img.level.width;
+        var y_scale = window.innerHeight / img.level.height;
+        var new_scale = Math.floor(Math.min(x_scale, y_scale));
+
+        if (canvas_scale != new_scale) {
+            canvas_scale = new_scale;
+            canvas.width = 0;
+            canvas.height = 0;
+            canvas.width = img.level.width * canvas_scale;
+            canvas.height = img.level.height * canvas_scale;
+            ctx.scale(canvas_scale, canvas_scale);
+        }
+    }
+
+    this.draw = function () {
+        resize_canvas();
         ctx.drawImage(img.level, 0, 0);
         
         for (var i = 0; i < env.JNB_MAX_PLAYERS; i++) {

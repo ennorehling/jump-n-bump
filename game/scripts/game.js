@@ -1,8 +1,5 @@
-function Game(canvas, img, movement, ai, sound_player, key_pressed, is_server) {
+function Game(movement, ai, animation, renderer, key_pressed, is_server) {
     var next_time = 0;
-    var canvas_scale = 1;
-    var ctx = canvas.getContext('2d');
-    var renderer = new Renderer(ctx, img);
 
     reset_players();
     reset_level();
@@ -61,15 +58,13 @@ function Game(canvas, img, movement, ai, sound_player, key_pressed, is_server) {
 
     function game_iteration() {
         steer_players();
-        movement.collision_check(renderer, img);
-        update_object_animations(renderer, img);
+        movement.collision_check();
+        animation.update_object();
         renderer.draw();
     }
 
     function pump() {
         while (1) {
-
-            resize_canvas();
             game_iteration();
             var now = timeGetTime();
             var time_diff = next_time - now;
@@ -81,21 +76,6 @@ function Game(canvas, img, movement, ai, sound_player, key_pressed, is_server) {
                 break;
             }
             // debug("frametime exceeded: " + (-time_diff));
-        }
-    }
-
-    function resize_canvas() {
-        var x_scale = window.innerWidth / img.level.width;
-        var y_scale = window.innerHeight / img.level.height;
-        var new_scale = Math.floor(Math.min(x_scale, y_scale));
-
-        if (canvas_scale != new_scale) {
-            canvas_scale = new_scale;
-            canvas.width = 0;
-            canvas.height = 0;
-            canvas.width = img.level.width * canvas_scale;
-            canvas.height = img.level.height * canvas_scale;
-            ctx.scale(canvas_scale, canvas_scale);
         }
     }
 
