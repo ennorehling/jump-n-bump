@@ -2,11 +2,7 @@
 
 var main_info = {
     music_no_sound : false,
-    no_gore : false,
-    page_info : {
-        num_pobs : 0,
-        pobs : []
-    }
+    no_gore : false
 };
 
 
@@ -122,7 +118,6 @@ function Game(canvas, img) {
     function game_loop() {
         steer_players();
         collision_check(renderer, img);
-        main_info.page_info.num_pobs = 0;
         update_object_animations(renderer, img);
         renderer.draw();
     }

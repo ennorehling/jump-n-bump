@@ -1,5 +1,7 @@
 function Renderer(ctx, img) {
+    var main = { num_pobs: 0, pobs: [] };
     var leftovers = { num_pobs: 0, pobs: [] };
+    
     var MAX = {
         POBS: 200,
         FLIES: 20,
@@ -12,12 +14,11 @@ function Renderer(ctx, img) {
     }
 
     this.add_pob = function(x, y, image, gob) {
-        var page_info = main_info.page_info;
-        if (page_info.num_pobs >= MAX.POBS) {
+        if (main.num_pobs >= MAX.POBS) {
             return;
         }
-        page_info.pobs[page_info.num_pobs] = { x: x, y: y, gob: gob, image: image };
-        page_info.num_pobs++;
+        main.pobs[main.num_pobs] = { x: x, y: y, gob: gob, image: image };
+        main.num_pobs++;
     }
 
     function put_pob(x, y, gob, img) {
@@ -34,8 +35,8 @@ function Renderer(ctx, img) {
     function draw_pobs() {
         var page_info = main_info.page_info;
 
-        for (var c1 = page_info.num_pobs - 1; c1 >= 0; c1--) {
-            var pob = page_info.pobs[c1];
+        for (var c1 = main.num_pobs - 1; c1 >= 0; c1--) {
+            var pob = main.pobs[c1];
             put_pob(pob.x, pob.y, pob.gob, pob.image);
         }
     }
@@ -48,7 +49,6 @@ function Renderer(ctx, img) {
     }
 
     this.draw = function() {
-
         ctx.drawImage(img.level, 0, 0);
 
         var page_info = main_info.page_info;
@@ -62,6 +62,8 @@ function Renderer(ctx, img) {
         draw_pobs();
 
         ctx.drawImage(img.mask, 0, 0);
+
+        main.num_pobs = 0;
     }
 
 };
