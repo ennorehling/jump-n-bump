@@ -36,9 +36,7 @@ function AI(keyboard_state) {
             var cur_posy = current_player.y >> 16;
             var tar_posx = target.x >> 16;
             var tar_posy = target.y >> 16;
-
-            /* Run towards target by default */
-
+            
             var tar_dist_above = cur_posy - tar_posy;
             var tar_dist_right = tar_posx - cur_posx;
             var tar_is_right = tar_dist_right > 0;
@@ -48,26 +46,22 @@ function AI(keyboard_state) {
 
             var same_vertical_line = tar_dist_right < 4 + 8 && tar_dist_right > -4;
 
-
-            var rm = tar_is_right;
-            var lm = !tar_is_right;
-
-            if (tar_above_nearby) { //Run away
-                lm = !lm;
-                rm = !rm;
-            }
-            else if (same_vertical_line) {      // makes the bunnies less "nervous"
-                lm = false;
-                lm = false;
-            }
-
-            var jm = should_jump(current_player, cur_posx, cur_posy, tar_posx, tar_posy, lm, rm);
+            var rm = should_move_direction(tar_above_nearby, same_vertical_line, tar_is_right);
+            var lm = should_move_direction(tar_above_nearby, same_vertical_line, !tar_is_right);
+            var jm = should_jump(current_player, cur_posx, cur_posy, tar_dist_above, tar_above_nearby, lm, rm);
 
             press_keys(i, lm, rm, jm);
         }
     }
 
-    function should_jump(current_player, cur_posx, cur_posy, tar_posx, tar_posy, lm, rm) {
+    function should_move_direction(running_away, same_vertical_line, dir_of_target)
+    {
+        //same_vertical_line is a form of hysteresis to prevent "nervous" bunnies that keep changing direction as soon as the player does.
+        return running_away && !dir_of_target
+            || !running_away && dir_of_target && !same_vertical_line;
+    }
+
+    function should_jump(current_player, cur_posx, cur_posy, tar_dist_above, running_away, lm, rm) {
         if (map_tile(cur_posx, cur_posy + 16) != BAN_VOID &&
             keyboard_state.key_pressed(current_player.keys[2]))
             return false;   // if we are on ground and jump key is being pressed,
@@ -87,12 +81,11 @@ function AI(keyboard_state) {
                         map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy + 8) != BAN_WATER)) {
             return true;   // this makes it possible to jump over 2 tiles
         }
-        else if (cur_posy - tar_posy < 32 && cur_posy - tar_posy > 0 &&
-            tar_posx - cur_posx < 32 + 8 && tar_posx - cur_posx > -32) { // don't jump - running away
+        else if (running_away) {
             return false;
         }
 
-        else if (tar_posy <= cur_posy) {  // target on the upper side
+        else if (tar_dist_above >= 0) {  // target on the upper side
             return true;
         } else {  // target below
             return false;
