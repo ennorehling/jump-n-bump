@@ -51,17 +51,16 @@ function AI(keyboard_state) {
 
         var same_vertical_line = tar_dist_right < 4 + 8 && tar_dist_right > -4;
 
-        var rm = should_move_direction(tar_above_nearby, same_vertical_line, tar_is_right);
-        var lm = should_move_direction(tar_above_nearby, same_vertical_line, !tar_is_right);
+        var rm = should_move_direction(tar_above_nearby, !same_vertical_line, tar_is_right);
+        var lm = should_move_direction(tar_above_nearby, !same_vertical_line, !tar_is_right);
         var jm = should_jump(current_player, cur_posx, cur_posy, tar_dist_above, tar_above_nearby, lm, rm);
 
         press_keys(current_player, lm, rm, jm);
     }
 
-    function should_move_direction(running_away, same_vertical_line, dir_of_target) {
-        //same_vertical_line is a form of hysteresis to prevent "nervous" bunnies that keep changing direction as soon as the player does.
-        return running_away && !dir_of_target
-            || !running_away && dir_of_target && !same_vertical_line;
+    function should_move_direction(running_away, allowed_to_chase, dir_of_target) {
+        return (running_away ^ dir_of_target)
+            && (running_away || allowed_to_chase); // Prevents "nervous" bunnies that keep changing direction as soon as the player does.
     }
 
     function should_jump(current_player, cur_posx, cur_posy, tar_dist_above, running_away, lm, rm) {
