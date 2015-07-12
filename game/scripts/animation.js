@@ -1,4 +1,32 @@
 function Animation(renderer, img, objects) {
+
+    function advance_frame(obj, pause_at_end)
+    {
+        obj.frame++;
+        if (obj.frame >= env.animation_data.objects[obj.anim].num_frames) {
+            if (pause_at_end) {
+                obj.frame--;
+                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+            }
+            else {
+                obj.used = false;
+            }
+        } else {
+            obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+            obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
+        }
+    }
+
+    function tick(obj, pause_at_end) {
+        obj.ticks--;
+        if (obj.ticks <= 0) {
+            advance_frame(obj, pause_at_end);
+        }
+        if (obj.used)
+            renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
+    }
+
+
     this.update_object = function () {
         var c1;
         var s1 = 0;
@@ -8,49 +36,12 @@ function Animation(renderer, img, objects) {
             if (obj.used) {
                 switch (obj.type) {
                     case objects.SPRING:
-                        obj.ticks--;
-                        if (obj.ticks <= 0) {
-                            obj.frame++;
-                            if (obj.frame >= env.animation_data.objects[obj.anim].num_frames) {
-                                obj.frame--;
-                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
-                            } else {
-                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
-                                obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
-                            }
-                        }
-                        if (obj.used)
-                            renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
+                        tick(obj, true);
                         break;
                     case objects.SPLASH:
-                        obj.ticks--;
-                        if (obj.ticks <= 0) {
-                            obj.frame++;
-                            if (obj.frame >= env.animation_data.objects[obj.anim].num_frames)
-                                obj.used = false;
-                            else {
-                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
-                                obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
-                            }
-                        }
-                        if (obj.used)
-                            renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
-                        break;
                     case objects.SMOKE:
-                        obj.x += obj.x_add;
-                        obj.y += obj.y_add;
-                        obj.ticks--;
-                        if (obj.ticks <= 0) {
-                            obj.frame++;
-                            if (obj.frame >= env.animation_data.objects[obj.anim].num_frames)
-                                obj.used = false;
-                            else {
-                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
-                                obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
-                            }
-                        }
-                        if (obj.used)
-                            renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
+                    case objects.FLESH_TRACE:
+                        tick(obj, false);
                         break;
                     case objects.YEL_BUTFLY:
                     case objects.PINK_BUTFLY:
@@ -310,20 +301,6 @@ function Animation(renderer, img, objects) {
                             obj.x_add = 16384;
                         if (obj.used)
                             renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.frame]);
-                        break;
-                    case objects.FLESH_TRACE:
-                        obj.ticks--;
-                        if (obj.ticks <= 0) {
-                            obj.frame++;
-                            if (obj.frame >= env.animation_data.objects[obj.anim].num_frames)
-                                obj.used = false;
-                            else {
-                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
-                                obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
-                            }
-                        }
-                        if (obj.used)
-                            renderer.add_pob(obj.x >> 16, obj.y >> 16, img.objects, object_gobs[obj.image]);
                         break;
                 }
             }
