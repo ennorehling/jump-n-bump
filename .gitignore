@@ -1,0 +1,6 @@
+.vs/
+game/scripts/
+packages/
+*/bower_components/
+*/build/
+*/node_modules/

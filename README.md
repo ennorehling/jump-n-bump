@@ -5,7 +5,9 @@ Keyboard map
 
 M: toggle sound
 
-1-4: toggle player 1-4 (active, AI, none)
+1-4: toggle player 1-4
+
+Alt + 1-4: toggle ai for player 1-4
 
 Arrows: control player 1
 
