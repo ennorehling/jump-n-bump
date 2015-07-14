@@ -1,5 +1,6 @@
 
 function Keyboard(sound_player) {
+    "use strict";
     var self = this;
     var keys_pressed = {}
     this.key_pressed = function(key) {

@@ -1,4 +1,5 @@
 function Sfx(sound_player) {
+    "use strict";
     function playOnce(filename_without_extension) {
         return function () { sound_player.play_sound(filename_without_extension, false); };
     };

@@ -1,4 +1,5 @@
 function Animation_Data() {
+    "use strict";
     function create_player_anims() {
         var player_anim_data = [
             1, 0, 0, 0x7fff, 0, 0, 0, 0, 0, 0,

@@ -1,4 +1,5 @@
 function Renderer(canvas, img) {
+    "use strict";
     var main = { num_pobs: 0, pobs: [] };
     var leftovers = { num_pobs: 0, pobs: [] };
     var canvas_scale = 1;

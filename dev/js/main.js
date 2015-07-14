@@ -7,6 +7,7 @@ var env = {
 var player = [];
 
 function init() {
+    "use strict";
     function gup(name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
         var regexS = "[\\?&]" + name + "=([^&#]*)";

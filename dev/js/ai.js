@@ -1,5 +1,5 @@
-
 function AI(keyboard_state) {
+    "use strict";
 
     function map_tile(x, y) {
         return GET_BAN_MAP(x >> 4, y >> 4);

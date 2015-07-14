@@ -1,4 +1,5 @@
 function Game(movement, ai, animation, renderer, objects, key_pressed, is_server) {
+    "use strict";
     var next_time = 0;
 
     reset_players();

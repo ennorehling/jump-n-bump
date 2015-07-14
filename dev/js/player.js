@@ -1,4 +1,5 @@
 function Player(playerIndex, keys, is_server) {
+    "use strict";
     this.action_left = false;
     this.action_up = false;
     this.action_right = false;
@@ -6,8 +7,10 @@ function Player(playerIndex, keys, is_server) {
     this.dead_flag = false;
     this.bumps = false;
     this.bumped = [];
-    this.x = 0; y = 0;
-    this.x_add = 0; y_add = 0;
+    this.x = 0;
+    this.y = 0;
+    this.x_add = 0;
+    this.y_add = 0;
     this.direction = 0;
     this.jump_ready = false;
     this.jump_abort = false;

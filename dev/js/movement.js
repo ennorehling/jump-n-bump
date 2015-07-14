@@ -1,6 +1,8 @@
 function Movement(renderer, img, sfx, objects, settings) {
+    "use strict";
 
-    this.steer_player = function(p) {
+    this.steer_player = function (p) {
+        var s1, s2;
         if (p.action_left && p.action_right) {
             if (p.direction == 0) {
                 if (p.action_right) {
@@ -138,7 +140,7 @@ function Movement(renderer, img, sfx, objects, settings) {
             p.set_anim(2);
             p.jump_ready = 0;
             p.jump_abort = 0;
-            for (c2 = 0; c2 < env.MAX_OBJECTS; c2++) {
+            for (var c2 = 0; c2 < env.MAX_OBJECTS; c2++) {
                 var obj = objects.objects[c2];
                 if (obj.used == 1 && obj.type == objects.SPRING) {
                     if (GET_BAN_MAP_XY((s1 + 8), (s2 + 15)) == BAN_SPRING) {
