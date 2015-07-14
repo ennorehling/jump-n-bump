@@ -1,0 +1,5 @@
+﻿{
+  "ignore": [
+    "\\bower_components\\"
+  ]
+}
