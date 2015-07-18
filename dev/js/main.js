@@ -37,12 +37,12 @@ function init() {
     };
     var muted = gup('nosound') == '1';
 
-    var sound_player = new Sound_Player(muted);
-    var sfx = new Sfx(sound_player);
+    this.sound_player = new Sound_Player(muted);
+    var sfx = new Sfx(this.sound_player);
     var renderer = new Renderer(canvas, img);
     var objects = new Objects();
     var movement = new Movement(renderer, img, sfx, objects, settings);
-    var keyboard = new Keyboard(sound_player);
+    var keyboard = new Keyboard(this.sound_player);
     var ai = new AI(keyboard);
     var animation = new Animation(renderer, img, objects);
     var game = new Game(movement, ai, animation, renderer, objects, keyboard.key_pressed, true);
@@ -50,6 +50,20 @@ function init() {
     document.onkeyup = keyboard.onKeyUp;
     sfx.music();
     game.start();
+    this.start = game.start;
+    this.pause = function () {
+        this.sound_player.set_muted(true);
+        game.pause();
+    }
+    this.unpause = function () {
+        this.sound_player.set_muted(false);
+        game.start();
+    }
+
+
+    this.scores = function () {
+        return player.map(function (p) { return p.bumped; });
+    }
 }
 
 function rnd(max_value) {
