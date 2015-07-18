@@ -6,8 +6,9 @@ var env = {
 
 var player = [];
 
-function init() {
+function Game_Session() {
     "use strict";
+
     function gup(name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
         var regexS = "[\\?&]" + name + "=([^&#]*)";
@@ -49,7 +50,7 @@ function init() {
     document.onkeydown = keyboard.onKeyDown;
     document.onkeyup = keyboard.onKeyUp;
     sfx.music();
-    game.start();
+
     this.start = game.start;
     this.pause = function () {
         this.sound_player.set_muted(true);
@@ -64,6 +65,7 @@ function init() {
     this.scores = function () {
         return player.map(function (p) { return p.bumped; });
     }
+    
 }
 
 function rnd(max_value) {

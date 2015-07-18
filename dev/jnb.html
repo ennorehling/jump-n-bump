@@ -1,31 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Jump'n'Bump - HTML5</title>
-<META NAME="description" CONTENT="An instant real-time multiplayer-only keyboard-crowding classic, this game pits up to four human-operated cute fuzzy widdle bunnies against each other for one goal only: lagomorphic cranial domination.">
-<link rel="shortcut icon" href="rabbit.ico" />
-<script type="text/javascript" src="scripts/jump-n-bump.js"></script>
-<script type="text/javascript" src="scripts/third_party/knockout.js"></script>
-<style type="text/css">
-  canvas { 
-	border: 0px solid black;
-    position: absolute;
-    top:0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin:auto;
-	}
-  img.resource { display:none; }
+    <title>Jump'n'Bump - HTML5</title>
+    <META NAME="description" CONTENT="An instant real-time multiplayer-only keyboard-crowding classic, this game pits up to four human-operated cute fuzzy widdle bunnies against each other for one goal only: lagomorphic cranial domination.">
+    <link rel="shortcut icon" href="rabbit.ico" />
+    <style type="text/css">
+      canvas { 
+	    border: 0px solid black;
+        position: absolute;
+        top:0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin:auto;
+	    }
+      img.resource { display:none; }
   
-</style>
+    </style>
 </head>
-<body onload="init()" text="#FFFFFF" bgcolor="#000000">
-<img class="resource" id='level' src='levels/default/level.png'/>
-<img class="resource" id='mask' src='levels/default/mask.png'/>
-<img class="resource" id='objects' src='sprites/objects.png'/>
-<img class="resource" id='numbers' src='sprites/numbers.png'/>
-<img class="resource" id='rabbits' src='sprites/rabbit.png'/>
-<canvas id="screen" width="1200" height="768"></canvas>
-<br/><tt style="visibility: hidden;">Debug: <span id='debug'></span></tt>
+<body text="#FFFFFF" bgcolor="#000000">
+    <img class="resource" id='level' src='levels/default/level.png'/>
+    <img class="resource" id='mask' src='levels/default/mask.png'/>
+    <img class="resource" id='objects' src='sprites/objects.png'/>
+    <img class="resource" id='numbers' src='sprites/numbers.png'/>
+    <img class="resource" id='rabbits' src='sprites/rabbit.png'/>
+    <div data-bind="visible: current_page() === Page.Game">
+        <canvas id="screen" width="1200" height="768"></canvas>
+        <button data-bind="click: pause_game" >Pause game</button>
+    </div>
+    <div data-bind="visible: current_page() == Page.Scores">
+        <h1>Scores</h1>
+        <table data-bind="with: scores_viewmodel">
+            <tr>
+                <!-- ko foreach: player_row -->
+                    <th data-bind="text: $data"></th>
+                <!-- /ko -->
+            </tr>
+            <tbody>
+                <!-- ko foreach: score_rows -->
+                    <tr>
+                        <th data-bind="text: $data[0]"></th>
+                        <!-- ko foreach: $data -->
+                            <!-- ko if: $index() != 0 -->
+                                <td data-bind="text: $data"></td>
+                            <!-- /ko -->
+                        <!-- /ko -->
+                    </tr>
+                <!-- /ko -->
+            </tbody>
+        </table>
+
+        <button data-bind="click: unpause_game">Unpause game</button>
+        
+    </div>
+    <div data-bind="visible: current_page() == Page.Instructions">
+        <p>
+            <h1>Jump'n'Bump - HTML5</h1>
+            <img align="left" src="jbcircle.png" />
+            This game is a HTML5 reimplementation of a <a href="https://github.com/fschulze/jumpnbump">open source</a> <a href="https://icculus.org/jumpnbump/">DOS classic</a>. As of July 2015, it is still in development.<br />
+            Maybe you would like to take a look at the <a href="http://github.org/badgerman/jump-n-bump">Source code</a>?
+        </p>
+    </div>
+    <div data-bind="visible: current_page() != Page.Game">
+        <br clear="all" />
+        <button data-bind="click: start_game">Start new game</button>
+        <h3>Keyboard map:</h3>
+        <ul>
+            <li>M: toggle sound
+            <li>1-4: toggle player 1-4
+            <li>Alt + 1-4: toggle AI for player 1-4
+            <li>Arrows: control player 1
+            <li>WAD: control player 2
+            <li>JIL: control player 3
+            <li>NumPad: control player 4
+        </ul>
+    </div>
+    <br/><tt style="visibility: hidden;">Debug: <span id='debug'></span></tt>
+
+    <script type="text/javascript" src="scripts/third_party/knockout.js"></script>
+    <script type="text/javascript" src="scripts/jump-n-bump.js"></script>
+</body>
 </html>

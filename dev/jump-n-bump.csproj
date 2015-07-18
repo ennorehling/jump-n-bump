@@ -39,6 +39,7 @@
     <Content Include="js\movement.js" />
     <Content Include="js\objects.js" />
     <Content Include="js\player.js" />
+    <Content Include="js\viewmodel.js" />
     <Content Include="js\render.js" />
     <Content Include="js\sfx.js" />
     <Content Include="js\sound.js" />
