@@ -1,7 +1,7 @@
 function Game(movement, ai, animation, renderer, objects, key_pressed, is_server) {
     "use strict";
     var next_time = 0;
-
+    var playing = false;
     reset_players();
     reset_level();
 
@@ -65,7 +65,7 @@ function Game(movement, ai, animation, renderer, objects, key_pressed, is_server
     }
 
     function pump() {
-        while (1) {
+        while (playing) {
             game_iteration();
             var now = timeGetTime();
             var time_diff = next_time - now;
@@ -82,6 +82,11 @@ function Game(movement, ai, animation, renderer, objects, key_pressed, is_server
 
     this.start = function () {
         next_time = timeGetTime() + 1000;
+        playing = true;
         pump();
+    }
+
+    this.pause = function () {
+        playing = false;
     }
 }
