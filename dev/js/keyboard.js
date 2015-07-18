@@ -21,18 +21,14 @@ function Keyboard(sound_player) {
 
     this.onKeyUp = function(evt) {
         keys_pressed[evt.keyCode] = false;
+        var uppercase_string = String.fromCharCode(evt.keyCode);
         if (evt.keyCode >= 49 && evt.keyCode <= 52) {
             var i = evt.keyCode - 49;
             if (evt.altKey) toggle_ai_enabled(i);
             else toggle_player_enabled(i);
-        } else if (evt.keyCode == 77) { // 'm'
+        } else if (uppercase_string === "M") {
             sound_player.toggle_sound();
-            debug(evt.keyCode);
         }
-    }
-
-    function debug(str) {
-        document.getElementById('debug').innerHTML = str;
     }
 
     function toggle_player_enabled(playerIndex) {

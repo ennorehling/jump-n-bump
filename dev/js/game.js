@@ -76,7 +76,6 @@ function Game(movement, ai, animation, renderer, objects, key_pressed, is_server
                 setTimeout(pump, time_diff);
                 break;
             }
-            // debug("frametime exceeded: " + (-time_diff));
         }
     }
 
