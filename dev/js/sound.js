@@ -2,16 +2,20 @@ function Sound_Player(muted) {
     var sounds = [];
     var sfx_extension;
     
-    function toggle_pause(audio) {
-        if (muted) audio.pause();
+    function set_single_audio_muted(audio, val) {
+        if (val) audio.pause();
         else if (audio.loop) audio.play();
     };
 
-    this.toggle_sound = function () {
-        muted = !muted;
+    this.set_muted = function (val) {
+        muted = val;
         for (var i in sounds) {
-            toggle_pause(sounds[i].audio);
+            set_single_audio_muted(sounds[i].audio, val);
         }
+    }
+
+    this.toggle_sound = function () {
+        this.set_muted(!muted);
     };
     
     this.play_sound = function(sfx_name, loop) {
