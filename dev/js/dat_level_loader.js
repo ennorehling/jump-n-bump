@@ -56,11 +56,7 @@
             return 0;
         }
 
-        var name = "";
-        var sizeof_name = 21;
-        var ofs = 0;
         var ptr = 0;
-        
         var num_files_contained = read_four_byte_int(ptr);
         ptr += 4;
 
