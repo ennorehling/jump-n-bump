@@ -27,7 +27,7 @@ function Game_Session() {
     img.rabbits = document.getElementById('rabbits');
     img.objects = document.getElementById('objects');
     img.numbers = document.getElementById('numbers');
-
+    
     var settings = {
         pogostick: gup('pogostick') == '1',
         jetpack: gup('jetpack') == '1',

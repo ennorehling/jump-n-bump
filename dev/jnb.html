@@ -63,7 +63,8 @@
     </div>
     <div data-bind="visible: current_page() != Page.Game">
         <br clear="all" />
-        <button data-bind="click: start_game">Start new game</button>
+        <input id="level_input" type="file" data-bind="event: { change: load_level }"/><br />
+        <button data-bind="click: start_game, disabled: loading_level">Start new game</button>
         <h3>Keyboard map:</h3>
         <ul>
             <li>M: toggle sound
@@ -77,6 +78,7 @@
     </div>
 
     <script type="text/javascript" src="scripts/third_party/knockout.js"></script>
+    <script type="text/javascript" src="scripts/third_party/pako_inflate.js"></script>
     <script type="text/javascript" src="scripts/jump-n-bump.js"></script>
 </body>
 </html>

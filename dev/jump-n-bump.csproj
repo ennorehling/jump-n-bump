@@ -32,6 +32,7 @@
     <Content Include="js\ai.js" />
     <Content Include="js\animation.js" />
     <Content Include="js\animation_data.js" />
+    <Content Include="js\dat_level_loader.js" />
     <Content Include="js\game.js" />
     <Content Include="js\keyboard.js" />
     <Content Include="js\level.js" />

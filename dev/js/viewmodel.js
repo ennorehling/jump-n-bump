@@ -7,10 +7,12 @@ function ViewModel() {
     "use strict";
     
     this.current_page = ko.observable(Page.Instructions);
-    this.current_game = ko.observable({});
+    this.loading_level = ko.observable(false);
+    var loader = new Dat_Level_Loader();
+    
+    this.current_game = ko.observable(new Game_Session());
     this.scores_viewmodel = ko.observable(new Scores_ViewModel([[]]));
     this.start_game = function () {
-        this.current_game(new Game_Session());
         this.current_game().start();
         this.current_page(Page.Game);
     }
@@ -22,6 +24,21 @@ function ViewModel() {
     this.unpause_game = function () {
         this.current_game().unpause();
         this.current_page(Page.Game);
+    }
+
+    this.load_level = function (self) {
+        this.loading_level(true);
+        var files = document.getElementById("level_input").files;
+        if (files.length) {
+            var file = files[0];
+
+            document.addEventListener(loader.on_loaded_event_text, function () {
+                ban_map = loader.read_level();
+                self.loading_level(false);
+            });
+
+            loader.load(file);
+        }
     }
 };
 
