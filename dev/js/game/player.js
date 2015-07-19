@@ -9,8 +9,8 @@ function Player(playerIndex, keys, is_server, rnd) {
     this.bumped = [];
     this.x = { pos: 0 };
     this.y = { pos: 0 };
-    this.x_add = 0;
-    this.y_add = 0;
+    this.x.velocity = 0;
+    this.y.velocity = 0;
     this.direction = 0;
     this.jump_ready = false;
     this.jump_abort = false;
@@ -60,7 +60,7 @@ function Player(playerIndex, keys, is_server, rnd) {
             if (c1 == env.JNB_MAX_PLAYERS) {
                 player[player_num].x.pos = s1 << 20;
                 player[player_num].y.pos = s2 << 20;
-                player[player_num].x_add = player[player_num].y_add = 0;
+                player[player_num].x.velocity = player[player_num].y.velocity = 0;
                 player[player_num].direction = 0;
                 player[player_num].jump_ready = 1;
                 player[player_num].in_water = 0;

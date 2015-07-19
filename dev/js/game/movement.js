@@ -26,16 +26,16 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
             below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
             below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
             if (below == BAN_SOLID || below == BAN_SPRING || (((below_left == BAN_SOLID || below_left == BAN_SPRING) && below_right != BAN_ICE) || (below_left != BAN_ICE && (below_right == BAN_SOLID || below_right == BAN_SPRING)))) {
-                if (p.x_add < 0) {
-                    p.x_add += 16384;
-                    if (p.x_add > 0)
-                        p.x_add = 0;
+                if (p.x.velocity < 0) {
+                    p.x.velocity += 16384;
+                    if (p.x.velocity > 0)
+                        p.x.velocity = 0;
                 } else {
-                    p.x_add -= 16384;
-                    if (p.x_add < 0)
-                        p.x_add = 0;
+                    p.x.velocity -= 16384;
+                    if (p.x.velocity < 0)
+                        p.x.velocity = 0;
                 }
-                if (p.x_add != 0 && GET_BAN_MAP_XY((s1 + 8), (s2 + 16)) == BAN_SOLID)
+                if (p.x.velocity != 0 && GET_BAN_MAP_XY((s1 + 8), (s2 + 16)) == BAN_SOLID)
                     objects.add(objects.SMOKE, (p.x.pos >> 16) + 2 + rnd(9), (p.y.pos >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
             }
             if (p.anim == 1) {
@@ -51,7 +51,7 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                     s2 = -16; //Allow player to jump off screen but not negative overflow if using jetpack
                 /* jump */
                 if (GET_BAN_MAP_XY(s1, (s2 + 16)) == BAN_SOLID || GET_BAN_MAP_XY(s1, (s2 + 16)) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), (s2 + 16)) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), (s2 + 16)) == BAN_ICE) {
-                    p.y_add = -280000;
+                    p.y.velocity = -280000;
                     p.set_anim(2);
                     p.jump_ready = 0;
                     p.jump_abort = 1;
@@ -62,7 +62,7 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                 }
                 /* jump out of water */
                 if (GET_BAN_MAP_IN_WATER(s1, s2)) {
-                    p.y_add = -196608;
+                    p.y.velocity = -196608;
                     p.in_water = 0;
                     p.set_anim(2);
                     p.jump_ready = 0;
@@ -76,23 +76,23 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
             /* fall down by gravity */
             if (settings.pogostick == 0 && (!p.action_up)) {
                 p.jump_ready = 1;
-                if (p.in_water == 0 && p.y_add < 0 && p.jump_abort == 1) {
+                if (p.in_water == 0 && p.y.velocity < 0 && p.jump_abort == 1) {
                     if (settings.bunnies_in_space == 0)
                         /* normal gravity */
-                        p.y_add += 32768;
+                        p.y.velocity += 32768;
                     else
                         /* light gravity */
-                        p.y_add += 16384;
-                    if (p.y_add > 0)
-                        p.y_add = 0;
+                        p.y.velocity += 16384;
+                    if (p.y.velocity > 0)
+                        p.y.velocity = 0;
                 }
             }
         } else {
             /* with jetpack */
             if (p.action_up) {
-                p.y_add -= 16384;
-                if (p.y_add < -400000)
-                    p.y_add = -400000;
+                p.y.velocity -= 16384;
+                if (p.y.velocity < -400000)
+                    p.y.velocity = -400000;
                 if (GET_BAN_MAP_IN_WATER(s1, s2))
                     p.in_water = 0;
                 if (rnd(100) < 50)
@@ -100,14 +100,14 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
             }
         }
 
-        p.x.pos += p.x_add;
+        p.x.pos += p.x.velocity;
         if ((p.x.pos >> 16) < 0) {
             p.x.pos = 0;
-            p.x_add = 0;
+            p.x.velocity = 0;
         }
         if ((p.x.pos >> 16) + 15 > 351) {
             p.x.pos = 336 << 16;
-            p.x_add = 0;
+            p.x.velocity = 0;
         }
         {
             if (p.y.pos > 0) {
@@ -120,23 +120,23 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
             s1 = (p.x.pos >> 16);
             if (GET_BAN_MAP_XY(s1, s2) == BAN_SOLID || GET_BAN_MAP_XY(s1, s2) == BAN_ICE || GET_BAN_MAP_XY(s1, s2) == BAN_SPRING || GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SOLID || GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_ICE || GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING) {
                 p.x.pos = (((s1 + 16) & 0xfff0)) << 16;
-                p.x_add = 0;
+                p.x.velocity = 0;
             }
 
             s1 = (p.x.pos >> 16);
             if (GET_BAN_MAP_XY((s1 + 15), s2) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), s2) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), s2) == BAN_SPRING || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING) {
                 p.x.pos = (((s1 + 16) & 0xfff0) - 16) << 16;
-                p.x_add = 0;
+                p.x.velocity = 0;
             }
         }
 
-        p.y.pos += p.y_add;
+        p.y.pos += p.y.velocity;
 
         s1 = (p.x.pos >> 16);
         s2 = (p.y.pos >> 16);
         if (GET_BAN_MAP_XY((s1 + 8), (s2 + 15)) == BAN_SPRING || ((GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING && GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) != BAN_SOLID) || (GET_BAN_MAP_XY(s1, (s2 + 15)) != BAN_SOLID && GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING))) {
             p.y.pos = ((p.y.pos >> 16) & 0xfff0) << 16;
-            p.y_add = -400000;
+            p.y.velocity = -400000;
             p.set_anim(2);
             p.jump_ready = 0;
             p.jump_abort = 0;
@@ -177,7 +177,7 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
             s2 = 0;
         if (GET_BAN_MAP_XY(s1, s2) == BAN_SOLID || GET_BAN_MAP_XY(s1, s2) == BAN_ICE || GET_BAN_MAP_XY(s1, s2) == BAN_SPRING || GET_BAN_MAP_XY((s1 + 15), s2) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), s2) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), s2) == BAN_SPRING) {
             p.y.pos = (((s2 + 16) & 0xfff0)) << 16;
-            p.y_add = 0;
+            p.y.velocity = 0;
             p.set_anim(0);
         }
         s1 = (p.x.pos >> 16);
@@ -189,46 +189,46 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                 /* falling into water */
                 p.in_water = 1;
                 p.set_anim(4);
-                if (p.y_add >= 32768) {
+                if (p.y.velocity >= 32768) {
                     objects.add(objects.SPLASH, (p.x.pos >> 16) + 8, ((p.y.pos >> 16) & 0xfff0) + 15, 0, 0, objects.ANIM_SPLASH, 0);
                     sfx.splash();
                 }
             }
             /* slowly move up to water surface */
-            p.y_add -= 1536;
-            if (p.y_add < 0 && p.anim != 5) {
+            p.y.velocity -= 1536;
+            if (p.y.velocity < 0 && p.anim != 5) {
                 p.set_anim(5);
             }
-            if (p.y_add < -65536)
-                p.y_add = -65536;
-            if (p.y_add > 65535)
-                p.y_add = 65535;
+            if (p.y.velocity < -65536)
+                p.y.velocity = -65536;
+            if (p.y.velocity > 65535)
+                p.y.velocity = 65535;
             if (GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SOLID || GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_ICE) {
                 p.y.pos = (((s2 + 16) & 0xfff0) - 16) << 16;
-                p.y_add = 0;
+                p.y.velocity = 0;
             }
         } else if (GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SOLID || GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_ICE || GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING) {
             p.in_water = 0;
             p.y.pos = (((s2 + 16) & 0xfff0) - 16) << 16;
-            p.y_add = 0;
+            p.y.velocity = 0;
             if (p.anim != 0 && p.anim != 1) {
                 p.set_anim(0);
             }
         } else {
             if (p.in_water == 0) {
                 if (settings.bunnies_in_space == 0)
-                    p.y_add += 12288;
+                    p.y.velocity += 12288;
                 else
-                    p.y_add += 6144;
-                if (p.y_add > 327680)
-                    p.y_add = 327680;
+                    p.y.velocity += 6144;
+                if (p.y.velocity > 327680)
+                    p.y.velocity = 327680;
             } else {
                 p.y.pos = (p.y.pos & 0xffff0000) + 0x10000;
-                p.y_add = 0;
+                p.y.velocity = 0;
             }
             p.in_water = 0;
         }
-        if (p.y_add > 36864 && p.anim != 3 && p.in_water == 0) {
+        if (p.y.velocity > 36864 && p.anim != 3 && p.in_water == 0) {
             p.set_anim(3);
         }
     }
@@ -268,37 +268,37 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                         }
                     } else {
                         if (player[c1].x.pos < player[c2].x.pos) {
-                            if (player[c1].x_add > 0)
+                            if (player[c1].x.velocity > 0)
                                 player[c1].x.pos = player[c2].x.pos - 0xC0000;
-                            else if (player[c2].x_add < 0)
+                            else if (player[c2].x.velocity < 0)
                                 player[c2].x.pos = player[c1].x.pos + 0xC0000;
                             else {
-                                player[c1].x.pos -= player[c1].x_add;
-                                player[c2].x.pos -= player[c2].x_add;
+                                player[c1].x.pos -= player[c1].x.velocity;
+                                player[c2].x.pos -= player[c2].x.velocity;
                             }
-                            l1 = player[c2].x_add;
-                            player[c2].x_add = player[c1].x_add;
-                            player[c1].x_add = l1;
-                            if (player[c1].x_add > 0)
-                                player[c1].x_add = -player[c1].x_add;
-                            if (player[c2].x_add < 0)
-                                player[c2].x_add = -player[c2].x_add;
+                            l1 = player[c2].x.velocity;
+                            player[c2].x.velocity = player[c1].x.velocity;
+                            player[c1].x.velocity = l1;
+                            if (player[c1].x.velocity > 0)
+                                player[c1].x.velocity = -player[c1].x.velocity;
+                            if (player[c2].x.velocity < 0)
+                                player[c2].x.velocity = -player[c2].x.velocity;
                         } else {
-                            if (player[c1].x_add > 0)
+                            if (player[c1].x.velocity > 0)
                                 player[c2].x.pos = player[c1].x.pos - 0xC0000;
-                            else if (player[c2].x_add < 0)
+                            else if (player[c2].x.velocity < 0)
                                 player[c1].x.pos = player[c2].x.pos + 0xC0000;
                             else {
-                                player[c1].x.pos -= player[c1].x_add;
-                                player[c2].x.pos -= player[c2].x_add;
+                                player[c1].x.pos -= player[c1].x.velocity;
+                                player[c2].x.pos -= player[c2].x.velocity;
                             }
-                            l1 = player[c2].x_add;
-                            player[c2].x_add = player[c1].x_add;
-                            player[c1].x_add = l1;
-                            if (player[c1].x_add < 0)
-                                player[c1].x_add = -player[c1].x_add;
-                            if (player[c2].x_add > 0)
-                                player[c2].x_add = -player[c2].x_add;
+                            l1 = player[c2].x.velocity;
+                            player[c2].x.velocity = player[c1].x.velocity;
+                            player[c1].x.velocity = l1;
+                            if (player[c1].x.velocity < 0)
+                                player[c1].x.velocity = -player[c1].x.velocity;
+                            if (player[c2].x.velocity > 0)
+                                player[c2].x.velocity = -player[c2].x.velocity;
                         }
                     }
                 }
@@ -309,9 +309,9 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
     function processKill(c1, c2, x, y) {
         var s1 = 0;
 
-        player[c1].y_add = -player[c1].y_add;
-        if (player[c1].y_add > -262144)
-            player[c1].y_add = -262144;
+        player[c1].y.velocity = -player[c1].y.velocity;
+        if (player[c1].y.velocity > -262144)
+            player[c1].y.velocity = -262144;
         player[c1].jump_abort = true;
         player[c2].dead_flag = true;
         if (player[c2].anim != 6) {
@@ -345,29 +345,29 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
         below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
 
         if (below == BAN_ICE) {
-            if (p.x_add > 0) {
-                p.x_add -= 1024;
+            if (p.x.velocity > 0) {
+                p.x.velocity -= 1024;
             } else {
-                p.x_add -= 768;
+                p.x.velocity -= 768;
             }
         } else if ((below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID)) {
-            if (p.x_add > 0) {
-                p.x_add -= 1024;
+            if (p.x.velocity > 0) {
+                p.x.velocity -= 1024;
             } else {
-                p.x_add -= 768;
+                p.x.velocity -= 768;
             }
         } else {
-            if (p.x_add > 0) {
-                p.x_add -= 16384;
-                if (p.x_add > -98304 && p.in_water == 0 && below == BAN_SOLID) {
+            if (p.x.velocity > 0) {
+                p.x.velocity -= 16384;
+                if (p.x.velocity > -98304 && p.in_water == 0 && below == BAN_SOLID) {
                     objects.add(objects.SMOKE, (p.x.pos >> 16) + 2 + rnd(9), (p.y.pos >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
                 }
             } else {
-                p.x_add -= 12288;
+                p.x.velocity -= 12288;
             }
         }
-        if (p.x_add < -98304) {
-            p.x_add = -98304;
+        if (p.x.velocity < -98304) {
+            p.x.velocity = -98304;
         }
         p.direction = 1;
         if (p.anim == 0) {
@@ -386,29 +386,29 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
         below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
 
         if (below == BAN_ICE) {
-            if (p.x_add < 0) {
-                p.x_add += 1024;
+            if (p.x.velocity < 0) {
+                p.x.velocity += 1024;
             } else {
-                p.x_add += 768;
+                p.x.velocity += 768;
             }
         } else if ((below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID)) {
-            if (p.x_add > 0) {
-                p.x_add += 1024;
+            if (p.x.velocity > 0) {
+                p.x.velocity += 1024;
             } else {
-                p.x_add += 768;
+                p.x.velocity += 768;
             }
         } else {
-            if (p.x_add < 0) {
-                p.x_add += 16384;
-                if (p.x_add < 98304 && p.in_water == 0 && below == BAN_SOLID) {
+            if (p.x.velocity < 0) {
+                p.x.velocity += 16384;
+                if (p.x.velocity < 98304 && p.in_water == 0 && below == BAN_SOLID) {
                     objects.add(objects.SMOKE, (p.x.pos >> 16) + 2 + rnd(9), (p.y.pos >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
                 }
             } else {
-                p.x_add += 12288;
+                p.x.velocity += 12288;
             }
         }
-        if (p.x_add > 98304) {
-            p.x_add = 98304;
+        if (p.x.velocity > 98304) {
+            p.x.velocity = 98304;
         }
         p.direction = 0;
         if (p.anim == 0) {

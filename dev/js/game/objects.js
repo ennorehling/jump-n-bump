@@ -26,12 +26,8 @@ function Objects(rnd) {
             if (!this.objects[c1].used) {
                 this.objects[c1].used = true;
                 this.objects[c1].type = type;
-                this.objects[c1].x = { pos: x << 16 };
-                this.objects[c1].y = { pos: y << 16 };
-                this.objects[c1].x_add = x_add;
-                this.objects[c1].y_add = y_add;
-                this.objects[c1].x_acc = 0;
-                this.objects[c1].y_acc = 0;
+                this.objects[c1].x = { pos: x << 16, velocity: x_add, acceleration: 0 };
+                this.objects[c1].y = { pos: y << 16, velocity: y_add, acceleration: 0 };
                 this.objects[c1].anim = anim;
                 this.objects[c1].frame = frame;
                 if (frame < env.animation_data.objects[anim].num_frames) {

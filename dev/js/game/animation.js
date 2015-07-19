@@ -58,76 +58,76 @@ function Animation(renderer, img, objects, rnd) {
                         break;
                     case objects.YEL_BUTFLY:
                     case objects.PINK_BUTFLY:
-                        obj.x_acc += rnd(128) - 64;
-                        if (obj.x_acc < -1024)
-                            obj.x_acc = -1024;
-                        if (obj.x_acc > 1024)
-                            obj.x_acc = 1024;
-                        obj.x_add += obj.x_acc;
-                        if (obj.x_add < -32768)
-                            obj.x_add = -32768;
-                        if (obj.x_add > 32768)
-                            obj.x_add = 32768;
-                        obj.x.pos += obj.x_add;
+                        obj.x.acceleration += rnd(128) - 64;
+                        if (obj.x.acceleration < -1024)
+                            obj.x.acceleration = -1024;
+                        if (obj.x.acceleration > 1024)
+                            obj.x.acceleration = 1024;
+                        obj.x.velocity += obj.x.acceleration;
+                        if (obj.x.velocity < -32768)
+                            obj.x.velocity = -32768;
+                        if (obj.x.velocity > 32768)
+                            obj.x.velocity = 32768;
+                        obj.x.pos += obj.x.velocity;
                         if ((obj.x.pos >> 16) < 16) {
                             obj.x.pos = 16 << 16;
-                            obj.x_add = -obj.x_add >> 2;
-                            obj.x_acc = 0;
+                            obj.x.velocity = -obj.x.velocity >> 2;
+                            obj.x.acceleration = 0;
                         } else if ((obj.x.pos >> 16) > 350) {
                             obj.x.pos = 350 << 16;
-                            obj.x_add = -obj.x_add >> 2;
-                            obj.x_acc = 0;
+                            obj.x.velocity = -obj.x.velocity >> 2;
+                            obj.x.acceleration = 0;
                         }
                         if (map_tile(obj) != BAN_VOID) {
-                            if (obj.x_add < 0) {
+                            if (obj.x.velocity < 0) {
                                 obj.x.pos = (((obj.x.pos >> 16) + 16) & 0xfff0) << 16;
                             } else {
                                 obj.x.pos = ((((obj.x.pos >> 16) - 16) & 0xfff0) + 15) << 16;
                             }
-                            obj.x_add = -obj.x_add >> 2;
-                            obj.x_acc = 0;
+                            obj.x.velocity = -obj.x.velocity >> 2;
+                            obj.x.acceleration = 0;
                         }
-                        obj.y_acc += rnd(64) - 32;
-                        if (obj.y_acc < -1024)
-                            obj.y_acc = -1024;
-                        if (obj.y_acc > 1024)
-                            obj.y_acc = 1024;
-                        obj.y_add += obj.y_acc;
-                        if (obj.y_add < -32768)
-                            obj.y_add = -32768;
-                        if (obj.y_add > 32768)
-                            obj.y_add = 32768;
-                        obj.y.pos += obj.y_add;
+                        obj.y.acceleration += rnd(64) - 32;
+                        if (obj.y.acceleration < -1024)
+                            obj.y.acceleration = -1024;
+                        if (obj.y.acceleration > 1024)
+                            obj.y.acceleration = 1024;
+                        obj.y.velocity += obj.y.acceleration;
+                        if (obj.y.velocity < -32768)
+                            obj.y.velocity = -32768;
+                        if (obj.y.velocity > 32768)
+                            obj.y.velocity = 32768;
+                        obj.y.pos += obj.y.velocity;
                         if ((obj.y.pos >> 16) < 0) {
                             obj.y.pos = 0;
-                            obj.y_add = -obj.y_add >> 2;
-                            obj.y_acc = 0;
+                            obj.y.velocity = -obj.y.velocity >> 2;
+                            obj.y.acceleration = 0;
                         } else if ((obj.y.pos >> 16) > 255) {
                             obj.y.pos = 255 << 16;
-                            obj.y_add = -obj.y_add >> 2;
-                            obj.y_acc = 0;
+                            obj.y.velocity = -obj.y.velocity >> 2;
+                            obj.y.acceleration = 0;
                         }
                         if (map_tile(obj) != BAN_VOID) {
-                            if (obj.y_add < 0) {
+                            if (obj.y.velocity < 0) {
                                 obj.y.pos = (((obj.y.pos >> 16) + 16) & 0xfff0) << 16;
                             } else {
                                 obj.y.pos = ((((obj.y.pos >> 16) - 16) & 0xfff0) + 15) << 16;
                             }
-                            obj.y_add = -obj.y_add >> 2;
-                            obj.y_acc = 0;
+                            obj.y.velocity = -obj.y.velocity >> 2;
+                            obj.y.acceleration = 0;
                         }
 
                         //Set animation based on direction of movement - TODO give object ownership of its left and right animation to deduplicate this
                         if (obj.type == objects.YEL_BUTFLY) {
-                            if (obj.x_add < 0 && obj.anim != objects.ANIM_YEL_BUTFLY_LEFT) {
+                            if (obj.x.velocity < 0 && obj.anim != objects.ANIM_YEL_BUTFLY_LEFT) {
                                 start_anim(obj, objects.ANIM_YEL_BUTFLY_LEFT);
-                            } else if (obj.x_add > 0 && obj.anim != objects.ANIM_YEL_BUTFLY_RIGHT) {
+                            } else if (obj.x.velocity > 0 && obj.anim != objects.ANIM_YEL_BUTFLY_RIGHT) {
                                 start_anim(obj, objects.ANIM_YEL_BUTFLY_RIGHT);
                             }
                         } else {
-                            if (obj.x_add < 0 && obj.anim != objects.ANIM_PINK_BUTFLY_LEFT) {
+                            if (obj.x.velocity < 0 && obj.anim != objects.ANIM_PINK_BUTFLY_LEFT) {
                                 start_anim(obj, objects.ANIM_PINK_BUTFLY_LEFT);
-                            } else if (obj.x_add > 0 && obj.anim != objects.ANIM_PINK_BUTFLY_RIGHT) {
+                            } else if (obj.x.velocity > 0 && obj.anim != objects.ANIM_PINK_BUTFLY_RIGHT) {
                                 start_anim(obj, objects.ANIM_PINK_BUTFLY_RIGHT);
                             }
                         }
@@ -137,72 +137,72 @@ function Animation(renderer, img, objects, rnd) {
                         if (rnd(100) < 30)
                             objects.add(objects.FLESH_TRACE, obj.x.pos >> 16, obj.y.pos >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 0);
                         if (map_tile(obj) == BAN_VOID) {
-                            obj.y_add += 3072;
-                            if (obj.y_add > 196608)
-                                obj.y_add = 196608;
+                            obj.y.velocity += 3072;
+                            if (obj.y.velocity > 196608)
+                                obj.y.velocity = 196608;
                         } else if (map_tile(obj) == BAN_WATER) {
-                            if (obj.x_add < 0) {
-                                if (obj.x_add < -65536)
-                                    obj.x_add = -65536;
-                                obj.x_add += 1024;
-                                if (obj.x_add > 0)
-                                    obj.x_add = 0;
+                            if (obj.x.velocity < 0) {
+                                if (obj.x.velocity < -65536)
+                                    obj.x.velocity = -65536;
+                                obj.x.velocity += 1024;
+                                if (obj.x.velocity > 0)
+                                    obj.x.velocity = 0;
                             } else {
-                                if (obj.x_add > 65536)
-                                    obj.x_add = 65536;
-                                obj.x_add -= 1024;
-                                if (obj.x_add < 0)
-                                    obj.x_add = 0;
+                                if (obj.x.velocity > 65536)
+                                    obj.x.velocity = 65536;
+                                obj.x.velocity -= 1024;
+                                if (obj.x.velocity < 0)
+                                    obj.x.velocity = 0;
                             }
-                            obj.y_add += 1024;
-                            if (obj.y_add < -65536)
-                                obj.y_add = -65536;
-                            if (obj.y_add > 65536)
-                                obj.y_add = 65536;
+                            obj.y.velocity += 1024;
+                            if (obj.y.velocity < -65536)
+                                obj.y.velocity = -65536;
+                            if (obj.y.velocity > 65536)
+                                obj.y.velocity = 65536;
                         }
-                        obj.x.pos += obj.x_add;
+                        obj.x.pos += obj.x.velocity;
                         if ((obj.y.pos >> 16) > 0 && (map_tile(obj) == BAN_SOLID || map_tile(obj) == BAN_ICE)) {
-                            if (obj.x_add < 0) {
+                            if (obj.x.velocity < 0) {
                                 obj.x.pos = (((obj.x.pos >> 16) + 16) & 0xfff0) << 16;
-                                obj.x_add = -obj.x_add >> 2;
+                                obj.x.velocity = -obj.x.velocity >> 2;
                             } else {
                                 obj.x.pos = ((((obj.x.pos >> 16) - 16) & 0xfff0) + 15) << 16;
-                                obj.x_add = -obj.x_add >> 2;
+                                obj.x.velocity = -obj.x.velocity >> 2;
                             }
                         }
-                        obj.y.pos += obj.y_add;
+                        obj.y.pos += obj.y.velocity;
                         if ((obj.x.pos >> 16) < -5 || (obj.x.pos >> 16) > 405 || (obj.y.pos >> 16) > 260)
                             obj.used = false;
                         if ((obj.y.pos >> 16) > 0 && (map_tile(obj) != BAN_VOID)) {
-                            if (obj.y_add < 0) {
+                            if (obj.y.velocity < 0) {
                                 if (map_tile(obj) != BAN_WATER) {
                                     obj.y.pos = (((obj.y.pos >> 16) + 16) & 0xfff0) << 16;
-                                    obj.x_add >>= 2;
-                                    obj.y_add = -obj.y_add >> 2;
+                                    obj.x.velocity >>= 2;
+                                    obj.y.velocity = -obj.y.velocity >> 2;
                                 }
                             } else {
                                 if (map_tile(obj) == BAN_SOLID) {
-                                    if (obj.y_add > 131072) {
+                                    if (obj.y.velocity > 131072) {
                                         obj.y.pos = ((((obj.y.pos >> 16) - 16) & 0xfff0) + 15) << 16;
-                                        obj.x_add >>= 2;
-                                        obj.y_add = -obj.y_add >> 2;
+                                        obj.x.velocity >>= 2;
+                                        obj.y.velocity = -obj.y.velocity >> 2;
                                     } else
                                         obj.used = false;
                                 } else if (map_tile(obj) == BAN_ICE) {
                                     obj.y.pos = ((((obj.y.pos >> 16) - 16) & 0xfff0) + 15) << 16;
-                                    if (obj.y_add > 131072)
-                                        obj.y_add = -obj.y_add >> 2;
+                                    if (obj.y.velocity > 131072)
+                                        obj.y.velocity = -obj.y.velocity >> 2;
                                     else
-                                        obj.y_add = 0;
+                                        obj.y.velocity = 0;
                                 }
                             }
                         }
-                        if (obj.x_add < 0 && obj.x_add > -16384)
-                            obj.x_add = -16384;
-                        if (obj.x_add > 0 && obj.x_add < 16384)
-                            obj.x_add = 16384;
+                        if (obj.x.velocity < 0 && obj.x.velocity > -16384)
+                            obj.x.velocity = -16384;
+                        if (obj.x.velocity > 0 && obj.x.velocity < 16384)
+                            obj.x.velocity = 16384;
                         if (obj.used) {
-                            s1 = Math.floor(Math.atan2(obj.y_add, obj.x_add) * 4 / Math.PI);
+                            s1 = Math.floor(Math.atan2(obj.y.velocity, obj.x.velocity) * 4 / Math.PI);
                             if (s1 < 0)
                                 s1 += 8;
                             if (s1 < 0)
@@ -222,55 +222,55 @@ function Animation(renderer, img, objects, rnd) {
                                 objects.add(objects.FLESH_TRACE, obj.x.pos >> 16, obj.y.pos >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 3);
                         }
                         if (map_tile(obj) == BAN_VOID) {
-                            obj.y_add += 3072;
-                            if (obj.y_add > 196608)
-                                obj.y_add = 196608;
+                            obj.y.velocity += 3072;
+                            if (obj.y.velocity > 196608)
+                                obj.y.velocity = 196608;
                         } else if (map_tile(obj) == BAN_WATER) {
-                            if (obj.x_add < 0) {
-                                if (obj.x_add < -65536)
-                                    obj.x_add = -65536;
-                                obj.x_add += 1024;
-                                if (obj.x_add > 0)
-                                    obj.x_add = 0;
+                            if (obj.x.velocity < 0) {
+                                if (obj.x.velocity < -65536)
+                                    obj.x.velocity = -65536;
+                                obj.x.velocity += 1024;
+                                if (obj.x.velocity > 0)
+                                    obj.x.velocity = 0;
                             } else {
-                                if (obj.x_add > 65536)
-                                    obj.x_add = 65536;
-                                obj.x_add -= 1024;
-                                if (obj.x_add < 0)
-                                    obj.x_add = 0;
+                                if (obj.x.velocity > 65536)
+                                    obj.x.velocity = 65536;
+                                obj.x.velocity -= 1024;
+                                if (obj.x.velocity < 0)
+                                    obj.x.velocity = 0;
                             }
-                            obj.y_add += 1024;
-                            if (obj.y_add < -65536)
-                                obj.y_add = -65536;
-                            if (obj.y_add > 65536)
-                                obj.y_add = 65536;
+                            obj.y.velocity += 1024;
+                            if (obj.y.velocity < -65536)
+                                obj.y.velocity = -65536;
+                            if (obj.y.velocity > 65536)
+                                obj.y.velocity = 65536;
                         }
-                        obj.x.pos += obj.x_add;
+                        obj.x.pos += obj.x.velocity;
                         if ((obj.y.pos >> 16) > 0 && (map_tile(obj) == BAN_SOLID || map_tile(obj) == BAN_ICE)) {
-                            if (obj.x_add < 0) {
+                            if (obj.x.velocity < 0) {
                                 obj.x.pos = (((obj.x.pos >> 16) + 16) & 0xfff0) << 16;
-                                obj.x_add = -obj.x_add >> 2;
+                                obj.x.velocity = -obj.x.velocity >> 2;
                             } else {
                                 obj.x.pos = ((((obj.x.pos >> 16) - 16) & 0xfff0) + 15) << 16;
-                                obj.x_add = -obj.x_add >> 2;
+                                obj.x.velocity = -obj.x.velocity >> 2;
                             }
                         }
-                        obj.y.pos += obj.y_add;
+                        obj.y.pos += obj.y.velocity;
                         if ((obj.x.pos >> 16) < -5 || (obj.x.pos >> 16) > 405 || (obj.y.pos >> 16) > 260)
                             obj.used = false;
                         if ((obj.y.pos >> 16) > 0 && (map_tile(obj) != BAN_VOID)) {
-                            if (obj.y_add < 0) {
+                            if (obj.y.velocity < 0) {
                                 if (map_tile(obj) != BAN_WATER) {
                                     obj.y.pos = (((obj.y.pos >> 16) + 16) & 0xfff0) << 16;
-                                    obj.x_add >>= 2;
-                                    obj.y_add = -obj.y_add >> 2;
+                                    obj.x.velocity >>= 2;
+                                    obj.y.velocity = -obj.y.velocity >> 2;
                                 }
                             } else {
                                 if (map_tile(obj) == BAN_SOLID) {
-                                    if (obj.y_add > 131072) {
+                                    if (obj.y.velocity > 131072) {
                                         obj.y.pos = ((((obj.y.pos >> 16) - 16) & 0xfff0) + 15) << 16;
-                                        obj.x_add >>= 2;
-                                        obj.y_add = -obj.y_add >> 2;
+                                        obj.x.velocity >>= 2;
+                                        obj.y.velocity = -obj.y.velocity >> 2;
                                     } else {
                                         if (rnd(100) < 10) {
                                             s1 = rnd(4) - 2;
@@ -280,17 +280,17 @@ function Animation(renderer, img, objects, rnd) {
                                     }
                                 } else if (map_tile(obj) == BAN_ICE) {
                                     obj.y.pos = ((((obj.y.pos >> 16) - 16) & 0xfff0) + 15) << 16;
-                                    if (obj.y_add > 131072)
-                                        obj.y_add = -obj.y_add >> 2;
+                                    if (obj.y.velocity > 131072)
+                                        obj.y.velocity = -obj.y.velocity >> 2;
                                     else
-                                        obj.y_add = 0;
+                                        obj.y.velocity = 0;
                                 }
                             }
                         }
-                        if (obj.x_add < 0 && obj.x_add > -16384)
-                            obj.x_add = -16384;
-                        if (obj.x_add > 0 && obj.x_add < 16384)
-                            obj.x_add = 16384;
+                        if (obj.x.velocity < 0 && obj.x.velocity > -16384)
+                            obj.x.velocity = -16384;
+                        if (obj.x.velocity > 0 && obj.x.velocity < 16384)
+                            obj.x.velocity = 16384;
                         if (obj.used)
                             renderer.add_pob(obj.x.pos >> 16, obj.y.pos >> 16, img.objects, object_gobs[obj.frame]);
                         break;
