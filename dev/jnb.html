@@ -14,23 +14,26 @@
         right: 0;
         margin:auto;
 	    }
+      img {float:right; }
       img.resource { display:none; }
-  
+      br { clear: both; }
+      body { color: #cccccc; background-color: black}
+      a { color: #bbbbbb; }
     </style>
 </head>
-<body text="#FFFFFF" bgcolor="#000000">
-    <img class="resource" id='level' src='levels/default/level.png'/>
-    <img class="resource" id='mask' src='levels/default/mask.png'/>
-    <img class="resource" id='objects' src='sprites/objects.png'/>
-    <img class="resource" id='numbers' src='sprites/numbers.png'/>
-    <img class="resource" id='rabbits' src='sprites/rabbit.png'/>
+<body>
+    <img class="resource" id='level' src='levels/default/level.png' alt=""/>
+    <img class="resource" id='mask' src='levels/default/mask.png' alt=""/>
+    <img class="resource" id='objects' src='sprites/objects.png' alt=""/>
+    <img class="resource" id='numbers' src='sprites/numbers.png' alt=""/>
+    <img class="resource" id='rabbits' src='sprites/rabbit.png' alt=""/>
     <div data-bind="visible: current_page() === Page.Game">
         <canvas id="screen" width="1200" height="768"></canvas>
         <button data-bind="click: current_game().pause" >Pause game (p)</button>
     </div>
     <div data-bind="visible: current_page() == Page.Scores">
         <button data-bind="click: current_game().unpause">Unpause game (p)</button>
-        <br clear="all" />
+        <br />
         <h3>Scores</h3>
         <table data-bind="with: scores_viewmodel">
             <tr>
@@ -52,13 +55,14 @@
             </tbody>
         </table>
 
-        <br clear="all" />
+        <br />
         
     </div>
     <div data-bind="visible: current_page() == Page.Instructions">
+        <h2>Jump 'n' Bump</h2>
+        <img src="jbcircle.png" alt="small preview of the game"/>
         <p>
-            <img align="left" src="jbcircle.png" />
-            This game is a HTML5 reimplementation of a <a href="https://github.com/fschulze/jumpnbump">open source</a> <a href="https://icculus.org/jumpnbump/">DOS classic</a>. As of July 2015, it is still in development.<br />
+            This game is a HTML5 reimplementation of a <a href="https://github.com/fschulze/jumpnbump">open source</a> <a href="https://icculus.org/jumpnbump/">DOS classic</a>. As of July 2015, it is still in development.
             Maybe you would like to take a look at the <a href="https://github.com/GrahamTheCoder/jump-n-bump">Source code</a>?
         </p>
     </div>
@@ -77,8 +81,8 @@
         </ul>
         <h3>Load level:</h3>
         <p>Load any of the levels found on <a href="http://www.brainchilddesign.com/games/jumpnbump/levels/levels1.html" target="_blank">Brainchild Design's website</a></p>
-        <input id="level_input" value="Select level" type="file" accept="*.dat" data-bind="event: { change: load_level }" />
-        <br clear="all" />
+        <input id="level_input" type="file" accept=".dat" data-bind="event: { change: load_level }" />
+        <br />
     </div>
 
     <script type="text/javascript" src="scripts/third_party/knockout.js"></script>
