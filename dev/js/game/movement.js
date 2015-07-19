@@ -3,21 +3,11 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
 
     this.steer_player = function (p) {
         var s1, s2;
-        if (p.action_left && p.action_right) {
-            if (p.direction == 0) {
-                if (p.action_right) {
-                    player_action_right(p);
-                }
-            } else {
-                if (p.action_left) {
-                    player_action_left(p);
-                }
-            }
-        } else if (p.action_left) {
+        if (p.action_left && !(p.action_right && p.direction == 0)) {
             player_action_left(p);
         } else if (p.action_right) {
             player_action_right(p);
-        } else if ((!p.action_left) && (!p.action_right)) {
+        } else {
             var below_left, below, below_right;
 
             s1 = (p.x.pos >> 16);
@@ -42,6 +32,7 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                 p.set_anim(0);
             }
         }
+
         if (settings.jetpack == 0) {
             /* no jetpack */
             if (settings.pogostick == 1 || (p.jump_ready == 1 && p.action_up)) {
