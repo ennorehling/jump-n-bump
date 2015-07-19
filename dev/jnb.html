@@ -29,7 +29,9 @@
         <button data-bind="click: pause_game" >Pause game</button>
     </div>
     <div data-bind="visible: current_page() == Page.Scores">
-        <h1>Scores</h1>
+        <button data-bind="click: unpause_game">Unpause game</button>
+        <br clear="all" />
+        <h3>Scores</h3>
         <table data-bind="with: scores_viewmodel">
             <tr>
                 <!-- ko foreach: player_row -->
@@ -50,22 +52,19 @@
             </tbody>
         </table>
 
-        <button data-bind="click: unpause_game">Unpause game</button>
+        <br clear="all" />
         
     </div>
     <div data-bind="visible: current_page() == Page.Instructions">
         <p>
-            <h1>Jump'n'Bump - HTML5</h1>
             <img align="left" src="jbcircle.png" />
             This game is a HTML5 reimplementation of a <a href="https://github.com/fschulze/jumpnbump">open source</a> <a href="https://icculus.org/jumpnbump/">DOS classic</a>. As of July 2015, it is still in development.<br />
-            Maybe you would like to take a look at the <a href="http://github.org/badgerman/jump-n-bump">Source code</a>?
+            Maybe you would like to take a look at the <a href="https://github.com/GrahamTheCoder/jump-n-bump">Source code</a>?
         </p>
     </div>
     <div data-bind="visible: current_page() != Page.Game">
-        <br clear="all" />
-        <input id="level_input" type="file" data-bind="event: { change: load_level }"/><br />
         <button data-bind="click: start_game, disabled: loading_level">Start new game</button>
-        <h3>Keyboard map:</h3>
+        <h3>Controls:</h3>
         <ul>
             <li>M: toggle sound
             <li>1-4: toggle player 1-4
@@ -75,6 +74,10 @@
             <li>JIL: control player 3
             <li>NumPad: control player 4
         </ul>
+        <h3>Load level:</h3>
+        <p>Load any of the levels found on <a href="http://www.brainchilddesign.com/games/jumpnbump/levels/levels1.html" target="_blank">Brainchild Design's website</a></p>
+        <input id="level_input" value="Select level" type="file" accept="*.dat" data-bind="event: { change: load_level }" />
+        <br clear="all" />
     </div>
 
     <script type="text/javascript" src="scripts/third_party/knockout.js"></script>
