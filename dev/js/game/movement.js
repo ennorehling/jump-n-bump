@@ -335,29 +335,27 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
     }
     
     function player_action_left(p) {
-        var s1 = 0, s2 = 0;
-        var below_left, below, below_right;
-
-        s1 = (p.x.pos >> 16);
-        s2 = (p.y.pos >> 16);
-        below_left = GET_BAN_MAP_XY(s1, s2 + 16);
-        below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
-        below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
+        var s1 = (p.x.pos >> 16);
+        var s2 = (p.y.pos >> 16);
+        var below_left = GET_BAN_MAP_XY(s1, s2 + 16);
+        var below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
+        var below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
+        var moving_right = p.x.velocity > 0;
 
         if (below == BAN_ICE) {
-            if (p.x.velocity > 0) {
+            if (moving_right) {
                 p.x.velocity -= 1024;
             } else {
                 p.x.velocity -= 768;
             }
         } else if ((below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID)) {
-            if (p.x.velocity > 0) {
+            if (moving_right) {
                 p.x.velocity -= 1024;
             } else {
                 p.x.velocity -= 768;
             }
         } else {
-            if (p.x.velocity > 0) {
+            if (moving_right) {
                 p.x.velocity -= 16384;
                 if (p.x.velocity > -98304 && p.in_water == 0 && below == BAN_SOLID) {
                     objects.add(objects.SMOKE, (p.x.pos >> 16) + 2 + rnd(9), (p.y.pos >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
@@ -376,29 +374,27 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
     }
 
     function player_action_right(p) {
-        var s1 = 0, s2 = 0;
-        var below_left, below, below_right;
-
-        s1 = (p.x.pos >> 16);
-        s2 = (p.y.pos >> 16);
-        below_left = GET_BAN_MAP_XY(s1, s2 + 16);
-        below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
-        below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
+        var s1 = (p.x.pos >> 16);
+        var s2 = (p.y.pos >> 16);
+        var below_left = GET_BAN_MAP_XY(s1, s2 + 16);
+        var below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
+        var below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
+        var moving_left = p.x.velocity < 0;
 
         if (below == BAN_ICE) {
-            if (p.x.velocity < 0) {
+            if (moving_left) {
                 p.x.velocity += 1024;
             } else {
                 p.x.velocity += 768;
             }
         } else if ((below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID)) {
-            if (p.x.velocity < 0) {
+            if (moving_left) {
                 p.x.velocity += 1024;
             } else {
                 p.x.velocity += 768;
             }
         } else {
-            if (p.x.velocity < 0) {
+            if (moving_left) {
                 p.x.velocity += 16384;
                 if (p.x.velocity < 98304 && p.in_water == 0 && below == BAN_SOLID) {
                     objects.add(objects.SMOKE, (p.x.pos >> 16) + 2 + rnd(9), (p.y.pos >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
