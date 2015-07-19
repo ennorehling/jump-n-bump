@@ -16,6 +16,10 @@ function Game_Session(level) {
     "use strict";
     var self = this;
 
+    function rnd(max_value) {
+        return Math.floor(Math.random() * max_value);
+    }
+
     function gup(name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
         var regexS = "[\\?&]" + name + "=([^&#]*)";
@@ -43,18 +47,17 @@ function Game_Session(level) {
     };
     var muted = gup('nosound') == '1';
     
-    this.sound_player = new Sound_Player(muted);
-    var sfx = new Sfx(this.sound_player);
+
     var renderer = new Renderer(canvas, img, level);
     var objects = new Objects(rnd);
-    var movement = new Movement(renderer, img, sfx, objects, settings, rnd);
     var key_action_mappings = [];
     var keyboard = new Keyboard(key_action_mappings);
     var ai = new AI(keyboard);
     var animation = new Animation(renderer, img, objects, rnd);
+    this.sound_player = new Sound_Player(muted);
+    var sfx = new Sfx(this.sound_player);
+    var movement = new Movement(renderer, img, sfx, objects, settings, rnd);
     var game = new Game(movement, ai, animation, renderer, objects, keyboard.key_pressed, level, true, rnd);
-    document.onkeydown = keyboard.onKeyDown;
-    document.onkeyup = keyboard.onKeyUp;
 
     this.scores = ko.observable([[]]);
     this.game_state = ko.observable(Game_State.Not_Started);
@@ -67,16 +70,12 @@ function Game_Session(level) {
     }
     this.unpause = function () {
         self.game_state(Game_State.Playing);
-        this.sound_player.set_muted(muted);
+        self.sound_player.set_muted(muted);
         game.start();
     }
     this.start = function () {
         sfx.music();
-        this.unpause();
-    }
-
-    function rnd(max_value) {
-        return Math.floor(Math.random() * max_value);
+        self.unpause();
     }
 
     key_action_mappings["M"] = function () {
@@ -98,5 +97,8 @@ function Game_Session(level) {
                 break;
         }
     };
+
+    document.onkeydown = keyboard.onKeyDown;
+    document.onkeyup = keyboard.onKeyUp;
 
 }
