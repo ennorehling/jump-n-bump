@@ -136,24 +136,18 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                 if (obj.used == 1 && obj.type == objects.SPRING) {
                     if (GET_BAN_MAP_XY((s1 + 8), (s2 + 15)) == BAN_SPRING) {
                         if ((obj.x.pos >> 20) == ((s1 + 8) >> LEVEL_SCALE_FACTOR) && (obj.y.pos >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
-                            obj.frame = 0;
-                            obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
-                            obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
+                            start_anim(obj);
                             break;
                         }
                     } else {
                         if (GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING) {
                             if ((obj.x.pos >> 20) == (s1 >> LEVEL_SCALE_FACTOR) && (obj.y.pos >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
-                                obj.frame = 0;
-                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
-                                obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
+                                start_anim(obj);
                                 break;
                             }
                         } else if (GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING) {
                             if ((obj.x.pos >> 20) == ((s1 + 15) >> LEVEL_SCALE_FACTOR) && (obj.y.pos >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
-                                obj.frame = 0;
-                                obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
-                                obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
+                                start_anim(obj);
                                 break;
                             }
                         }
@@ -295,6 +289,12 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                 }
             }
         }
+    }
+
+    function start_anim(obj) {
+        obj.frame = 0;
+        obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
+        obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
     }
 
     function processKill(c1, c2, x, y) {
