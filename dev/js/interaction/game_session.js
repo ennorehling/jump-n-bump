@@ -56,11 +56,14 @@ function Game_Session(level) {
     document.onkeydown = keyboard.onKeyDown;
     document.onkeyup = keyboard.onKeyUp;
 
+    this.scores = ko.observable([[]]);
     this.game_state = ko.observable(Game_State.Not_Started);
+
     this.pause = function () {
         self.game_state(Game_State.Paused);
         self.sound_player.set_muted(true);
         game.pause();
+        self.scores(player.map(function (p) { return p.bumped; }));
     }
     this.unpause = function () {
         self.game_state(Game_State.Playing);
@@ -70,10 +73,6 @@ function Game_Session(level) {
     this.start = function () {
         sfx.music();
         this.unpause();
-    }
-    
-    this.scores = function () {
-        return player.map(function (p) { return p.bumped; });
     }
 
     function rnd(max_value) {

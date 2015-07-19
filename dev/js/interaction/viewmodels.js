@@ -14,10 +14,6 @@ function ViewModel() {
     this.current_page = ko.computed(function () {
         return self.current_game().game_state();
     });
-    this.scores_viewmodel = ko.observable(new Scores_ViewModel([[]]));
-    this.start_game = function () {
-        this.current_game().start();
-    }
     this.pause_game = function () {
         this.current_game().pause();
         this.scores_viewmodel(new Scores_ViewModel(this.current_game().scores()));
@@ -25,6 +21,9 @@ function ViewModel() {
     this.unpause_game = function () {
         this.current_game().unpause();
     }
+    this.scores_viewmodel = ko.computed(function () {
+        return new Scores_ViewModel(self.current_game().scores());
+    });
 
     this.load_level = function (self) {
         this.loading_level(true);
