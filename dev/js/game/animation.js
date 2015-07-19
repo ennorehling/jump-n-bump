@@ -40,6 +40,37 @@ function Animation(renderer, img, objects, rnd) {
         return GET_BAN_MAP(obj.x.pos >> 20, obj.y.pos >> 20);
     }
 
+    function update_butterfly_position(obj, dimension, min, max) {
+        if (dimension.acceleration < -1024)
+            dimension.acceleration = -1024;
+        if (dimension.acceleration > 1024)
+            dimension.acceleration = 1024;
+        dimension.velocity += dimension.acceleration;
+        if (dimension.velocity < -32768)
+            dimension.velocity = -32768;
+        if (dimension.velocity > 32768)
+            dimension.velocity = 32768;
+        dimension.pos += dimension.velocity;
+        if ((dimension.pos >> 16) < min) {
+            dimension.pos = min << 16;
+            dimension.velocity = -dimension.velocity >> 2;
+            dimension.acceleration = 0;
+        } else if ((dimension.pos >> 16) > max) {
+            dimension.pos = max << 16;
+            dimension.velocity = -dimension.velocity >> 2;
+            dimension.acceleration = 0;
+        }
+        if (map_tile(obj) != BAN_VOID) {
+            if (dimension.velocity < 0) {
+                dimension.pos = (((dimension.pos >> 16) + 16) & 0xfff0) << 16;
+            } else {
+                dimension.pos = ((((dimension.pos >> 16) - 16) & 0xfff0) + 15) << 16;
+            }
+            dimension.velocity = -dimension.velocity >> 2;
+            dimension.acceleration = 0;
+        }
+    }
+
     this.update_object = function () {
         var c1;
         var s1 = 0;
@@ -59,63 +90,9 @@ function Animation(renderer, img, objects, rnd) {
                     case objects.YEL_BUTFLY:
                     case objects.PINK_BUTFLY:
                         obj.x.acceleration += rnd(128) - 64;
-                        if (obj.x.acceleration < -1024)
-                            obj.x.acceleration = -1024;
-                        if (obj.x.acceleration > 1024)
-                            obj.x.acceleration = 1024;
-                        obj.x.velocity += obj.x.acceleration;
-                        if (obj.x.velocity < -32768)
-                            obj.x.velocity = -32768;
-                        if (obj.x.velocity > 32768)
-                            obj.x.velocity = 32768;
-                        obj.x.pos += obj.x.velocity;
-                        if ((obj.x.pos >> 16) < 16) {
-                            obj.x.pos = 16 << 16;
-                            obj.x.velocity = -obj.x.velocity >> 2;
-                            obj.x.acceleration = 0;
-                        } else if ((obj.x.pos >> 16) > 350) {
-                            obj.x.pos = 350 << 16;
-                            obj.x.velocity = -obj.x.velocity >> 2;
-                            obj.x.acceleration = 0;
-                        }
-                        if (map_tile(obj) != BAN_VOID) {
-                            if (obj.x.velocity < 0) {
-                                obj.x.pos = (((obj.x.pos >> 16) + 16) & 0xfff0) << 16;
-                            } else {
-                                obj.x.pos = ((((obj.x.pos >> 16) - 16) & 0xfff0) + 15) << 16;
-                            }
-                            obj.x.velocity = -obj.x.velocity >> 2;
-                            obj.x.acceleration = 0;
-                        }
+                        update_butterfly_position(obj, obj.x, 16, 350);
                         obj.y.acceleration += rnd(64) - 32;
-                        if (obj.y.acceleration < -1024)
-                            obj.y.acceleration = -1024;
-                        if (obj.y.acceleration > 1024)
-                            obj.y.acceleration = 1024;
-                        obj.y.velocity += obj.y.acceleration;
-                        if (obj.y.velocity < -32768)
-                            obj.y.velocity = -32768;
-                        if (obj.y.velocity > 32768)
-                            obj.y.velocity = 32768;
-                        obj.y.pos += obj.y.velocity;
-                        if ((obj.y.pos >> 16) < 0) {
-                            obj.y.pos = 0;
-                            obj.y.velocity = -obj.y.velocity >> 2;
-                            obj.y.acceleration = 0;
-                        } else if ((obj.y.pos >> 16) > 255) {
-                            obj.y.pos = 255 << 16;
-                            obj.y.velocity = -obj.y.velocity >> 2;
-                            obj.y.acceleration = 0;
-                        }
-                        if (map_tile(obj) != BAN_VOID) {
-                            if (obj.y.velocity < 0) {
-                                obj.y.pos = (((obj.y.pos >> 16) + 16) & 0xfff0) << 16;
-                            } else {
-                                obj.y.pos = ((((obj.y.pos >> 16) - 16) & 0xfff0) + 15) << 16;
-                            }
-                            obj.y.velocity = -obj.y.velocity >> 2;
-                            obj.y.acceleration = 0;
-                        }
+                        update_butterfly_position(obj, obj.y, 0, 255);
 
                         //Set animation based on direction of movement - TODO give object ownership of its left and right animation to deduplicate this
                         if (obj.type == objects.YEL_BUTFLY) {
