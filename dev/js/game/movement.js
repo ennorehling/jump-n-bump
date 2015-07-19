@@ -139,19 +139,17 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                             start_anim(obj);
                             break;
                         }
-                    } else {
-                        if (GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING) {
+                    } else if (GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING) {
                             if ((obj.x.pos >> 20) == (s1 >> LEVEL_SCALE_FACTOR) && (obj.y.pos >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
                                 start_anim(obj);
                                 break;
                             }
-                        } else if (GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING) {
-                            if ((obj.x.pos >> 20) == ((s1 + 15) >> LEVEL_SCALE_FACTOR) && (obj.y.pos >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
-                                start_anim(obj);
-                                break;
-                            }
+                    } else if (GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING) {
+                        if ((obj.x.pos >> 20) == ((s1 + 15) >> LEVEL_SCALE_FACTOR) && (obj.y.pos >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
+                            start_anim(obj);
+                            break;
                         }
-                    }
+                    }                    
                 }
             }
             sfx.spring();
