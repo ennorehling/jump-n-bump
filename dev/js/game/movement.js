@@ -346,7 +346,7 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
 
         if (moving_right) {
             p.x.velocity -= (1024 * speed);
-            if (!is_ice_below && p.x.velocity > -98304 && p.in_water == 0 && below == BAN_SOLID) {
+            if (p.x.velocity > -98304 && p.in_water == 0 && below == BAN_SOLID) {
                 objects.add(objects.SMOKE, (p.x.pos >> 16) + 2 + rnd(9), (p.y.pos >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
             }
         } else {
@@ -374,7 +374,7 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
 
         if (moving_left) {
             p.x.velocity += (1024 * speed);
-            if (!is_ice_below && p.x.velocity < 98304 && p.in_water == 0 && below == BAN_SOLID) {
+            if (p.x.velocity < 98304 && p.in_water == 0 && below == BAN_SOLID) {
                 objects.add(objects.SMOKE, (p.x.pos >> 16) + 2 + rnd(9), (p.y.pos >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
             }
         } else {
