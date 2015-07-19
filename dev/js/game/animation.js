@@ -71,6 +71,10 @@ function Animation(renderer, img, objects, rnd) {
         }
     }
 
+    function add_flesh_trace(obj, frame) {
+        objects.add(objects.FLESH_TRACE, obj.x.pos >> 16, obj.y.pos >> 16, 0, 0, objects.ANIM_FLESH_TRACE, frame);
+    }
+
     this.update_object = function () {
         var c1;
         var s1 = 0;
@@ -112,7 +116,7 @@ function Animation(renderer, img, objects, rnd) {
                         break;
                     case objects.FUR:
                         if (rnd(100) < 30)
-                            objects.add(objects.FLESH_TRACE, obj.x.pos >> 16, obj.y.pos >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 0);
+                            add_flesh_trace(obj, 0);
                         if (map_tile(obj) == BAN_VOID) {
                             obj.y.velocity += 3072;
                             if (obj.y.velocity > 196608)
@@ -192,11 +196,11 @@ function Animation(renderer, img, objects, rnd) {
                     case objects.FLESH:
                         if (rnd(100) < 30) {
                             if (obj.frame == 76)
-                                objects.add(objects.FLESH_TRACE, obj.x.pos >> 16, obj.y.pos >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 1);
+                                add_flesh_trace(obj, 1);
                             else if (obj.frame == 77)
-                                objects.add(objects.FLESH_TRACE, obj.x.pos >> 16, obj.y.pos >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 2);
+                                add_flesh_trace(obj, 2);
                             else if (obj.frame == 78)
-                                objects.add(objects.FLESH_TRACE, obj.x.pos >> 16, obj.y.pos >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 3);
+                                add_flesh_trace(obj, 3);
                         }
                         if (map_tile(obj) == BAN_VOID) {
                             obj.y.velocity += 3072;
