@@ -392,7 +392,7 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                 p.x.velocity += 768;
             }
         } else if ((below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID)) {
-            if (p.x.velocity > 0) {
+            if (p.x.velocity < 0) {
                 p.x.velocity += 1024;
             } else {
                 p.x.velocity += 768;
