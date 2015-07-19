@@ -341,14 +341,9 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
         var below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
         var below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
         var moving_right = p.x.velocity > 0;
+        var is_ice_below = below == BAN_ICE || (below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID);
 
-        if (below == BAN_ICE) {
-            if (moving_right) {
-                p.x.velocity -= 1024;
-            } else {
-                p.x.velocity -= 768;
-            }
-        } else if ((below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID)) {
+        if (is_ice_below) {
             if (moving_right) {
                 p.x.velocity -= 1024;
             } else {
@@ -380,14 +375,9 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
         var below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
         var below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
         var moving_left = p.x.velocity < 0;
+        var is_ice_below = below == BAN_ICE || (below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID);
 
-        if (below == BAN_ICE) {
-            if (moving_left) {
-                p.x.velocity += 1024;
-            } else {
-                p.x.velocity += 768;
-            }
-        } else if ((below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID)) {
+        if (is_ice_below) {
             if (moving_left) {
                 p.x.velocity += 1024;
             } else {
