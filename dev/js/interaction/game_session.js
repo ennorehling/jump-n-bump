@@ -7,8 +7,14 @@ var env = {
 
 var player = [];
 
+function Enum(obj) {
+    return Object.freeze ? Object.freeze(obj) : obj;
+}
+var Game_State = Enum({ Not_Started: 0, Playing: 1, Paused: 2 });
+
 function Game_Session(level) {
     "use strict";
+    var self = this;
 
     function gup(name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -50,11 +56,14 @@ function Game_Session(level) {
     document.onkeydown = keyboard.onKeyDown;
     document.onkeyup = keyboard.onKeyUp;
 
+    this.game_state = ko.observable(Game_State.Not_Started);
     this.pause = function () {
-        this.sound_player.set_muted(true);
+        self.game_state(Game_State.Paused);
+        self.sound_player.set_muted(true);
         game.pause();
     }
-    this.unpause= function () {
+    this.unpause = function () {
+        self.game_state(Game_State.Playing);
         this.sound_player.set_muted(muted);
         game.start();
     }
@@ -71,6 +80,24 @@ function Game_Session(level) {
         return Math.floor(Math.random() * max_value);
     }
 
-    key_action_mappings["M"] = this.sound_player.toggle_sound;
+    key_action_mappings["M"] = function () {
+        if (self.game_state() === Game_State.Playing) {
+            muted = !muted;
+            self.sound_player.toggle_sound();
+        }
+    }
+    key_action_mappings["P"] = function () {
+        switch(self.game_state()) {
+            case Game_State.Not_Started:
+                self.start();
+                break;
+            case Game_State.Paused:
+                self.unpause();
+                break;
+            case Game_State.Playing:
+                self.pause();
+                break;
+        }
+    };
 
 }
