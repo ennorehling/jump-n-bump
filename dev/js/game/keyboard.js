@@ -1,4 +1,3 @@
-
 function Keyboard(sound_player) {
     "use strict";
     var self = this;
