@@ -1,4 +1,5 @@
 function Sound_Player(muted) {
+    var self = this;
     var sounds = [];
     var sfx_extension;
     
@@ -15,13 +16,10 @@ function Sound_Player(muted) {
     }
 
     this.toggle_sound = function () {
-        this.set_muted(!muted);
+        self.set_muted(!muted);
     };
     
     this.play_sound = function(sfx_name, loop) {
-        if (muted) {
-            return;
-        }
         var i, replace = -1;
         var audio;
         for (i in sounds) {
@@ -29,7 +27,9 @@ function Sound_Player(muted) {
                 replace = i;
                 if (sounds[i].sfx_name == sfx_name) {
                     audio = sounds[i].audio;
-                    audio.play();
+                    if (!muted) {
+                        audio.play();
+                    }
                     return;
                 }
             }
@@ -37,8 +37,11 @@ function Sound_Player(muted) {
         audio = document.createElement('audio');
         sfx_extension = audio.canPlayType('audio/mpeg')?'mp3':'ogg';
         audio.addEventListener('canplaythrough', function(ev) {
-            this.removeEventListener('canplaythrough', arguments.callee,false);
-            this.play();
+            this.removeEventListener('canplaythrough', arguments.callee, false);
+            
+            if (!muted) {
+                this.play();
+            }
         }, false);
         audio.src = "sound/" + sfx_name + "." + sfx_extension;
         if (loop) audio.loop = true;
