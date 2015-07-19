@@ -21,10 +21,3 @@ function GET_BAN_MAP_IN_WATER(s1, s2) {
     return (GET_BAN_MAP_XY((s1), ((s2) + 7)) == BAN_VOID || GET_BAN_MAP_XY(((s1) + 15), ((s2) + 7)) == BAN_VOID)
 	&& (GET_BAN_MAP_XY((s1), ((s2) + 8)) == BAN_WATER || GET_BAN_MAP_XY(((s1) + 15), ((s2) + 8)) == BAN_WATER);
 }
-	
-function create_map() {
-    ban_map = [];
-    for (i=0; i != LEVEL_WIDTH * LEVEL_HEIGHT; ++i) {
-        ban_map[i] = levelmap[i] * 1; //Convert to integer
-    }
-}

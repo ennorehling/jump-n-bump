@@ -1,4 +1,4 @@
-function Renderer(canvas, img) {
+function Renderer(canvas, img, level) {
     "use strict";
     var main = { num_pobs: 0, pobs: [] };
     var leftovers = { num_pobs: 0, pobs: [] };
@@ -51,24 +51,25 @@ function Renderer(canvas, img) {
 
 
     function resize_canvas() {
-        var x_scale = window.innerWidth / img.level.width;
-        var y_scale = window.innerHeight / img.level.height;
+        var x_scale = window.innerWidth / level.image.width;
+        var y_scale = window.innerHeight / level.image.height;
         var new_scale = Math.floor(Math.min(x_scale, y_scale));
 
         if (canvas_scale != new_scale) {
             canvas_scale = new_scale;
             canvas.width = 0;
             canvas.height = 0;
-            canvas.width = img.level.width * canvas_scale;
-            canvas.height = img.level.height * canvas_scale;
+            canvas.width = level.image.width * canvas_scale;
+            canvas.height = level.image.height * canvas_scale;
             ctx.scale(canvas_scale, canvas_scale);
         }
     }
 
     this.draw = function () {
         resize_canvas();
-        ctx.drawImage(img.level, 0, 0);
-        
+
+        ctx.drawImage(level.image, 0, 0);
+
         for (var i = 0; i < env.JNB_MAX_PLAYERS; i++) {
             if (player[i].enabled) {
                 this.add_pob(player[i].x >> 16, player[i].y >> 16, img.rabbits, rabbit_gobs[player[i].get_image() + i * 18]);
@@ -77,9 +78,29 @@ function Renderer(canvas, img) {
         draw_leftovers();
         draw_pobs();
 
-        ctx.drawImage(img.mask, 0, 0);
-
+        ctx.drawImage(level.mask, 0, 0);
         main.num_pobs = 0;
     }
 
+
+    function scale_image_data(imageData, scale) {
+        var scaled = ctx.createImageData(imageData.width * scale, imageData.height * scale);
+        var subLine = ctx.createImageData(scale, 1).data
+        for (var row = 0; row < imageData.height; row++) {
+            for (var col = 0; col < imageData.width; col++) {
+                var sourcePixel = imageData.data.subarray(
+                    (row * imageData.width + col) * 4,
+                    (row * imageData.width + col) * 4 + 4
+                );
+                for (var x = 0; x < scale; x++) subLine.set(sourcePixel, x * 4)
+                for (var y = 0; y < scale; y++) {
+                    var destRow = row * scale + y;
+                    var destCol = col * scale;
+                    scaled.data.set(subLine, (destRow * scaled.width + destCol) * 4)
+                }
+            }
+        }
+
+        return scaled;
+    }
 };

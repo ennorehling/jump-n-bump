@@ -1,12 +1,13 @@
 var env = {
     JNB_MAX_PLAYERS: 4,
     MAX_OBJECTS: 200,
-    animation_data: new Animation_Data()
+    animation_data: new Animation_Data(),
+    level: {}
 };
 
 var player = [];
 
-function Game_Session() {
+function Game_Session(level) {
     "use strict";
 
     function gup(name) {
@@ -22,8 +23,6 @@ function Game_Session() {
 
     var canvas = document.getElementById('screen');
     var img = {};
-    img.level = document.getElementById('level');
-    img.mask = document.getElementById('mask');
     img.rabbits = document.getElementById('rabbits');
     img.objects = document.getElementById('objects');
     img.numbers = document.getElementById('numbers');
@@ -40,13 +39,13 @@ function Game_Session() {
 
     this.sound_player = new Sound_Player(muted);
     var sfx = new Sfx(this.sound_player);
-    var renderer = new Renderer(canvas, img);
+    var renderer = new Renderer(canvas, img, level);
     var objects = new Objects();
     var movement = new Movement(renderer, img, sfx, objects, settings);
     var keyboard = new Keyboard(this.sound_player);
     var ai = new AI(keyboard);
     var animation = new Animation(renderer, img, objects);
-    var game = new Game(movement, ai, animation, renderer, objects, keyboard.key_pressed, true);
+    var game = new Game(movement, ai, animation, renderer, objects, keyboard.key_pressed, level, true);
     document.onkeydown = keyboard.onKeyDown;
     document.onkeyup = keyboard.onKeyUp;
     sfx.music();

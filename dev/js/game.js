@@ -1,4 +1,4 @@
-function Game(movement, ai, animation, renderer, objects, key_pressed, is_server) {
+function Game(movement, ai, animation, renderer, objects, key_pressed, level, is_server) {
     "use strict";
     var next_time = 0;
     var playing = false;
@@ -16,7 +16,7 @@ function Game(movement, ai, animation, renderer, objects, key_pressed, is_server
     }
 
     function reset_level() {
-        create_map();
+        ban_map = level.ban_map;
         objects.reset_objects();
 
         for (var c1 = 0; c1 < env.JNB_MAX_PLAYERS; c1++) {

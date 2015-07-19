@@ -5,12 +5,12 @@ var Page = Enum({ Instructions: 0, Game: 1, Scores: 2 });
 
 function ViewModel() {
     "use strict";
-    
+    var self = this;
     this.current_page = ko.observable(Page.Instructions);
-    this.loading_level = ko.observable(false);
+    this.loading_level = ko.observable(true);
     var loader = new Dat_Level_Loader();
     
-    this.current_game = ko.observable(new Game_Session());
+    this.current_game = ko.observable(new Game_Session(create_default_level()));
     this.scores_viewmodel = ko.observable(new Scores_ViewModel([[]]));
     this.start_game = function () {
         this.current_game().start();
@@ -33,7 +33,7 @@ function ViewModel() {
             var file = files[0];
 
             document.addEventListener(loader.on_loaded_event_text, function () {
-                ban_map = loader.read_level();
+                self.current_game(new Game_Session(loader.read_level()));
                 self.loading_level(false);
             });
 

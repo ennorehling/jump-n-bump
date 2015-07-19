@@ -39,6 +39,7 @@
     <Content Include="js\main.js" />
     <Content Include="js\movement.js" />
     <Content Include="js\objects.js" />
+    <Content Include="js\offscreen_canvas.js" />
     <Content Include="js\player.js" />
     <Content Include="js\viewmodel.js" />
     <Content Include="js\render.js" />
