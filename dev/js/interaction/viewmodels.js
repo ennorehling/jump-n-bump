@@ -21,7 +21,10 @@ function ViewModel() {
         this.scores_viewmodel(new Scores_ViewModel(this.current_game().scores()));
         this.current_page(Page.Scores);
     }
-    this.unpause_game = this.start_game;
+    this.unpause_game = function () {
+        this.current_game().unpause();
+        this.current_page(Page.Game);
+    }
 
     this.load_level = function (self) {
         this.loading_level(true);
