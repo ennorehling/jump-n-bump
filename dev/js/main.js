@@ -48,16 +48,18 @@ function Game_Session(level) {
     var game = new Game(movement, ai, animation, renderer, objects, keyboard.key_pressed, level, true);
     document.onkeydown = keyboard.onKeyDown;
     document.onkeyup = keyboard.onKeyUp;
-    sfx.music();
 
-    this.start = game.start;
     this.pause = function () {
         this.sound_player.set_muted(true);
         game.pause();
     }
-    this.unpause = function () {
-        this.sound_player.set_muted(false);
+    this.unpause= function () {
+        this.sound_player.set_muted(muted);
         game.start();
+    }
+    this.start = function () {
+        sfx.music();
+        this.unpause();
     }
 
 
