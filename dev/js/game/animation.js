@@ -36,6 +36,10 @@ function Animation(renderer, img, objects, rnd) {
         obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
     }
 
+    function map_tile(obj) {
+        return GET_BAN_MAP(obj.x >> 20, obj.y >> 20);
+    }
+
     this.update_object = function () {
         var c1;
         var s1 = 0;
@@ -74,7 +78,7 @@ function Animation(renderer, img, objects, rnd) {
                             obj.x_add = -obj.x_add >> 2;
                             obj.x_acc = 0;
                         }
-                        if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != BAN_VOID) {
+                        if (map_tile(obj) != BAN_VOID) {
                             if (obj.x_add < 0) {
                                 obj.x = (((obj.x >> 16) + 16) & 0xfff0) << 16;
                             } else {
@@ -103,7 +107,7 @@ function Animation(renderer, img, objects, rnd) {
                             obj.y_add = -obj.y_add >> 2;
                             obj.y_acc = 0;
                         }
-                        if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != BAN_VOID) {
+                        if (map_tile(obj) != BAN_VOID) {
                             if (obj.y_add < 0) {
                                 obj.y = (((obj.y >> 16) + 16) & 0xfff0) << 16;
                             } else {
@@ -130,11 +134,11 @@ function Animation(renderer, img, objects, rnd) {
                     case objects.FUR:
                         if (rnd(100) < 30)
                             objects.add(objects.FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 0);
-                        if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_VOID) {
+                        if (map_tile(obj) == BAN_VOID) {
                             obj.y_add += 3072;
                             if (obj.y_add > 196608)
                                 obj.y_add = 196608;
-                        } else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_WATER) {
+                        } else if (map_tile(obj) == BAN_WATER) {
                             if (obj.x_add < 0) {
                                 if (obj.x_add < -65536)
                                     obj.x_add = -65536;
@@ -155,7 +159,7 @@ function Animation(renderer, img, objects, rnd) {
                                 obj.y_add = 65536;
                         }
                         obj.x += obj.x_add;
-                        if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_SOLID || GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_ICE)) {
+                        if ((obj.y >> 16) > 0 && (map_tile(obj) == BAN_SOLID || map_tile(obj) == BAN_ICE)) {
                             if (obj.x_add < 0) {
                                 obj.x = (((obj.x >> 16) + 16) & 0xfff0) << 16;
                                 obj.x_add = -obj.x_add >> 2;
@@ -167,22 +171,22 @@ function Animation(renderer, img, objects, rnd) {
                         obj.y += obj.y_add;
                         if ((obj.x >> 16) < -5 || (obj.x >> 16) > 405 || (obj.y >> 16) > 260)
                             obj.used = false;
-                        if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != BAN_VOID)) {
+                        if ((obj.y >> 16) > 0 && (map_tile(obj) != BAN_VOID)) {
                             if (obj.y_add < 0) {
-                                if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != BAN_WATER) {
+                                if (map_tile(obj) != BAN_WATER) {
                                     obj.y = (((obj.y >> 16) + 16) & 0xfff0) << 16;
                                     obj.x_add >>= 2;
                                     obj.y_add = -obj.y_add >> 2;
                                 }
                             } else {
-                                if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_SOLID) {
+                                if (map_tile(obj) == BAN_SOLID) {
                                     if (obj.y_add > 131072) {
                                         obj.y = ((((obj.y >> 16) - 16) & 0xfff0) + 15) << 16;
                                         obj.x_add >>= 2;
                                         obj.y_add = -obj.y_add >> 2;
                                     } else
                                         obj.used = false;
-                                } else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_ICE) {
+                                } else if (map_tile(obj) == BAN_ICE) {
                                     obj.y = ((((obj.y >> 16) - 16) & 0xfff0) + 15) << 16;
                                     if (obj.y_add > 131072)
                                         obj.y_add = -obj.y_add >> 2;
@@ -215,11 +219,11 @@ function Animation(renderer, img, objects, rnd) {
                             else if (obj.frame == 78)
                                 objects.add(objects.FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 3);
                         }
-                        if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_VOID) {
+                        if (map_tile(obj) == BAN_VOID) {
                             obj.y_add += 3072;
                             if (obj.y_add > 196608)
                                 obj.y_add = 196608;
-                        } else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_WATER) {
+                        } else if (map_tile(obj) == BAN_WATER) {
                             if (obj.x_add < 0) {
                                 if (obj.x_add < -65536)
                                     obj.x_add = -65536;
@@ -240,7 +244,7 @@ function Animation(renderer, img, objects, rnd) {
                                 obj.y_add = 65536;
                         }
                         obj.x += obj.x_add;
-                        if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_SOLID || GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_ICE)) {
+                        if ((obj.y >> 16) > 0 && (map_tile(obj) == BAN_SOLID || map_tile(obj) == BAN_ICE)) {
                             if (obj.x_add < 0) {
                                 obj.x = (((obj.x >> 16) + 16) & 0xfff0) << 16;
                                 obj.x_add = -obj.x_add >> 2;
@@ -252,15 +256,15 @@ function Animation(renderer, img, objects, rnd) {
                         obj.y += obj.y_add;
                         if ((obj.x >> 16) < -5 || (obj.x >> 16) > 405 || (obj.y >> 16) > 260)
                             obj.used = false;
-                        if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != BAN_VOID)) {
+                        if ((obj.y >> 16) > 0 && (map_tile(obj) != BAN_VOID)) {
                             if (obj.y_add < 0) {
-                                if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != BAN_WATER) {
+                                if (map_tile(obj) != BAN_WATER) {
                                     obj.y = (((obj.y >> 16) + 16) & 0xfff0) << 16;
                                     obj.x_add >>= 2;
                                     obj.y_add = -obj.y_add >> 2;
                                 }
                             } else {
-                                if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_SOLID) {
+                                if (map_tile(obj) == BAN_SOLID) {
                                     if (obj.y_add > 131072) {
                                         obj.y = ((((obj.y >> 16) - 16) & 0xfff0) + 15) << 16;
                                         obj.x_add >>= 2;
@@ -272,7 +276,7 @@ function Animation(renderer, img, objects, rnd) {
                                         }
                                         obj.used = false;
                                     }
-                                } else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_ICE) {
+                                } else if (map_tile(obj) == BAN_ICE) {
                                     obj.y = ((((obj.y >> 16) - 16) & 0xfff0) + 15) << 16;
                                     if (obj.y_add > 131072)
                                         obj.y_add = -obj.y_add >> 2;
