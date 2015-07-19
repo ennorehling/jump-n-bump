@@ -1,4 +1,4 @@
-function Game(movement, ai, animation, renderer, objects, key_pressed, level, is_server) {
+function Game(movement, ai, animation, renderer, objects, key_pressed, level, is_server, rnd) {
     "use strict";
     var next_time = 0;
     var playing = false;
@@ -7,10 +7,10 @@ function Game(movement, ai, animation, renderer, objects, key_pressed, level, is
 
     function reset_players() {
         player = [
-        new Player(0, [37, 39, 38], is_server),
-        new Player(1, [65, 68, 87], is_server),
-        new Player(2, [100, 102, 104], is_server),
-        new Player(3, [74, 76, 73], is_server)
+        new Player(0, [37, 39, 38], is_server, rnd),
+        new Player(1, [65, 68, 87], is_server, rnd),
+        new Player(2, [100, 102, 104], is_server, rnd),
+        new Player(3, [74, 76, 73], is_server, rnd)
         ];
         player[3].ai = true;
     }

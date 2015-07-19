@@ -1,4 +1,4 @@
-function Objects() {
+function Objects(rnd) {
     "use strict";
     var self = this;
     this.objects = [];

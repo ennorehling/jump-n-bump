@@ -40,12 +40,12 @@ function Game_Session(level) {
     this.sound_player = new Sound_Player(muted);
     var sfx = new Sfx(this.sound_player);
     var renderer = new Renderer(canvas, img, level);
-    var objects = new Objects();
-    var movement = new Movement(renderer, img, sfx, objects, settings);
+    var objects = new Objects(rnd);
+    var movement = new Movement(renderer, img, sfx, objects, settings, rnd);
     var keyboard = new Keyboard(this.sound_player);
     var ai = new AI(keyboard);
-    var animation = new Animation(renderer, img, objects);
-    var game = new Game(movement, ai, animation, renderer, objects, keyboard.key_pressed, level, true);
+    var animation = new Animation(renderer, img, objects, rnd);
+    var game = new Game(movement, ai, animation, renderer, objects, keyboard.key_pressed, level, true, rnd);
     document.onkeydown = keyboard.onKeyDown;
     document.onkeyup = keyboard.onKeyUp;
 
@@ -61,14 +61,13 @@ function Game_Session(level) {
         sfx.music();
         this.unpause();
     }
-
-
+    
     this.scores = function () {
         return player.map(function (p) { return p.bumped; });
     }
-    
-}
 
-function rnd(max_value) {
-    return Math.floor(Math.random() * max_value);
+    function rnd(max_value) {
+        return Math.floor(Math.random() * max_value);
+    }
+
 }

@@ -1,4 +1,4 @@
-function Movement(renderer, img, sfx, objects, settings) {
+function Movement(renderer, img, sfx, objects, settings, rnd) {
     "use strict";
 
     this.steer_player = function (p) {

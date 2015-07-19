@@ -1,4 +1,4 @@
-function Animation(renderer, img, objects) {
+function Animation(renderer, img, objects, rnd) {
     "use strict";
     function advance_frame(obj, pause_at_end, loop)
     {

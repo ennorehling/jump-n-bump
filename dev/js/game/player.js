@@ -1,4 +1,4 @@
-function Player(playerIndex, keys, is_server) {
+function Player(playerIndex, keys, is_server, rnd) {
     "use strict";
     this.action_left = false;
     this.action_up = false;
