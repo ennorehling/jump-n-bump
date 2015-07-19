@@ -20,8 +20,8 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
         } else if ((!p.action_left) && (!p.action_right)) {
             var below_left, below, below_right;
 
-            s1 = (p.x >> 16);
-            s2 = (p.y >> 16);
+            s1 = (p.x.pos >> 16);
+            s2 = (p.y.pos >> 16);
             below_left = GET_BAN_MAP_XY(s1, s2 + 16);
             below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
             below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
@@ -36,7 +36,7 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                         p.x_add = 0;
                 }
                 if (p.x_add != 0 && GET_BAN_MAP_XY((s1 + 8), (s2 + 16)) == BAN_SOLID)
-                    objects.add(objects.SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
+                    objects.add(objects.SMOKE, (p.x.pos >> 16) + 2 + rnd(9), (p.y.pos >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
             }
             if (p.anim == 1) {
                 p.set_anim(0);
@@ -45,8 +45,8 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
         if (settings.jetpack == 0) {
             /* no jetpack */
             if (settings.pogostick == 1 || (p.jump_ready == 1 && p.action_up)) {
-                s1 = (p.x >> 16);
-                s2 = (p.y >> 16);
+                s1 = (p.x.pos >> 16);
+                s2 = (p.y.pos >> 16);
                 if (s2 < -16)
                     s2 = -16; //Allow player to jump off screen but not negative overflow if using jetpack
                 /* jump */
@@ -96,46 +96,46 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                 if (GET_BAN_MAP_IN_WATER(s1, s2))
                     p.in_water = 0;
                 if (rnd(100) < 50)
-                    objects.add(objects.SMOKE, (p.x >> 16) + 6 + rnd(5), (p.y >> 16) + 10 + rnd(5), 0, 16384 + rnd(8192), objects.ANIM_SMOKE, 0);
+                    objects.add(objects.SMOKE, (p.x.pos >> 16) + 6 + rnd(5), (p.y.pos >> 16) + 10 + rnd(5), 0, 16384 + rnd(8192), objects.ANIM_SMOKE, 0);
             }
         }
 
-        p.x += p.x_add;
-        if ((p.x >> 16) < 0) {
-            p.x = 0;
+        p.x.pos += p.x_add;
+        if ((p.x.pos >> 16) < 0) {
+            p.x.pos = 0;
             p.x_add = 0;
         }
-        if ((p.x >> 16) + 15 > 351) {
-            p.x = 336 << 16;
+        if ((p.x.pos >> 16) + 15 > 351) {
+            p.x.pos = 336 << 16;
             p.x_add = 0;
         }
         {
-            if (p.y > 0) {
-                s2 = (p.y >> 16);
+            if (p.y.pos > 0) {
+                s2 = (p.y.pos >> 16);
             } else {
                 /* check top line only */
                 s2 = 0;
             }
 
-            s1 = (p.x >> 16);
+            s1 = (p.x.pos >> 16);
             if (GET_BAN_MAP_XY(s1, s2) == BAN_SOLID || GET_BAN_MAP_XY(s1, s2) == BAN_ICE || GET_BAN_MAP_XY(s1, s2) == BAN_SPRING || GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SOLID || GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_ICE || GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING) {
-                p.x = (((s1 + 16) & 0xfff0)) << 16;
+                p.x.pos = (((s1 + 16) & 0xfff0)) << 16;
                 p.x_add = 0;
             }
 
-            s1 = (p.x >> 16);
+            s1 = (p.x.pos >> 16);
             if (GET_BAN_MAP_XY((s1 + 15), s2) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), s2) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), s2) == BAN_SPRING || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING) {
-                p.x = (((s1 + 16) & 0xfff0) - 16) << 16;
+                p.x.pos = (((s1 + 16) & 0xfff0) - 16) << 16;
                 p.x_add = 0;
             }
         }
 
-        p.y += p.y_add;
+        p.y.pos += p.y_add;
 
-        s1 = (p.x >> 16);
-        s2 = (p.y >> 16);
+        s1 = (p.x.pos >> 16);
+        s2 = (p.y.pos >> 16);
         if (GET_BAN_MAP_XY((s1 + 8), (s2 + 15)) == BAN_SPRING || ((GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING && GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) != BAN_SOLID) || (GET_BAN_MAP_XY(s1, (s2 + 15)) != BAN_SOLID && GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING))) {
-            p.y = ((p.y >> 16) & 0xfff0) << 16;
+            p.y.pos = ((p.y.pos >> 16) & 0xfff0) << 16;
             p.y_add = -400000;
             p.set_anim(2);
             p.jump_ready = 0;
@@ -144,7 +144,7 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                 var obj = objects.objects[c2];
                 if (obj.used == 1 && obj.type == objects.SPRING) {
                     if (GET_BAN_MAP_XY((s1 + 8), (s2 + 15)) == BAN_SPRING) {
-                        if ((obj.x >> 20) == ((s1 + 8) >> LEVEL_SCALE_FACTOR) && (obj.y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
+                        if ((obj.x.pos >> 20) == ((s1 + 8) >> LEVEL_SCALE_FACTOR) && (obj.y.pos >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
                             obj.frame = 0;
                             obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
                             obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
@@ -152,14 +152,14 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                         }
                     } else {
                         if (GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING) {
-                            if ((obj.x >> 20) == (s1 >> LEVEL_SCALE_FACTOR) && (obj.y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
+                            if ((obj.x.pos >> 20) == (s1 >> LEVEL_SCALE_FACTOR) && (obj.y.pos >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
                                 obj.frame = 0;
                                 obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
                                 obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
                                 break;
                             }
                         } else if (GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING) {
-                            if ((obj.x >> 20) == ((s1 + 15) >> LEVEL_SCALE_FACTOR) && (obj.y >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
+                            if ((obj.x.pos >> 20) == ((s1 + 15) >> LEVEL_SCALE_FACTOR) && (obj.y.pos >> 20) == ((s2 + 15) >> LEVEL_SCALE_FACTOR)) {
                                 obj.frame = 0;
                                 obj.ticks = env.animation_data.objects[obj.anim].frame[obj.frame].ticks;
                                 obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
@@ -171,17 +171,17 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
             }
             sfx.spring();
         }
-        s1 = (p.x >> 16);
-        s2 = (p.y >> 16);
+        s1 = (p.x.pos >> 16);
+        s2 = (p.y.pos >> 16);
         if (s2 < 0)
             s2 = 0;
         if (GET_BAN_MAP_XY(s1, s2) == BAN_SOLID || GET_BAN_MAP_XY(s1, s2) == BAN_ICE || GET_BAN_MAP_XY(s1, s2) == BAN_SPRING || GET_BAN_MAP_XY((s1 + 15), s2) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), s2) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), s2) == BAN_SPRING) {
-            p.y = (((s2 + 16) & 0xfff0)) << 16;
+            p.y.pos = (((s2 + 16) & 0xfff0)) << 16;
             p.y_add = 0;
             p.set_anim(0);
         }
-        s1 = (p.x >> 16);
-        s2 = (p.y >> 16);
+        s1 = (p.x.pos >> 16);
+        s2 = (p.y.pos >> 16);
         if (s2 < 0)
             s2 = 0;
         if (GET_BAN_MAP_XY((s1 + 8), (s2 + 8)) == BAN_WATER) {
@@ -190,7 +190,7 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                 p.in_water = 1;
                 p.set_anim(4);
                 if (p.y_add >= 32768) {
-                    objects.add(objects.SPLASH, (p.x >> 16) + 8, ((p.y >> 16) & 0xfff0) + 15, 0, 0, objects.ANIM_SPLASH, 0);
+                    objects.add(objects.SPLASH, (p.x.pos >> 16) + 8, ((p.y.pos >> 16) & 0xfff0) + 15, 0, 0, objects.ANIM_SPLASH, 0);
                     sfx.splash();
                 }
             }
@@ -204,12 +204,12 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
             if (p.y_add > 65535)
                 p.y_add = 65535;
             if (GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SOLID || GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_ICE) {
-                p.y = (((s2 + 16) & 0xfff0) - 16) << 16;
+                p.y.pos = (((s2 + 16) & 0xfff0) - 16) << 16;
                 p.y_add = 0;
             }
         } else if (GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SOLID || GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_ICE || GET_BAN_MAP_XY(s1, (s2 + 15)) == BAN_SPRING || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), (s2 + 15)) == BAN_SPRING) {
             p.in_water = 0;
-            p.y = (((s2 + 16) & 0xfff0) - 16) << 16;
+            p.y.pos = (((s2 + 16) & 0xfff0) - 16) << 16;
             p.y_add = 0;
             if (p.anim != 0 && p.anim != 1) {
                 p.set_anim(0);
@@ -223,7 +223,7 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                 if (p.y_add > 327680)
                     p.y_add = 327680;
             } else {
-                p.y = (p.y & 0xffff0000) + 0x10000;
+                p.y.pos = (p.y.pos & 0xffff0000) + 0x10000;
                 p.y_add = 0;
             }
             p.in_water = 0;
@@ -259,22 +259,22 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                 c2 = 3;
             }
             if (player[c1].enabled && player[c2].enabled) {
-                if (Math.abs(player[c1].x - player[c2].x) < 0xC0000 && Math.abs(player[c1].y - player[c2].y) < 0xC0000) {
-                    if ((Math.abs(player[c1].y - player[c2].y) >> 16) > 5) {
-                        if (player[c1].y < player[c2].y) {
+                if (Math.abs(player[c1].x.pos - player[c2].x.pos) < 0xC0000 && Math.abs(player[c1].y.pos - player[c2].y.pos) < 0xC0000) {
+                    if ((Math.abs(player[c1].y.pos - player[c2].y.pos) >> 16) > 5) {
+                        if (player[c1].y.pos < player[c2].y.pos) {
                             player_kill(c1, c2);
                         } else {
                             player_kill(c2, c1);
                         }
                     } else {
-                        if (player[c1].x < player[c2].x) {
+                        if (player[c1].x.pos < player[c2].x.pos) {
                             if (player[c1].x_add > 0)
-                                player[c1].x = player[c2].x - 0xC0000;
+                                player[c1].x.pos = player[c2].x.pos - 0xC0000;
                             else if (player[c2].x_add < 0)
-                                player[c2].x = player[c1].x + 0xC0000;
+                                player[c2].x.pos = player[c1].x.pos + 0xC0000;
                             else {
-                                player[c1].x -= player[c1].x_add;
-                                player[c2].x -= player[c2].x_add;
+                                player[c1].x.pos -= player[c1].x_add;
+                                player[c2].x.pos -= player[c2].x_add;
                             }
                             l1 = player[c2].x_add;
                             player[c2].x_add = player[c1].x_add;
@@ -285,12 +285,12 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                                 player[c2].x_add = -player[c2].x_add;
                         } else {
                             if (player[c1].x_add > 0)
-                                player[c2].x = player[c1].x - 0xC0000;
+                                player[c2].x.pos = player[c1].x.pos - 0xC0000;
                             else if (player[c2].x_add < 0)
-                                player[c1].x = player[c2].x + 0xC0000;
+                                player[c1].x.pos = player[c2].x.pos + 0xC0000;
                             else {
-                                player[c1].x -= player[c1].x_add;
-                                player[c2].x -= player[c2].x_add;
+                                player[c1].x.pos -= player[c1].x_add;
+                                player[c2].x.pos -= player[c2].x_add;
                             }
                             l1 = player[c2].x_add;
                             player[c2].x_add = player[c1].x_add;
@@ -331,15 +331,15 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
     }
 
     function player_kill(c1, c2) {
-        processKill(c1, c2, player[c2].x, player[c2].y);
+        processKill(c1, c2, player[c2].x.pos, player[c2].y.pos);
     }
     
     function player_action_left(p) {
         var s1 = 0, s2 = 0;
         var below_left, below, below_right;
 
-        s1 = (p.x >> 16);
-        s2 = (p.y >> 16);
+        s1 = (p.x.pos >> 16);
+        s2 = (p.y.pos >> 16);
         below_left = GET_BAN_MAP_XY(s1, s2 + 16);
         below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
         below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
@@ -360,7 +360,7 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
             if (p.x_add > 0) {
                 p.x_add -= 16384;
                 if (p.x_add > -98304 && p.in_water == 0 && below == BAN_SOLID) {
-                    objects.add(objects.SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
+                    objects.add(objects.SMOKE, (p.x.pos >> 16) + 2 + rnd(9), (p.y.pos >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
                 }
             } else {
                 p.x_add -= 12288;
@@ -379,8 +379,8 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
         var s1 = 0, s2 = 0;
         var below_left, below, below_right;
 
-        s1 = (p.x >> 16);
-        s2 = (p.y >> 16);
+        s1 = (p.x.pos >> 16);
+        s2 = (p.y.pos >> 16);
         below_left = GET_BAN_MAP_XY(s1, s2 + 16);
         below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
         below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
@@ -401,7 +401,7 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
             if (p.x_add < 0) {
                 p.x_add += 16384;
                 if (p.x_add < 98304 && p.in_water == 0 && below == BAN_SOLID) {
-                    objects.add(objects.SMOKE, (p.x >> 16) + 2 + rnd(9), (p.y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
+                    objects.add(objects.SMOKE, (p.x.pos >> 16) + 2 + rnd(9), (p.y.pos >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), objects.ANIM_SMOKE, 0);
                 }
             } else {
                 p.x_add += 12288;

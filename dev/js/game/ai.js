@@ -12,8 +12,8 @@ function AI(keyboard_state) {
             if (i == j || !player[j].enabled) {
                 continue;
             }
-            var deltax = player[j].x - player[i].x;
-            var deltay = player[j].y - player[i].y;
+            var deltax = player[j].x.pos - player[i].x.pos;
+            var deltay = player[j].y.pos - player[i].y.pos;
             var players_distance = deltax * deltax + deltay * deltay;
 
             if (players_distance < nearest_distance || nearest_distance == -1) {
@@ -37,10 +37,10 @@ function AI(keyboard_state) {
     }
 
     function move(current_player, target) {
-        var cur_posx = current_player.x >> 16;
-        var cur_posy = current_player.y >> 16;
-        var tar_posx = target.x >> 16;
-        var tar_posy = target.y >> 16;
+        var cur_posx = current_player.x.pos >> 16;
+        var cur_posy = current_player.y.pos >> 16;
+        var tar_posx = target.x.pos >> 16;
+        var tar_posy = target.y.pos >> 16;
 
         var tar_dist_above = cur_posy - tar_posy;
         var tar_dist_right = tar_posx - cur_posx;

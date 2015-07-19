@@ -26,8 +26,8 @@ function Objects(rnd) {
             if (!this.objects[c1].used) {
                 this.objects[c1].used = true;
                 this.objects[c1].type = type;
-                this.objects[c1].x = x << 16;
-                this.objects[c1].y = y << 16;
+                this.objects[c1].x = { pos: x << 16 };
+                this.objects[c1].y = { pos: y << 16 };
                 this.objects[c1].x_add = x_add;
                 this.objects[c1].y_add = y_add;
                 this.objects[c1].x_acc = 0;

@@ -7,8 +7,8 @@ function Player(playerIndex, keys, is_server, rnd) {
     this.dead_flag = false;
     this.bumps = false;
     this.bumped = [];
-    this.x = 0;
-    this.y = 0;
+    this.x = { pos: 0 };
+    this.y = { pos: 0 };
     this.x_add = 0;
     this.y_add = 0;
     this.direction = 0;
@@ -53,13 +53,13 @@ function Player(playerIndex, keys, is_server, rnd) {
             }
             for (c1 = 0; c1 < env.JNB_MAX_PLAYERS; c1++) {
                 if (c1 != player_num && player[c1].enabled) {
-                    if (Math.abs((s1 << LEVEL_SCALE_FACTOR) - (player[c1].x >> 16)) < 32 && Math.abs((s2 << LEVEL_SCALE_FACTOR) - (player[c1].y >> 16)) < 32)
+                    if (Math.abs((s1 << LEVEL_SCALE_FACTOR) - (player[c1].x.pos >> 16)) < 32 && Math.abs((s2 << LEVEL_SCALE_FACTOR) - (player[c1].y.pos >> 16)) < 32)
                         break;
                 }
             }
             if (c1 == env.JNB_MAX_PLAYERS) {
-                player[player_num].x = s1 << 20;
-                player[player_num].y = s2 << 20;
+                player[player_num].x.pos = s1 << 20;
+                player[player_num].y.pos = s2 << 20;
                 player[player_num].x_add = player[player_num].y_add = 0;
                 player[player_num].direction = 0;
                 player[player_num].jump_ready = 1;
