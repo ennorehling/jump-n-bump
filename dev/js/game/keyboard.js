@@ -1,4 +1,4 @@
-function Keyboard(sound_player) {
+function Keyboard(key_function_mappings) {
     "use strict";
     var self = this;
     var keys_pressed = {}
@@ -25,8 +25,9 @@ function Keyboard(sound_player) {
             var i = evt.keyCode - 49;
             if (evt.altKey) toggle_ai_enabled(i);
             else toggle_player_enabled(i);
-        } else if (uppercase_string === "M") {
-            sound_player.toggle_sound();
+        } else {
+            var action = key_function_mappings[uppercase_string];
+            if (action != null) action();
         }
     }
 

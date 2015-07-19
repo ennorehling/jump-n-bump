@@ -36,13 +36,14 @@ function Game_Session(level) {
         no_gore: false
     };
     var muted = gup('nosound') == '1';
-
+    
     this.sound_player = new Sound_Player(muted);
     var sfx = new Sfx(this.sound_player);
     var renderer = new Renderer(canvas, img, level);
     var objects = new Objects(rnd);
     var movement = new Movement(renderer, img, sfx, objects, settings, rnd);
-    var keyboard = new Keyboard(this.sound_player);
+    var key_action_mappings = [];
+    var keyboard = new Keyboard(key_action_mappings);
     var ai = new AI(keyboard);
     var animation = new Animation(renderer, img, objects, rnd);
     var game = new Game(movement, ai, animation, renderer, objects, keyboard.key_pressed, level, true, rnd);
@@ -69,5 +70,7 @@ function Game_Session(level) {
     function rnd(max_value) {
         return Math.floor(Math.random() * max_value);
     }
+
+    key_action_mappings["M"] = this.sound_player.toggle_sound;
 
 }
