@@ -81,26 +81,4 @@ function Renderer(canvas, img, level) {
         ctx.drawImage(level.mask, 0, 0);
         main.num_pobs = 0;
     }
-
-
-    function scale_image_data(imageData, scale) {
-        var scaled = ctx.createImageData(imageData.width * scale, imageData.height * scale);
-        var subLine = ctx.createImageData(scale, 1).data
-        for (var row = 0; row < imageData.height; row++) {
-            for (var col = 0; col < imageData.width; col++) {
-                var sourcePixel = imageData.data.subarray(
-                    (row * imageData.width + col) * 4,
-                    (row * imageData.width + col) * 4 + 4
-                );
-                for (var x = 0; x < scale; x++) subLine.set(sourcePixel, x * 4)
-                for (var y = 0; y < scale; y++) {
-                    var destRow = row * scale + y;
-                    var destCol = col * scale;
-                    scaled.data.set(subLine, (destRow * scaled.width + destCol) * 4)
-                }
-            }
-        }
-
-        return scaled;
-    }
 };

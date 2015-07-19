@@ -32,20 +32,20 @@
     <Content Include="js\game\ai.js" />
     <Content Include="js\game\animation.js" />
     <Content Include="asset_data\animation_data.js" />
-    <Content Include="js\level\dat_level_loader.js" />
+    <Content Include="js\resource_loading\dat_level_loader.js" />
     <Content Include="js\game\game.js" />
     <Content Include="js\game\keyboard.js" />
-    <Content Include="js\level\level.js" />
-    <Content Include="js\user_interface\game_session.js" />
+    <Content Include="js\game\level.js" />
+    <Content Include="js\interaction\game_session.js" />
     <Content Include="js\game\movement.js" />
     <Content Include="js\game\objects.js" />
-    <Content Include="js\level\offscreen_canvas.js" />
+    <Content Include="js\resource_loading\offscreen_canvas.js" />
     <Content Include="js\game\player.js" />
-    <Content Include="js\user_interface\scores_viewmodel.js" />
-    <Content Include="js\user_interface\viewmodels.js" />
-    <Content Include="js\user_interface\renderer.js" />
+    <Content Include="js\interaction\scores_viewmodel.js" />
+    <Content Include="js\interaction\viewmodels.js" />
+    <Content Include="js\interaction\renderer.js" />
     <Content Include="js\game\sfx.js" />
-    <Content Include="js\user_interface\sound_player.js" />
+    <Content Include="js\resource_loading\sound_player.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bower.json" />
