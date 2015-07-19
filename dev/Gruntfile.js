@@ -1,3 +1,4 @@
+/// <binding />
 module.exports = function(grunt) {
 
   // Project configuration.
@@ -5,7 +6,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 	watch: {
 		scripts: {
-		  files: ['*/*.js', 'Gruntfile.js'],
+		    files: ['asset_data/**/*.js', 'js/**/*.js', 'Gruntfile.js'],
 		  tasks: ['build'],
 		  options: {
 			spawn: false,
@@ -33,7 +34,7 @@ module.exports = function(grunt) {
         separator: '\n\n'
       },
       dist: {
-        src: ['*/*.js', ],
+          src: ['asset_data/**/*.js', 'js/**/*.js'],
         dest: '../game/scripts/<%= pkg.name %>.js'
       }
 	},
