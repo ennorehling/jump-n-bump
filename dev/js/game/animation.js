@@ -74,7 +74,7 @@ function Animation(renderer, img, objects, rnd) {
                             obj.x_add = -obj.x_add >> 2;
                             obj.x_acc = 0;
                         }
-                        if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != 0) {
+                        if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != BAN_VOID) {
                             if (obj.x_add < 0) {
                                 obj.x = (((obj.x >> 16) + 16) & 0xfff0) << 16;
                             } else {
@@ -103,7 +103,7 @@ function Animation(renderer, img, objects, rnd) {
                             obj.y_add = -obj.y_add >> 2;
                             obj.y_acc = 0;
                         }
-                        if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != 0) {
+                        if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != BAN_VOID) {
                             if (obj.y_add < 0) {
                                 obj.y = (((obj.y >> 16) + 16) & 0xfff0) << 16;
                             } else {
@@ -130,11 +130,11 @@ function Animation(renderer, img, objects, rnd) {
                     case objects.FUR:
                         if (rnd(100) < 30)
                             objects.add(objects.FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 0);
-                        if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 0) {
+                        if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_VOID) {
                             obj.y_add += 3072;
                             if (obj.y_add > 196608)
                                 obj.y_add = 196608;
-                        } else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 2) {
+                        } else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_WATER) {
                             if (obj.x_add < 0) {
                                 if (obj.x_add < -65536)
                                     obj.x_add = -65536;
@@ -155,7 +155,7 @@ function Animation(renderer, img, objects, rnd) {
                                 obj.y_add = 65536;
                         }
                         obj.x += obj.x_add;
-                        if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 1 || GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 3)) {
+                        if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_SOLID || GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_ICE)) {
                             if (obj.x_add < 0) {
                                 obj.x = (((obj.x >> 16) + 16) & 0xfff0) << 16;
                                 obj.x_add = -obj.x_add >> 2;
@@ -167,22 +167,22 @@ function Animation(renderer, img, objects, rnd) {
                         obj.y += obj.y_add;
                         if ((obj.x >> 16) < -5 || (obj.x >> 16) > 405 || (obj.y >> 16) > 260)
                             obj.used = false;
-                        if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != 0)) {
+                        if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != BAN_VOID)) {
                             if (obj.y_add < 0) {
-                                if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != 2) {
+                                if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != BAN_WATER) {
                                     obj.y = (((obj.y >> 16) + 16) & 0xfff0) << 16;
                                     obj.x_add >>= 2;
                                     obj.y_add = -obj.y_add >> 2;
                                 }
                             } else {
-                                if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 1) {
+                                if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_SOLID) {
                                     if (obj.y_add > 131072) {
                                         obj.y = ((((obj.y >> 16) - 16) & 0xfff0) + 15) << 16;
                                         obj.x_add >>= 2;
                                         obj.y_add = -obj.y_add >> 2;
                                     } else
                                         obj.used = false;
-                                } else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 3) {
+                                } else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_ICE) {
                                     obj.y = ((((obj.y >> 16) - 16) & 0xfff0) + 15) << 16;
                                     if (obj.y_add > 131072)
                                         obj.y_add = -obj.y_add >> 2;
@@ -215,11 +215,11 @@ function Animation(renderer, img, objects, rnd) {
                             else if (obj.frame == 78)
                                 objects.add(objects.FLESH_TRACE, obj.x >> 16, obj.y >> 16, 0, 0, objects.ANIM_FLESH_TRACE, 3);
                         }
-                        if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 0) {
+                        if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_VOID) {
                             obj.y_add += 3072;
                             if (obj.y_add > 196608)
                                 obj.y_add = 196608;
-                        } else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 2) {
+                        } else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_WATER) {
                             if (obj.x_add < 0) {
                                 if (obj.x_add < -65536)
                                     obj.x_add = -65536;
@@ -240,7 +240,7 @@ function Animation(renderer, img, objects, rnd) {
                                 obj.y_add = 65536;
                         }
                         obj.x += obj.x_add;
-                        if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 1 || GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 3)) {
+                        if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_SOLID || GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_ICE)) {
                             if (obj.x_add < 0) {
                                 obj.x = (((obj.x >> 16) + 16) & 0xfff0) << 16;
                                 obj.x_add = -obj.x_add >> 2;
@@ -252,15 +252,15 @@ function Animation(renderer, img, objects, rnd) {
                         obj.y += obj.y_add;
                         if ((obj.x >> 16) < -5 || (obj.x >> 16) > 405 || (obj.y >> 16) > 260)
                             obj.used = false;
-                        if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != 0)) {
+                        if ((obj.y >> 16) > 0 && (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != BAN_VOID)) {
                             if (obj.y_add < 0) {
-                                if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != 2) {
+                                if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) != BAN_WATER) {
                                     obj.y = (((obj.y >> 16) + 16) & 0xfff0) << 16;
                                     obj.x_add >>= 2;
                                     obj.y_add = -obj.y_add >> 2;
                                 }
                             } else {
-                                if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 1) {
+                                if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_SOLID) {
                                     if (obj.y_add > 131072) {
                                         obj.y = ((((obj.y >> 16) - 16) & 0xfff0) + 15) << 16;
                                         obj.x_add >>= 2;
@@ -272,7 +272,7 @@ function Animation(renderer, img, objects, rnd) {
                                         }
                                         obj.used = false;
                                     }
-                                } else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == 3) {
+                                } else if (GET_BAN_MAP(obj.x >> 20, obj.y >> 20) == BAN_ICE) {
                                     obj.y = ((((obj.y >> 16) - 16) & 0xfff0) + 15) << 16;
                                     if (obj.y_add > 131072)
                                         obj.y_add = -obj.y_add >> 2;
