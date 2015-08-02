@@ -63,7 +63,7 @@ function AI(keyboard_state) {
             && (running_away || allowed_to_chase); // Prevents "nervous" bunnies that keep changing direction as soon as the player does.
     }
 
-    function should_jump(current_player, cur_posx, cur_posy, tar_dist_above, tar_above_nearby, lm, rm) {
+    function should_jump(current_player, cur_posx, cur_posy, tar_dist_above, tar_directly_above, lm, rm) {
 
         var already_jumping = keyboard_state.key_pressed(current_player.keys[2]);
         var tile_below = map_tile(cur_posx, cur_posy + 16);
@@ -84,13 +84,9 @@ function AI(keyboard_state) {
         else if (blocks_movement(tile_heading_for) && already_jumping) {
             return true;   // this makes it possible to jump over 2 tiles
         }
-        else if (tar_above_nearby) {
-            return false;
-        }
-        else if (tar_dist_above >= 0 && tar_dist_above < 32) {  // Try to get higher than the target
-            return true;
-        } else {  // target below
-            return false;
+        else {
+            var could_get_above_target = tar_dist_above >= 0 && tar_dist_above < 32;
+            return !tar_directly_above && could_get_above_target;
         }
     }
 
