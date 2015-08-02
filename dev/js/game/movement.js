@@ -218,7 +218,6 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
     
     this.collision_check = function() {
         var c1 = 0, c2 = 0, c3 = 0;
-        var l1;
 
         /* collision check */
         for (c3 = 0; c3 < 6; c3++) {
@@ -245,48 +244,52 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
             var p2 = player[c2];
             if (p1.enabled && p2.enabled) {
                 if (Math.abs(p1.x.pos - p2.x.pos) < 0xC0000 && Math.abs(p1.y.pos - p2.y.pos) < 0xC0000) {
-                    if ((Math.abs(p1.y.pos - p2.y.pos) >> 16) > 5) {
-                        if (p1.y.pos < p2.y.pos) {
-                            player_kill(c1, c2);
-                        } else {
-                            player_kill(c2, c1);
-                        }
-                    } else {
-                        if (p1.x.pos < p2.x.pos) {
-                            if (p1.x.velocity > 0)
-                                p1.x.pos = p2.x.pos - 0xC0000;
-                            else if (p2.x.velocity < 0)
-                                p2.x.pos = p1.x.pos + 0xC0000;
-                            else {
-                                p1.x.pos -= p1.x.velocity;
-                                p2.x.pos -= p2.x.velocity;
-                            }
-                            l1 = p2.x.velocity;
-                            p2.x.velocity = p1.x.velocity;
-                            p1.x.velocity = l1;
-                            if (p1.x.velocity > 0)
-                                p1.x.velocity = -p1.x.velocity;
-                            if (p2.x.velocity < 0)
-                                p2.x.velocity = -p2.x.velocity;
-                        } else {
-                            if (p1.x.velocity > 0)
-                                p2.x.pos = p1.x.pos - 0xC0000;
-                            else if (p2.x.velocity < 0)
-                                p1.x.pos = p2.x.pos + 0xC0000;
-                            else {
-                                p1.x.pos -= p1.x.velocity;
-                                p2.x.pos -= p2.x.velocity;
-                            }
-                            l1 = p2.x.velocity;
-                            p2.x.velocity = p1.x.velocity;
-                            p1.x.velocity = l1;
-                            if (p1.x.velocity < 0)
-                                p1.x.velocity = -p1.x.velocity;
-                            if (p2.x.velocity > 0)
-                                p2.x.velocity = -p2.x.velocity;
-                        }
-                    }
+                    player_collision_check(p1, p2);
                 }
+            }
+        }
+    }
+
+    function player_collision_check(p1, p2) {
+        if ((Math.abs(p1.y.pos - p2.y.pos) >> 16) > 5) {
+            if (p1.y.pos < p2.y.pos) {
+                player_kill(p1, p2);
+            } else {
+                player_kill(p2, p1);
+            }
+        } else {
+            if (p1.x.pos < p2.x.pos) {
+                if (p1.x.velocity > 0)
+                    p1.x.pos = p2.x.pos - 0xC0000;
+                else if (p2.x.velocity < 0)
+                    p2.x.pos = p1.x.pos + 0xC0000;
+                else {
+                    p1.x.pos -= p1.x.velocity;
+                    p2.x.pos -= p2.x.velocity;
+                }
+                var l1 = p2.x.velocity;
+                p2.x.velocity = p1.x.velocity;
+                p1.x.velocity = l1;
+                if (p1.x.velocity > 0)
+                    p1.x.velocity = -p1.x.velocity;
+                if (p2.x.velocity < 0)
+                    p2.x.velocity = -p2.x.velocity;
+            } else {
+                if (p1.x.velocity > 0)
+                    p2.x.pos = p1.x.pos - 0xC0000;
+                else if (p2.x.velocity < 0)
+                    p1.x.pos = p2.x.pos + 0xC0000;
+                else {
+                    p1.x.pos -= p1.x.velocity;
+                    p2.x.pos -= p2.x.velocity;
+                }
+                var l1 = p2.x.velocity;
+                p2.x.velocity = p1.x.velocity;
+                p1.x.velocity = l1;
+                if (p1.x.velocity < 0)
+                    p1.x.velocity = -p1.x.velocity;
+                if (p2.x.velocity > 0)
+                    p2.x.velocity = -p2.x.velocity;
             }
         }
     }
@@ -297,32 +300,27 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
         obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
     }
 
-    function processKill(c1, c2, x, y) {
-        var s1 = 0;
 
-        player[c1].y.velocity = -player[c1].y.velocity;
-        if (player[c1].y.velocity > -262144)
-            player[c1].y.velocity = -262144;
-        player[c1].jump_abort = true;
-        player[c2].dead_flag = true;
-        if (player[c2].anim != 6) {
-            player[c2].set_anim(6);
+    function player_kill(killer, victim) {
+        killer.y.velocity = -killer.y.velocity;
+        if (killer.y.velocity > -262144)
+            killer.y.velocity = -262144;
+        killer.jump_abort = true;
+        victim.dead_flag = true;
+        if (victim.anim != 6) {
+            victim.set_anim(6);
             if (!settings.no_gore) {
-                objects.add_gore(x, y, c2);
+                objects.add_gore(victim.x.pos, victim.y.pos, victim.player_index);
             }
             sfx.death();
-            player[c1].bumps++;
-            player[c1].bumped[c2]++;
-            s1 = player[c1].bumps % 100;
+            killer.bumps++;
+            killer.bumped[victim.player_index]++;
+            var s1 = killer.bumps % 100;
             if (s1 % 10 == 0) {
-                renderer.add_leftovers(360, 34 + c1 * 64, img.numbers, number_gobs[Math.floor(s1 / 10) % 10]);
+                renderer.add_leftovers(360, 34 + killer.player_index * 64, img.numbers, number_gobs[Math.floor(s1 / 10) % 10]);
             }
-            renderer.add_leftovers(376, 34 + c1 * 64, img.numbers, number_gobs[s1 % 10]);
+            renderer.add_leftovers(376, 34 + killer.player_index * 64, img.numbers, number_gobs[s1 % 10]);
         }
-    }
-
-    function player_kill(c1, c2) {
-        processKill(c1, c2, player[c2].x.pos, player[c2].y.pos);
     }
     
     function player_action_left(p) {
