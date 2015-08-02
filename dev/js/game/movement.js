@@ -241,47 +241,49 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
                 c1 = 2;
                 c2 = 3;
             }
-            if (player[c1].enabled && player[c2].enabled) {
-                if (Math.abs(player[c1].x.pos - player[c2].x.pos) < 0xC0000 && Math.abs(player[c1].y.pos - player[c2].y.pos) < 0xC0000) {
-                    if ((Math.abs(player[c1].y.pos - player[c2].y.pos) >> 16) > 5) {
-                        if (player[c1].y.pos < player[c2].y.pos) {
+            var p1 = player[c1];
+            var p2 = player[c2];
+            if (p1.enabled && p2.enabled) {
+                if (Math.abs(p1.x.pos - p2.x.pos) < 0xC0000 && Math.abs(p1.y.pos - p2.y.pos) < 0xC0000) {
+                    if ((Math.abs(p1.y.pos - p2.y.pos) >> 16) > 5) {
+                        if (p1.y.pos < p2.y.pos) {
                             player_kill(c1, c2);
                         } else {
                             player_kill(c2, c1);
                         }
                     } else {
-                        if (player[c1].x.pos < player[c2].x.pos) {
-                            if (player[c1].x.velocity > 0)
-                                player[c1].x.pos = player[c2].x.pos - 0xC0000;
-                            else if (player[c2].x.velocity < 0)
-                                player[c2].x.pos = player[c1].x.pos + 0xC0000;
+                        if (p1.x.pos < p2.x.pos) {
+                            if (p1.x.velocity > 0)
+                                p1.x.pos = p2.x.pos - 0xC0000;
+                            else if (p2.x.velocity < 0)
+                                p2.x.pos = p1.x.pos + 0xC0000;
                             else {
-                                player[c1].x.pos -= player[c1].x.velocity;
-                                player[c2].x.pos -= player[c2].x.velocity;
+                                p1.x.pos -= p1.x.velocity;
+                                p2.x.pos -= p2.x.velocity;
                             }
-                            l1 = player[c2].x.velocity;
-                            player[c2].x.velocity = player[c1].x.velocity;
-                            player[c1].x.velocity = l1;
-                            if (player[c1].x.velocity > 0)
-                                player[c1].x.velocity = -player[c1].x.velocity;
-                            if (player[c2].x.velocity < 0)
-                                player[c2].x.velocity = -player[c2].x.velocity;
+                            l1 = p2.x.velocity;
+                            p2.x.velocity = p1.x.velocity;
+                            p1.x.velocity = l1;
+                            if (p1.x.velocity > 0)
+                                p1.x.velocity = -p1.x.velocity;
+                            if (p2.x.velocity < 0)
+                                p2.x.velocity = -p2.x.velocity;
                         } else {
-                            if (player[c1].x.velocity > 0)
-                                player[c2].x.pos = player[c1].x.pos - 0xC0000;
-                            else if (player[c2].x.velocity < 0)
-                                player[c1].x.pos = player[c2].x.pos + 0xC0000;
+                            if (p1.x.velocity > 0)
+                                p2.x.pos = p1.x.pos - 0xC0000;
+                            else if (p2.x.velocity < 0)
+                                p1.x.pos = p2.x.pos + 0xC0000;
                             else {
-                                player[c1].x.pos -= player[c1].x.velocity;
-                                player[c2].x.pos -= player[c2].x.velocity;
+                                p1.x.pos -= p1.x.velocity;
+                                p2.x.pos -= p2.x.velocity;
                             }
-                            l1 = player[c2].x.velocity;
-                            player[c2].x.velocity = player[c1].x.velocity;
-                            player[c1].x.velocity = l1;
-                            if (player[c1].x.velocity < 0)
-                                player[c1].x.velocity = -player[c1].x.velocity;
-                            if (player[c2].x.velocity > 0)
-                                player[c2].x.velocity = -player[c2].x.velocity;
+                            l1 = p2.x.velocity;
+                            p2.x.velocity = p1.x.velocity;
+                            p1.x.velocity = l1;
+                            if (p1.x.velocity < 0)
+                                p1.x.velocity = -p1.x.velocity;
+                            if (p2.x.velocity > 0)
+                                p2.x.velocity = -p2.x.velocity;
                         }
                     }
                 }
