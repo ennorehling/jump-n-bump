@@ -63,36 +63,39 @@ function AI(keyboard_state) {
             && (running_away || allowed_to_chase); // Prevents "nervous" bunnies that keep changing direction as soon as the player does.
     }
 
-    function should_jump(current_player, cur_posx, cur_posy, tar_dist_above, running_away, lm, rm) {
-        if (map_tile(cur_posx, cur_posy + 16) != BAN_VOID &&
-            keyboard_state.key_pressed(current_player.keys[2]))
-            return false;   // if we are on ground and jump key is being pressed,
-            //first we have to release it or else we won't be able to jump more than once
+    function should_jump(current_player, cur_posx, cur_posy, tar_dist_above, tar_above_nearby, lm, rm) {
 
-        else if (map_tile(cur_posx, cur_posy - 8) != BAN_VOID &&
-            map_tile(cur_posx, cur_posy - 8) != BAN_WATER) {
-            return false;   // don't jump if there is something over it
+        var already_jumping = keyboard_state.key_pressed(current_player.keys[2]);
+        var tile_below = map_tile(cur_posx, cur_posy + 16);
+        var tile_above = map_tile(cur_posx, cur_posy - 8);
+        var tile_heading_for = map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy + (already_jumping * 8));
+        var on_ground = tile_below != BAN_VOID;
+
+        if (on_ground && already_jumping) {
+            return false; //must release key before we can jump again
+        } 
+        else if (blocks_movement(tile_above)) {
+            return false; // don't jump if there is something over it
         }
-        else if (map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy) != BAN_VOID &&
-            map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy) != BAN_WATER &&
-            cur_posx > 16 && cur_posx < 352 - 16 - 8)  // obstacle, jump
+        else if (blocks_movement(tile_heading_for) &&
+            cur_posx > 16 && cur_posx < 352 - 16 - 8) {  // obstacle, jump
             return true;   // if there is something on the way, jump over it
-
-        else if (keyboard_state.key_pressed(current_player.keys[2]) &&
-                        (map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy + 8) != BAN_VOID &&
-                        map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy + 8) != BAN_WATER)) {
+        }
+        else if (blocks_movement(tile_heading_for) && already_jumping) {
             return true;   // this makes it possible to jump over 2 tiles
         }
-        else if (running_away) {
+        else if (tar_above_nearby) {
             return false;
         }
-
         else if (tar_dist_above >= 0 && tar_dist_above < 32) {  // Try to get higher than the target
             return true;
         } else {  // target below
             return false;
         }
-        return jm;
+    }
+
+    function blocks_movement(tile_type) {
+        return tile_type != BAN_WATER && tile_type != BAN_VOID;
     }
 
     function press_keys(p, lm, rm, jm) {
