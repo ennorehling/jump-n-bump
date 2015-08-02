@@ -217,34 +217,15 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
     }
     
     this.collision_check = function() {
-        var c1 = 0, c2 = 0, c3 = 0;
-
         /* collision check */
-        for (c3 = 0; c3 < 6; c3++) {
-            if (c3 == 0) {
-                c1 = 0;
-                c2 = 1;
-            } else if (c3 == 1) {
-                c1 = 0;
-                c2 = 2;
-            } else if (c3 == 2) {
-                c1 = 0;
-                c2 = 3;
-            } else if (c3 == 3) {
-                c1 = 1;
-                c2 = 2;
-            } else if (c3 == 4) {
-                c1 = 1;
-                c2 = 3;
-            } else if (c3 == 5) {
-                c1 = 2;
-                c2 = 3;
-            }
-            var p1 = player[c1];
-            var p2 = player[c2];
-            if (p1.enabled && p2.enabled) {
-                if (Math.abs(p1.x.pos - p2.x.pos) < 0xC0000 && Math.abs(p1.y.pos - p2.y.pos) < 0xC0000) {
-                    player_collision_check(p1, p2);
+        for (var c1 = 0; c1 < 3; c1++) {
+            for (var c2 = c1 + 1; c2 < 4; c2++) {
+                var p1 = player[c1];
+                var p2 = player[c2];
+                if (p1.enabled && p2.enabled) {
+                    if (Math.abs(p1.x.pos - p2.x.pos) < 0xC0000 && Math.abs(p1.y.pos - p2.y.pos) < 0xC0000) {
+                        player_collision_check(p1, p2);
+                    }
                 }
             }
         }
