@@ -70,6 +70,7 @@ function AI(keyboard_state) {
         var tile_above = map_tile(cur_posx, cur_posy - 8);
         var tile_heading_for = map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy + (already_jumping * 8));
         var on_ground = tile_below != BAN_VOID;
+        var at_map_edge = cur_posx <= 16 || cur_posx + 8 >= 352 - 16
 
         if (on_ground && already_jumping) {
             return false; //must release key before we can jump again
@@ -77,8 +78,7 @@ function AI(keyboard_state) {
         else if (blocks_movement(tile_above)) {
             return false; // don't jump if there is something over it
         }
-        else if (blocks_movement(tile_heading_for) &&
-            cur_posx > 16 && cur_posx < 352 - 16 - 8) {  // obstacle, jump
+        else if (blocks_movement(tile_heading_for) && !at_map_edge) {
             return true;   // if there is something on the way, jump over it
         }
         else if (blocks_movement(tile_heading_for) && already_jumping) {
