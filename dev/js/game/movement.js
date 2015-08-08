@@ -220,49 +220,10 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
         /* collision check */
         for (var c1 = 0; c1 < 3; c1++) {
             for (var c2 = c1 + 1; c2 < 4; c2++) {
-                var p1 = player[c1];
-                var p2 = player[c2];
-                if (p1.enabled && p2.enabled) {
-                    if (Math.abs(p1.x.pos - p2.x.pos) < 0xC0000 && Math.abs(p1.y.pos - p2.y.pos) < 0xC0000) {
-                        player_collision_check(p1, p2);
-                    }
-                }
+                var pair = new Player_Pair(player[c1], player[c2], sfx, renderer, objects, img, settings);
+                pair.collision_check();
             }
         }
-    }
-
-    function player_collision_check(p1, p2) {
-        if ((Math.abs(p1.y.pos - p2.y.pos) >> 16) > 5) {
-            if (p1.y.pos < p2.y.pos) {
-                player_kill(p1, p2);
-            } else {
-                player_kill(p2, p1);
-            }
-        } else {
-            if (p1.x.pos < p2.x.pos) {
-                repel_each_other(p1, p2);
-            } else {
-                repel_each_other(p2, p1);
-            }
-        }
-    }
-
-    function repel_each_other(left_player, right_player){
-        if (right_player.x.velocity > 0)
-            left_player.x.pos = right_player.x.pos - 0xC0000;
-        else if (left_player.x.velocity < 0)
-            right_player.x.pos = left_player.x.pos + 0xC0000;
-        else {
-            left_player.x.pos -= left_player.x.velocity;
-            right_player.x.pos -= right_player.x.velocity;
-        }
-        var l1 = left_player.x.velocity;
-        left_player.x.velocity = right_player.x.velocity;
-        right_player.x.velocity = l1;
-        if (right_player.x.velocity < 0)
-            right_player.x.velocity = -right_player.x.velocity;
-        if (left_player.x.velocity > 0)
-            left_player.x.velocity = -left_player.x.velocity;
     }
 
     function start_anim(obj) {
@@ -271,29 +232,6 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
         obj.image = env.animation_data.objects[obj.anim].frame[obj.frame].image;
     }
 
-
-    function player_kill(killer, victim) {
-        killer.y.velocity = -killer.y.velocity;
-        if (killer.y.velocity > -262144)
-            killer.y.velocity = -262144;
-        killer.jump_abort = true;
-        victim.dead_flag = true;
-        if (victim.anim != 6) {
-            victim.set_anim(6);
-            if (!settings.no_gore) {
-                objects.add_gore(victim.x.pos, victim.y.pos, victim.player_index);
-            }
-            sfx.death();
-            killer.bumps++;
-            killer.bumped[victim.player_index]++;
-            var s1 = killer.bumps % 100;
-            if (s1 % 10 == 0) {
-                renderer.add_leftovers(360, 34 + killer.player_index * 64, img.numbers, number_gobs[Math.floor(s1 / 10) % 10]);
-            }
-            renderer.add_leftovers(376, 34 + killer.player_index * 64, img.numbers, number_gobs[s1 % 10]);
-        }
-    }
-    
     function player_action_left(p) {
         var sx = (p.x.pos >> 16);
         var sy = (p.y.pos >> 16);
