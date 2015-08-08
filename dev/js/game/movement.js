@@ -305,11 +305,11 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
     }
     
     function player_action_left(p) {
-        var s1 = (p.x.pos >> 16);
-        var s2 = (p.y.pos >> 16);
-        var below_left = GET_BAN_MAP_XY(s1, s2 + 16);
-        var below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
-        var below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
+        var sx = (p.x.pos >> 16);
+        var sy = (p.y.pos >> 16);
+        var below_left = GET_BAN_MAP_XY(sx, sy + 16);
+        var below = GET_BAN_MAP_XY(sx + 8, sy + 16);
+        var below_right = GET_BAN_MAP_XY(sx + 15, sy + 16);
         var moving_right = p.x.velocity > 0;
         var is_ice_below = below == BAN_ICE || (below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID);
         var acceleration = is_ice_below ? 1 : 8;
@@ -333,11 +333,11 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
     }
 
     function player_action_right(p) {
-        var s1 = (p.x.pos >> 16);
-        var s2 = (p.y.pos >> 16);
-        var below_left = GET_BAN_MAP_XY(s1, s2 + 16);
-        var below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
-        var below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
+        var sx = (p.x.pos >> 16);
+        var sy = (p.y.pos >> 16);
+        var below_left = GET_BAN_MAP_XY(sx, sy + 16);
+        var below = GET_BAN_MAP_XY(sx + 8, sy + 16);
+        var below_right = GET_BAN_MAP_XY(sx + 15, sy + 16);
         var moving_left = p.x.velocity < 0;
         var is_ice_below = below == BAN_ICE || (below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID);
         var acceleration = is_ice_below ? 1 : 8;
