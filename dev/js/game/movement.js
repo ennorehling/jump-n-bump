@@ -240,21 +240,21 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
             }
         } else {
             if (p1.x.pos < p2.x.pos) {
-                if (p1.x.velocity > 0)
+                if (p2.x.velocity > 0)
                     p1.x.pos = p2.x.pos - 0xC0000;
-                else if (p2.x.velocity < 0)
+                else if (p1.x.velocity < 0)
                     p2.x.pos = p1.x.pos + 0xC0000;
                 else {
                     p1.x.pos -= p1.x.velocity;
                     p2.x.pos -= p2.x.velocity;
                 }
-                var l1 = p2.x.velocity;
-                p2.x.velocity = p1.x.velocity;
-                p1.x.velocity = l1;
-                if (p1.x.velocity > 0)
-                    p1.x.velocity = -p1.x.velocity;
+                var l1 = p1.x.velocity;
+                p1.x.velocity = p2.x.velocity;
+                p2.x.velocity = l1;
                 if (p2.x.velocity < 0)
                     p2.x.velocity = -p2.x.velocity;
+                if (p1.x.velocity > 0)
+                    p1.x.velocity = -p1.x.velocity;
             } else {
                 if (p1.x.velocity > 0)
                     p2.x.pos = p1.x.pos - 0xC0000;
