@@ -240,39 +240,29 @@ function Movement(renderer, img, sfx, objects, settings, rnd) {
             }
         } else {
             if (p1.x.pos < p2.x.pos) {
-                if (p2.x.velocity > 0)
-                    p1.x.pos = p2.x.pos - 0xC0000;
-                else if (p1.x.velocity < 0)
-                    p2.x.pos = p1.x.pos + 0xC0000;
-                else {
-                    p1.x.pos -= p1.x.velocity;
-                    p2.x.pos -= p2.x.velocity;
-                }
-                var l1 = p1.x.velocity;
-                p1.x.velocity = p2.x.velocity;
-                p2.x.velocity = l1;
-                if (p2.x.velocity < 0)
-                    p2.x.velocity = -p2.x.velocity;
-                if (p1.x.velocity > 0)
-                    p1.x.velocity = -p1.x.velocity;
+                repel_each_other(p1, p2);
             } else {
-                if (p1.x.velocity > 0)
-                    p2.x.pos = p1.x.pos - 0xC0000;
-                else if (p2.x.velocity < 0)
-                    p1.x.pos = p2.x.pos + 0xC0000;
-                else {
-                    p1.x.pos -= p1.x.velocity;
-                    p2.x.pos -= p2.x.velocity;
-                }
-                var l1 = p2.x.velocity;
-                p2.x.velocity = p1.x.velocity;
-                p1.x.velocity = l1;
-                if (p1.x.velocity < 0)
-                    p1.x.velocity = -p1.x.velocity;
-                if (p2.x.velocity > 0)
-                    p2.x.velocity = -p2.x.velocity;
+                repel_each_other(p2, p1);
             }
         }
+    }
+
+    function repel_each_other(left_player, right_player){
+        if (right_player.x.velocity > 0)
+            left_player.x.pos = right_player.x.pos - 0xC0000;
+        else if (left_player.x.velocity < 0)
+            right_player.x.pos = left_player.x.pos + 0xC0000;
+        else {
+            left_player.x.pos -= left_player.x.velocity;
+            right_player.x.pos -= right_player.x.velocity;
+        }
+        var l1 = left_player.x.velocity;
+        left_player.x.velocity = right_player.x.velocity;
+        right_player.x.velocity = l1;
+        if (right_player.x.velocity < 0)
+            right_player.x.velocity = -right_player.x.velocity;
+        if (left_player.x.velocity > 0)
+            left_player.x.velocity = -left_player.x.velocity;
     }
 
     function start_anim(obj) {
