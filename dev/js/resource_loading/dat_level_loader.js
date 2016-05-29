@@ -140,7 +140,7 @@
 
         for (var file_number = 0; file_number < num_files_contained; file_number++) {
 
-            var file_name = String.fromCharCode.apply(null, datafile_buffer.subarray(ptr, ptr + 12)).normalize();
+            var file_name = String.fromCharCode.apply(null, datafile_buffer.subarray(ptr, ptr + 12)).replace(/[^\x20-\xFF]/g, '');
             ptr += 12;
             var file_offset = read_four_byte_int(ptr);
             ptr += 8;
