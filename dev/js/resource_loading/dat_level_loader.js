@@ -114,11 +114,10 @@
                 colormap[ofs++] = a;
             }
         }
-        if (palette != null) {
-            handle++;
-            for (var c1 = 0; c1 < PALETTE_256_SIZE; c1++)
-                palette[c1] = datafile_buffer[handle++];
-        }
+		handle++;
+		for (var c1 = 0; c1 < PALETTE_256_SIZE; c1++) {
+			palette[c1] = datafile_buffer[handle++];
+		}
 
         return { palette: palette, colormap: colormap };
     }
