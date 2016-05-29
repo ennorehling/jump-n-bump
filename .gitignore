@@ -5,3 +5,5 @@ packages/
 */build/
 */node_modules/
 game/jnb.html
+
+*.zip
