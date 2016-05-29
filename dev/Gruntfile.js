@@ -56,6 +56,13 @@ module.exports = function(grunt) {
 		],
 	  },
 	},
+	zip: {
+	  'long-format': {
+		src: ['../game/**'],
+		dest: '../release.zip',
+	    cwd: '../game/'
+	  }
+	}
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -64,9 +71,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-bower');
   grunt.loadNpmTasks('main-bower-files');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-zip');
 
   // Default task(s).
-  grunt.registerTask('build', ['bower', 'concat', 'uglify', 'copy']);
+  grunt.registerTask('build', ['bower', 'concat', 'uglify', 'copy', 'zip']);
   grunt.registerTask('default', ['build', 'watch']);
 
 };
