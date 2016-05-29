@@ -14,7 +14,7 @@ module.exports = function(grunt) {
 		},
 		bower: {
 			files: ['bower.json'],
-			tasks: ['bower:dist']
+			tasks: ['bower:dev']
 		},
 		html: {
 			files: ['*.html'],
@@ -61,11 +61,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-bower');
   grunt.loadNpmTasks('main-bower-files');
   grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Default task(s).
-  grunt.registerTask('build', ['bower:dist', 'concat', 'uglify', 'copy']);
+  grunt.registerTask('build', ['bower', 'concat', 'uglify', 'copy']);
   grunt.registerTask('default', ['build', 'watch']);
 
 };
