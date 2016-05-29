@@ -1,5 +1,8 @@
 @ECHO OFF
+ECHO Note: Script requires NPM on the PATH
+ECHO If successful, run 'build.bat' to build
 call npm install
-bower install
-ECHO Run 'grunt' to build
+node_modules\.bin\bower install
+
+
 PAUSE
