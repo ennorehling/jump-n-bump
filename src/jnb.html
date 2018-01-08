@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jump'n'Bump - HTML5</title>
+    <META NAME="description" CONTENT="An instant real-time multiplayer-only keyboard-crowding classic, this game pits up to four human-operated cute fuzzy widdle bunnies against each other for one goal only: lagomorphic cranial domination.">
+    <link rel="shortcut icon" href="rabbit.ico" />
+    <style type="text/css">
+      canvas { 
+	    border: 0px solid black;
+        position: absolute;
+        top:0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin:auto;
+	    }
+      img {float:right; }
+      img.resource { display:none; }
+      br { clear: both; }
+      body { color: #cccccc; background-color: black}
+      a { color: #bbbbbb; }
+    </style>
+</head>
+<body>
+    <img class="resource" id='level' src='levels/default/level.png' alt=""/>
+    <img class="resource" id='mask' src='levels/default/mask.png' alt=""/>
+    <img class="resource" id='objects' src='sprites/objects.png' alt=""/>
+    <img class="resource" id='numbers' src='sprites/numbers.png' alt=""/>
+    <img class="resource" id='rabbits' src='sprites/rabbit.png' alt=""/>
+    <div data-bind="visible: current_page() === Page.Game">
+        <canvas id="screen" width="1200" height="768"></canvas>
+        <button data-bind="click: current_game().pause" >Pause game (p)</button>
+    </div>
+    <div data-bind="visible: current_page() == Page.Scores">
+        <button data-bind="click: current_game().unpause">Unpause game (p)</button>
+        <br />
+        <h3>Scores</h3>
+        <table data-bind="with: scores_viewmodel">
+            <tr>
+                <!-- ko foreach: player_row -->
+                    <th data-bind="text: $data"></th>
+                <!-- /ko -->
+            </tr>
+            <tbody>
+                <!-- ko foreach: score_rows -->
+                    <tr>
+                        <th data-bind="text: $data[0]"></th>
+                        <!-- ko foreach: $data -->
+                            <!-- ko if: $index() != 0 -->
+                                <td data-bind="text: $data"></td>
+                            <!-- /ko -->
+                        <!-- /ko -->
+                    </tr>
+                <!-- /ko -->
+            </tbody>
+        </table>
+
+        <br />
+        
+    </div>
+    <div data-bind="visible: current_page() == Page.Instructions">
+        <h2>Jump 'n' Bump</h2>
+        <img src="jbcircle.png" alt="small preview of the game"/>
+        <p>
+            This game is a HTML5 reimplementation of a <a href="https://github.com/fschulze/jumpnbump">open source</a> <a href="https://icculus.org/jumpnbump/">DOS classic</a>. As of July 2015, it is still in development.
+            Maybe you would like to take a look at the <a href="https://github.com/GrahamTheCoder/jump-n-bump">Source code</a>?
+        </p>
+    </div>
+    <div data-bind="visible: current_page() != Page.Game">
+        <button data-bind="click: current_game().start, disabled: loading_level">Start new game</button>
+        <h3>Controls:</h3>
+        <ul>
+            <li>M: toggle sound</li>
+            <li>P: toggle pause</li>
+            <li>1-4: toggle player 1-4</li>
+            <li>Alt + 1-4: toggle AI for player 1-4</li>
+            <li>Arrows: control player 1</li>
+            <li>WAD: control player 2</li>
+            <li>JIL: control player 3</li>
+            <li>NumPad: control player 4</li>
+        </ul>
+        <h3>Load level:</h3>
+        <p>Load any of the levels found on <a href="http://www.brainchilddesign.com/games/jumpnbump/levels/levels1.html" target="_blank">Brainchild Design's website</a></p>
+        <input id="level_input" type="file" accept=".dat" data-bind="event: { change: load_level }" />
+        <br />
+    </div>
+</body>
+</html>

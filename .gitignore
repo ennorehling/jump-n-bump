@@ -7,3 +7,6 @@ packages/
 game/jnb.html
 
 *.zip
+/node_modules/
+/game/index.html
+/game/jump-n-bump.js

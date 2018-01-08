@@ -1,0 +1,72 @@
+export const number_gobs = [
+{
+    x: 0,
+    y: 0,
+    width: 16,
+    height: 22,
+    hotspot_x: 0,
+    hotspot_y: 0
+}, {
+    x: 18,
+    y: 0,
+    width: 16,
+    height: 22,
+    hotspot_x: 0,
+    hotspot_y: 0
+}, {
+    x: 36,
+    y: 0,
+    width: 16,
+    height: 22,
+    hotspot_x: 0,
+    hotspot_y: 0
+}, {
+    x: 54,
+    y: 0,
+    width: 16,
+    height: 22,
+    hotspot_x: 0,
+    hotspot_y: 0
+}, {
+    x: 72,
+    y: 0,
+    width: 16,
+    height: 22,
+    hotspot_x: 0,
+    hotspot_y: 0
+}, {
+    x: 90,
+    y: 0,
+    width: 16,
+    height: 22,
+    hotspot_x: 0,
+    hotspot_y: 0
+}, {
+    x: 108,
+    y: 0,
+    width: 16,
+    height: 22,
+    hotspot_x: 0,
+    hotspot_y: 0
+}, {
+    x: 126,
+    y: 0,
+    width: 16,
+    height: 22,
+    hotspot_x: 0,
+    hotspot_y: 0
+}, {
+    x: 144,
+    y: 0,
+    width: 16,
+    height: 22,
+    hotspot_x: 0,
+    hotspot_y: 0
+}, {
+    x: 162,
+    y: 0,
+    width: 16,
+    height: 22,
+    hotspot_x: 0,
+    hotspot_y: 0
+}];
