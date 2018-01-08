@@ -16,3 +16,11 @@ WAD: control player 2
 JIL: control player 3
 
 NumPad: control player 4
+
+## Development
+
+1. First run: `npm install`
+1. To rebuild `npm run build`
+1. To rebuild whenever files change `npm run watch`
+1. Open `game/index.html` in a browser to play
+
