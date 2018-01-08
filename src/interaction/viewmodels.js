@@ -14,7 +14,8 @@ function ViewModel() {
     var loader = new Dat_Level_Loader();
     this.Page = Enum({ Instructions: 0, Game: 1, Scores: 2 });
     this.loading_level = ko.observable(true);
-    this.current_game = ko.observable(new Game_Session(create_default_level()));
+    this.current_level = create_default_level();
+    this.current_game = ko.observable(new Game_Session(this.current_level));
 
     this.current_page = ko.computed(function () {
         return self.current_game().game_state();
@@ -23,6 +24,11 @@ function ViewModel() {
         return new Scores_ViewModel(self.current_game().scores());
     });
 
+    this.restart = function () {
+        self.current_game(new Game_Session(self.current_level));
+        self.current_game().start();
+    }
+
     this.load_level = function (self) {
         this.loading_level(true);
         var files = document.getElementById("level_input").files;
@@ -30,7 +36,8 @@ function ViewModel() {
             var file = files[0];
 
             document.addEventListener(loader.on_loaded_event_text, function () {
-                self.current_game(new Game_Session(loader.read_level()));
+                self.current_level = loader.read_level();
+                self.current_game(new Game_Session(self.current_level));
                 self.loading_level(false);
             });
 

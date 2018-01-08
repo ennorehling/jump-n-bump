@@ -67,7 +67,7 @@
         </p>
     </div>
     <div data-bind="visible: current_page() != Page.Game">
-        <button data-bind="click: current_game().start, disabled: loading_level">Start new game</button>
+        <button data-bind="click: restart, disabled: loading_level">Start new game</button>
         <h3>Controls:</h3>
         <ul>
             <li>M: toggle sound</li>
