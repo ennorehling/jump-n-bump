@@ -54,9 +54,9 @@ export function Game_Session(level) {
         pogostick: gup('pogostick') == '1',
         jetpack: gup('jetpack') == '1',
         bunnies_in_space: gup('space') == '1',
-        flies_enabled: false,
-        blood_is_thicker_than_water: false,
-        no_gore: false
+        flies_enabled: gup('lordoftheflies') == '1',
+        blood_is_thicker_than_water: gup('bloodisthickerthanwater') == '1',
+        no_gore: gup('nogore') == '1'
     };
     var muted = gup('nosound') == '1';
     
