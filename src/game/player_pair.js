@@ -1,3 +1,5 @@
+import { number_gobs } from "../asset_data/number_gobs";
+
 export function Player_Pair(first, second, sfx, renderer, objects, img, settings) {
     "use strict";
 

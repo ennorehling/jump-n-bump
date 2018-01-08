@@ -1,3 +1,5 @@
+import { player } from "../game/game";
+
 export function Keyboard(key_function_mappings) {
     "use strict";
     var self = this;

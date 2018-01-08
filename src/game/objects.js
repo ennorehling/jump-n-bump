@@ -1,3 +1,7 @@
+import { env } from "../interaction/game_session";
+import { BAN_VOID, BAN_SPRING, GET_BAN_MAP } from "../game/level";
+import { LEVEL_HEIGHT, LEVEL_WIDTH, LEVEL_SCALE_FACTOR } from "../asset_data/default_levelmap";
+
 export function Objects(rnd) {
     "use strict";
     var self = this;

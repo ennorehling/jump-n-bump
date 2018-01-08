@@ -11,11 +11,14 @@ export function Animation_Data() {
             1, 0, 8, 5, 0, 0, 0, 0, 0, 0
         ];
 
-        var player_anims = [];
+        const player_anims = [];
 	    for (var c1 = 0; c1 < 7; c1++) {
-            player_anims[c1] = { frame : [] };
-		    player_anims[c1].num_frames = player_anim_data[c1 * 10];
-		    player_anims[c1].restart_frame = player_anim_data[c1 * 10 + 1];
+            player_anims[c1] = {
+                frame: [],
+	            num_frames: player_anim_data[c1 * 10],
+	            restart_frame: player_anim_data[c1 * 10 + 1]
+            };
+		    
 		    for (var c2 = 0; c2 < 4; c2++) {
                 player_anims[c1].frame[c2] = {};
 			    player_anims[c1].frame[c2].image = player_anim_data[c1 * 10 + c2 * 2 + 2];

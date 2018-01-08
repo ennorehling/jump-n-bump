@@ -1,11 +1,16 @@
-var SQUARE_SIZE = 1 << LEVEL_SCALE_FACTOR;
-var BAN_VOID	= 0;
-var BAN_SOLID	= 1;
-var BAN_WATER	= 2;
-var BAN_ICE		= 3;
-var BAN_SPRING	= 4;
+import { LEVEL_SCALE_FACTOR, LEVEL_WIDTH } from "../asset_data/default_levelmap";
+export var SQUARE_SIZE = 1 << LEVEL_SCALE_FACTOR;
+export var BAN_VOID	= 0;
+export var BAN_SOLID	= 1;
+export var BAN_WATER	= 2;
+export var BAN_ICE		= 3;
+export var BAN_SPRING	= 4;
 
-var ban_map;
+let ban_map;
+
+export function SET_BAN_MAP(new_ban_map) {
+    ban_map = new_ban_map;
+}
 
 export function GET_BAN_MAP_XY(x, y) {
     if (y<0) y = 0;

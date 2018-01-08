@@ -1,13 +1,18 @@
+import { create_default_level } from "../asset_data/default_levelmap";
+import { Dat_Level_Loader } from "../resource_loading/dat_level_loader";
+import { env, Game_Session } from "../interaction/game_session";
+import { Scores_ViewModel } from "../interaction/scores_viewmodel";
+import ko from "knockout";
+
 function Enum(obj) {
     return Object.freeze ? Object.freeze(obj) : obj;
 }
-var Page = Enum({ Instructions: 0, Game: 1, Scores: 2 });
 
 function ViewModel() {
     "use strict";
     var self = this;
     var loader = new Dat_Level_Loader();
-
+    this.Page = Enum({ Instructions: 0, Game: 1, Scores: 2 });
     this.loading_level = ko.observable(true);
     this.current_game = ko.observable(new Game_Session(create_default_level()));
 

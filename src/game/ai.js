@@ -1,3 +1,7 @@
+import { BAN_VOID, BAN_WATER, GET_BAN_MAP } from "./level";
+import { env } from "../interaction/game_session";
+import { player } from "../game/game";
+
 export function AI(keyboard_state) {
     "use strict";
 

@@ -1,3 +1,9 @@
+import { env } from "../interaction/game_session";
+import { LEVEL_SCALE_FACTOR } from "../asset_data/default_levelmap";
+import { BAN_SOLID, BAN_SPRING, BAN_ICE, BAN_WATER, GET_BAN_MAP_XY, GET_BAN_MAP_IN_WATER } from "../game/level";
+import { Player_Pair } from "../game/player_pair";
+import { player } from "../game/game";
+
 export function Movement(renderer, img, sfx, objects, settings, rnd) {
     "use strict";
 

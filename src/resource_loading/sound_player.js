@@ -36,13 +36,14 @@ export function Sound_Player(muted) {
         }
         audio = document.createElement('audio');
         sfx_extension = audio.canPlayType('audio/mpeg')?'mp3':'ogg';
-        audio.addEventListener('canplaythrough', function(ev) {
-            this.removeEventListener('canplaythrough', arguments.callee, false);
+        const onPlayThrough = function(ev) {
+            this.removeEventListener('canplaythrough', onPlayThrough, false);
             
             if (!muted) {
                 this.play();
             }
-        }, false);
+        };
+        audio.addEventListener('canplaythrough', onPlayThrough, false);
         audio.src = "sound/" + sfx_name + "." + sfx_extension;
         if (loop) audio.loop = true;
         audio.load();

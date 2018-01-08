@@ -1,3 +1,9 @@
+import { env } from "../interaction/game_session";
+import { Player } from "../game/player";
+import { SET_BAN_MAP } from "../game/level";
+
+export let player = [];
+
 export function Game(movement, ai, animation, renderer, objects, key_pressed, level, is_server, rnd) {
     "use strict";
     var next_time = 0;
@@ -16,7 +22,7 @@ export function Game(movement, ai, animation, renderer, objects, key_pressed, le
     }
 
     function reset_level() {
-        ban_map = level.ban_map;
+        SET_BAN_MAP(level.ban_map);
         objects.reset_objects();
 
         for (var c1 = 0; c1 < env.JNB_MAX_PLAYERS; c1++) {

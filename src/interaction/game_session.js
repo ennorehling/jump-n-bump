@@ -1,11 +1,22 @@
-var env = {
+import { Animation_Data } from "../asset_data/animation_data";
+import { Renderer } from "../interaction/renderer";
+import { Objects } from "../game/objects";
+import { Keyboard } from "../game/keyboard";
+import { AI } from "../game/ai";
+import { Animation } from "../game/animation";
+import { Sound_Player } from "../resource_loading/sound_player";
+import { Sfx } from "../game/sfx";
+import { Movement } from "../game/movement";
+import { Game, player } from "../game/game";
+import { Scores_ViewModel } from "../interaction/scores_viewmodel";
+import ko from "knockout";
+
+export const env = {
     JNB_MAX_PLAYERS: 4,
     MAX_OBJECTS: 200,
     animation_data: new Animation_Data(),
     level: {}
 };
-
-var player = [];
 
 function Enum(obj) {
     return Object.freeze ? Object.freeze(obj) : obj;
@@ -32,10 +43,12 @@ export function Game_Session(level) {
     }
 
     var canvas = document.getElementById('screen');
-    var img = {};
-    img.rabbits = document.getElementById('rabbits');
-    img.objects = document.getElementById('objects');
-    img.numbers = document.getElementById('numbers');
+    var img = {
+        rabbits: document.getElementById('rabbits'),
+        objects: document.getElementById('objects'),
+        numbers: document.getElementById('numbers')    
+    };
+    
     
     var settings = {
         pogostick: gup('pogostick') == '1',

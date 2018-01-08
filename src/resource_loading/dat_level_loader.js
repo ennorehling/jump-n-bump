@@ -1,4 +1,8 @@
-﻿export function Dat_Level_Loader() {
+﻿import { LEVEL_HEIGHT, LEVEL_WIDTH } from  "../asset_data/default_levelmap";
+import { BAN_SOLID } from "../game/level";
+import { Offscreen_Canvas } from "../resource_loading/offscreen_canvas";
+
+export function Dat_Level_Loader() {
     "use strict";
     var self = this;
     this.on_loaded_event_text = "level_loaded";

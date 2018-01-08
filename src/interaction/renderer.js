@@ -1,3 +1,7 @@
+import { player } from "../game/game";
+import { env } from "../interaction/game_session";
+import { rabbit_gobs } from "../asset_data/rabbit_gobs";
+
 export function Renderer(canvas, img, level) {
     "use strict";
     var main = { num_pobs: 0, pobs: [] };

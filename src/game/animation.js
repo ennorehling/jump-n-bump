@@ -1,3 +1,7 @@
+import { env } from "../interaction/game_session";
+import { BAN_SOLID, BAN_VOID, BAN_WATER, BAN_ICE, GET_BAN_MAP} from "../game/level";
+import { object_gobs } from "../asset_data/object_gobs";
+
 export function Animation(renderer, img, objects, rnd) {
     "use strict";
     function advance_frame(obj, pause_at_end, loop)
