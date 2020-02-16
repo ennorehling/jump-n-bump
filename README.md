@@ -1,21 +1,14 @@
-# jump-n-bump
+# Jump n Bump ![Deploy to GitHub Pages](https://github.com/GrahamTheCoder/jump-n-bump/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)
+
 HTML5 port of the [open source](https://github.com/fschulze/jumpnbump) [DOS classic](https://icculus.org/jumpnbump/) by [Brainchild Design](http://www.bitbliss.com)
 
-Keyboard map
+Play the game here: https://grahamthecoder.github.io/jump-n-bump/
 
-M: toggle sound
+![image](https://user-images.githubusercontent.com/2490482/74604912-8d1f4f80-50ba-11ea-8f66-f52eb0776077.png)
 
-1-4: toggle player 1-4
+## About
 
-Alt + 1-4: toggle ai for player 1-4
 
-Arrows: control player 1
-
-WAD: control player 2
-
-JIL: control player 3
-
-NumPad: control player 4
 
 ## Development
 
