@@ -1,0 +1,12 @@
+.vs/
+game/scripts/
+packages/
+*/bower_components/
+*/build/
+*/node_modules/
+game/jnb.html
+
+*.zip
+/node_modules/
+/game/index.html
+/game/jump-n-bump.js

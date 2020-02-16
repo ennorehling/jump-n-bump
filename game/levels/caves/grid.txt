@@ -1,0 +1,14 @@
+grid.pcx is a pcx of the 
+16x22 grid of squares that 
+the level is build around.  
+It is great for early 
+testing (just fill in the 
+appropriate squares), and 
+can be used to line up 
+graphics correctly.  I 
+thought that maybe you would
+want to unzip this file and
+have it availabe for separate
+download, as it serves as a
+great starting point for
+a new level.
